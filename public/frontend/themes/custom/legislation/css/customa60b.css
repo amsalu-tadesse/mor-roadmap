@@ -1,0 +1,15 @@
+.news-img-thumbnail {
+    height: 200px;
+}
+
+.news-full-img-thumbnail {
+    height: 350px;
+}
+
+.comment-card-header {
+    color: white;
+}
+
+.draft-comments {
+    color: #06357A;
+}
