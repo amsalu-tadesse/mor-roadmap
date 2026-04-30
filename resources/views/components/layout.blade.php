@@ -112,7 +112,7 @@
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('assets/dist/js/demo.js') }}"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="{{ asset('assets/dist/js/pages/dashboard.js') }}"></script>
+    <!-- <script src="{{ asset('assets/dist/js/pages/dashboard.js') }}"></script> -->
     <script src="{{ asset('assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js') }}"></script>
 
     <!-- DataTables  & Plugins -->
@@ -179,7 +179,7 @@
 
 
     <!-- to print charts data html2pdf library -->
-    <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+    <!-- Removed broken rawgit link, cdnjs is already included above -->
 
     {{-- <script>
     $(document).ready(function () {

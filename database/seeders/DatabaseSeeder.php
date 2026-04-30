@@ -112,6 +112,17 @@ class DatabaseSeeder extends Seeder
             'country',
             'notification',
             'login-attempt',
+            'directorate',
+            'theme',
+            'objective',
+            'initiative-status',
+            'implementation-status',
+            'partner',
+            'request-status',
+            'support-request',
+            'draft-initiative',
+            'implementation-initiative',
+            'shelf-initiative',
         ];
         $permission_activities = [
             'list',
@@ -952,6 +963,11 @@ class DatabaseSeeder extends Seeder
                     "description" => $organization["description"]
                 ]
             );
+        }
+
+        $statuses = ['Draft', 'Implementation', 'Shelf'];
+        foreach ($statuses as $status) {
+            \App\Models\ImplementationStatus::firstOrCreate(['name' => $status]);
         }
     }
 }

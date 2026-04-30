@@ -21,11 +21,86 @@ return [
                 'title'      =>  'Users',
                 'url'        =>  'admin.users.index',
                 'permission' => 'user: list'
-            ]
+            ],
         ]
     ],
 
     'menu_2'                 =>  [
+        'name'                 => 'System Setup',
+        'menu_icon'           => 'fa-list-alt',
+        'permissions'           => ['directorate: list', 'theme: list', 'objective: list', 'initiative-status: list', 'implementation-status: list', 'partner: list', 'request-status: list', 'support-request: list'],
+
+        'menu_item'            =>
+        [
+            [
+                'title'      =>  'Directorates',
+                'url'        =>  'admin.directorates.index',
+                'permission' => 'directorate: list'
+            ],
+            [
+                'title'      =>  'Themes',
+                'url'        =>  'admin.themes.index',
+                'permission' => 'theme: list'
+            ],
+            [
+                'title'      =>  'Objectives',
+                'url'        =>  'admin.objectives.index',
+                'permission' => 'objective: list'
+            ],
+            [
+                'title'      =>  'Initiative Statuses',
+                'url'        =>  'admin.initiative-statuses.index',
+                'permission' => 'initiative-status: list'
+            ],
+            [
+                'title'      =>  'Implementation Statuses',
+                'url'        =>  'admin.implementation-statuses.index',
+                'permission' => 'implementation-status: list'
+            ],
+            [
+                'title'      =>  'Partners',
+                'url'        =>  'admin.partners.index',
+                'permission' => 'partner: list'
+            ],
+            [
+                'title'      =>  'Request Statuses',
+                'url'        =>  'admin.request-statuses.index',
+                'permission' => 'request-status: list'
+            ],
+            [
+                'title'      =>  'Support Requests',
+                'url'        =>  'admin.support-requests.index',
+                'permission' => 'support-request: list'
+            ]
+        ]
+    ],
+
+    'menu_3'                 =>  [
+        'name'                 => 'Initiatives',
+        'menu_icon'           => 'fa-tasks',
+        'permissions'           => ['draft-initiative: list', 'implementation-initiative: list', 'shelf-initiative: list'],
+
+        'menu_item'            =>
+        [
+            [
+                'title'      =>  'Draft Initiatives',
+                'url'        =>  'admin.draft-initiatives.index',
+                'permission' => 'draft-initiative: list'
+            ],
+            [
+                'title'      =>  'Implementation Initiatives',
+                'url'        =>  'admin.implementation-initiatives.index',
+                'permission' => 'implementation-initiative: list'
+            ],
+            [
+                'title'      =>  'Shelf Initiatives',
+                'url'        =>  'admin.shelf-initiatives.index',
+                'permission' => 'shelf-initiative: list'
+            ]
+        ]
+    ],
+
+    'menu_4'                 =>  [
         'name'                 => 'Countries & Regions',
         'menu_icon'           => 'fas fa-globe',
         'permissions'           => ['region: list', 'zone: list', 'country: list'],
@@ -50,7 +125,7 @@ return [
         ]
     ],
 
-    'menu_3'                 =>  [
+    'menu_5'                 =>  [
         'name'                 => 'Settings',
         'menu_icon'           => 'fas fa-cog',
         'permissions'           => [
@@ -91,7 +166,7 @@ return [
         ]
     ],
    
-    'menu_4'                 =>  [
+    'menu_6'                 =>  [
         'name'                 => 'Log & Exceptions',
         'menu_icon'           => 'fa-bug',
         'permissions'           => ['audit: list', 'custom-exception: list'],
