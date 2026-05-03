@@ -1,7 +1,7 @@
 @props(['partners', 'initiativeStatuses'])
 
 <div class="modal fade" id="update_modal">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Update Implementation Details</h4>

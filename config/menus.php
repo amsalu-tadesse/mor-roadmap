@@ -83,17 +83,17 @@ return [
         'menu_item'            =>
         [
             [
-                'title'      =>  'Drafting Stage',
+                'title'      =>  'Drafting stage',
                 'url'        =>  'admin.draft-initiatives.index',
                 'permission' => 'draft-initiative: list'
             ],
              [
-                'title'      =>  'Shelfing Stage',
+                'title'      =>  'Shelfing stage',
                 'url'        =>  'admin.shelf-initiatives.index',
                 'permission' => 'shelf-initiative: list'
              ],
             [
-                'title'      =>  'Implementation Stage',
+                'title'      =>  'Implementation stage',
                 'url'        =>  'admin.implementation-initiatives.index',
                 'permission' => 'implementation-initiative: list'
             ],
