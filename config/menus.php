@@ -83,20 +83,21 @@ return [
         'menu_item'            =>
         [
             [
-                'title'      =>  'Draft Initiatives',
+                'title'      =>  'Drafting Stage',
                 'url'        =>  'admin.draft-initiatives.index',
                 'permission' => 'draft-initiative: list'
             ],
+             [
+                'title'      =>  'Shelfing Stage',
+                'url'        =>  'admin.shelf-initiatives.index',
+                'permission' => 'shelf-initiative: list'
+             ],
             [
-                'title'      =>  'Implementation Initiatives',
+                'title'      =>  'Implementation Stage',
                 'url'        =>  'admin.implementation-initiatives.index',
                 'permission' => 'implementation-initiative: list'
             ],
-            [
-                'title'      =>  'Shelf Initiatives',
-                'url'        =>  'admin.shelf-initiatives.index',
-                'permission' => 'shelf-initiative: list'
-            ]
+
         ]
     ],
 
@@ -161,11 +162,11 @@ return [
                 'url'        =>  'admin.notifications.index',
                 'permission'   => 'notification: list'
             ],
-           
+
 
         ]
     ],
-   
+
     'menu_6'                 =>  [
         'name'                 => 'Log & Exceptions',
         'menu_icon'           => 'fa-bug',
