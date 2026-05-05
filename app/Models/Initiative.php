@@ -58,4 +58,9 @@ class Initiative extends Model
     {
         return $this->belongsTo(InitiativeStatus::class);
     }
+
+    public function supportRequests()
+    {
+        return $this->hasMany(SupportRequest::class);
+    }
 }

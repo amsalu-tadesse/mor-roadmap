@@ -11,6 +11,7 @@ class StoreSupportRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'initiative_id'     => 'nullable|exists:initiatives,id',
             'partner_id'        => 'required|exists:partners,id',
             'activities'        => 'required|string',
             'request_status_id' => 'required|exists:request_statuses,id',

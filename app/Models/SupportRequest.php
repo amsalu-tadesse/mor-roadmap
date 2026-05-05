@@ -12,6 +12,7 @@ class SupportRequest extends Model
     use HasFactory, SoftDeletes, CreatedUpdatedBy;
 
     protected $fillable = [
+        'initiative_id',
         'partner_id',
         'activities',
         'request_status_id',
@@ -34,5 +35,10 @@ class SupportRequest extends Model
     public function requestStatus()
     {
         return $this->belongsTo(RequestStatus::class);
+    }
+
+    public function initiative()
+    {
+        return $this->belongsTo(Initiative::class);
     }
 }

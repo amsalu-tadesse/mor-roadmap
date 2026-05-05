@@ -24,7 +24,7 @@
         $initiativeStatuses = \App\Models\InitiativeStatus::all();
     @endphp
 
-    <x-partials.implementation_initiative_modal :partners="$partners" :initiativeStatuses="$initiativeStatuses" />
+    <x-partials.implementation_initiative_modal :partners="$partners" :initiativeStatuses="$initiativeStatuses" :objectives="$objectives" :directorates="$directorates" :implementationStatuses="$implementationStatuses" />
     <x-show-modals.implementation_initiative_show_modal />
 
     @push('scripts')
@@ -77,6 +77,10 @@
                         success: function(response) {
                             if (response.success == 1) {
                                 $('#initiative_id').val(response.initiative.id);
+                                $('#name').val(response.initiative.name);
+                                $('#objective_id').val(response.initiative.objective_id);
+                                $('#directorate_id').val(response.initiative.directorate_id);
+                                $('#implementation_status_id').val(response.initiative.implementation_status_id);
                                 $('#start_date').val(response.start_date);
                                 $('#end_date').val(response.end_date);
                                 $('#budget').val(response.initiative.budget);
@@ -85,6 +89,7 @@
                                 $('#completion').val(response.initiative.completion);
                                 $('#initiative_status_id').val(response.initiative.initiative_status_id);
                                 $('#request').val(response.initiative.request);
+                                $('#note').val(response.initiative.note);
                                 $('#update_modal').modal('show');
                             }
                         }

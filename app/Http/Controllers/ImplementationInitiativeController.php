@@ -11,12 +11,17 @@ use App\Models\Initiative;
 use App\Models\InitiativeStatus;
 use App\Models\Objective;
 use App\Models\Partner;
+use App\Models\RequestStatus;
+use App\Models\SupportRequest;
 
 class ImplementationInitiativeController extends Controller
 {
     public function index(ImplementationInitiativesDataTable $dataTable)
     {
-        return $dataTable->render('admin.implementation-initiatives.index');
+        $objectives = Objective::all();
+        $directorates = Directorate::all();
+        $implementationStatuses = ImplementationStatus::all();
+        return $dataTable->render('admin.implementation-initiatives.index', compact('objectives', 'directorates', 'implementationStatuses'));
     }
 
     public function create()
@@ -64,9 +69,14 @@ class ImplementationInitiativeController extends Controller
                 'end_date' => $implementationInitiative->end_date ? $implementationInitiative->end_date->format('Y-m-d') : '',
             ]);
         }
+        $objectives = Objective::all();
+        $directorates = Directorate::all();
+        $implementationStatuses = ImplementationStatus::all();
         $partners = Partner::all();
         $initiativeStatuses = InitiativeStatus::all();
-        return view('admin.implementation-initiatives.edit', compact('implementationInitiative', 'partners', 'initiativeStatuses'));
+        $requestStatuses = RequestStatus::all();
+        $priorities = SupportRequest::PRIORITIES;
+        return view('admin.implementation-initiatives.edit', compact('implementationInitiative', 'objectives', 'directorates', 'implementationStatuses', 'partners', 'initiativeStatuses', 'requestStatuses', 'priorities'));
     }
 
     public function update(UpdateImplementationInitiativeRequest $request, Initiative $implementationInitiative)

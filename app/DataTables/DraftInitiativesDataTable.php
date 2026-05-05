@@ -36,10 +36,20 @@ class DraftInitiativesDataTable extends DataTable
 
     public function query(Initiative $model): QueryBuilder
     {
-        return $model->newQuery()->with(['objective', 'directorate', 'implementationStatus'])
+        $query = $model->newQuery()->with(['objective', 'directorate', 'implementationStatus'])
             ->whereHas('implementationStatus', function ($query) {
                 $query->where('name', 'Draft');
             });
+
+        if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
+            $query->where('directorate_id', $this->request()->get('directorate_id'));
+        }
+
+        if ($this->request()->has('objective_id') && $this->request()->get('objective_id') != '') {
+            $query->where('objective_id', $this->request()->get('objective_id'));
+        }
+
+        return $query;
     }
 
     public function html(): HtmlBuilder
@@ -47,7 +57,7 @@ class DraftInitiativesDataTable extends DataTable
         return $this->builder()
             ->setTableId('draft-initiatives-table')
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.objective_id = $("#filter_objective").val();')
             ->orderBy(1)
             ->selectStyleSingle()
             ->dom(
@@ -76,7 +86,6 @@ class DraftInitiativesDataTable extends DataTable
             Column::make('name')->title('Initiative Name'),
             Column::make('objective_name')->title('Objective')->orderable(false),
             Column::make('directorate_name')->title('Directorate')->orderable(false),
-            Column::make('implementation_status_name')->title('Impl. Status')->orderable(false),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
         ];
     }

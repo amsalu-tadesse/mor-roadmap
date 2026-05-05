@@ -1,4 +1,4 @@
-@props(['partners', 'requestStatuses', 'priorities'])
+@props(['partners', 'requestStatuses', 'priorities', 'initiatives'])
 
 <div class="modal fade" id="update_modal">
     <div class="modal-dialog modal-lg">
@@ -13,6 +13,19 @@
                 @csrf
                 <div class="modal-body">
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="initiative_id">Initiative</label>
+                                    <select name="initiative_id" class="form-control" id="initiative_id">
+                                        <option value="">Select Initiative</option>
+                                        @foreach($initiatives as $initiative)
+                                            <option value="{{ $initiative->id }}">{{ $initiative->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">

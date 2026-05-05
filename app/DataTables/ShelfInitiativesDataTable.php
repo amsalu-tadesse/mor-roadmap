@@ -19,17 +19,14 @@ class ShelfInitiativesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
-            ->addColumn('start_date', fn($row) => $row->start_date ? $row->start_date->format('Y-m-d') : 'N/A')
-            ->addColumn('end_date', fn($row) => $row->end_date ? $row->end_date->format('Y-m-d') : 'N/A')
-            ->addColumn('partner_name', fn($row) => $row->partner->name ?? 'N/A')
-            ->addColumn('initiative_status_name', fn($row) => $row->initiativeStatus->name ?? 'N/A')
-            ->addColumn('completion', fn($row) => $row->completion ? $row->completion . '%' : 'N/A')
+            ->addColumn('objective_name', fn($row) => $row->objective->name ?? 'N/A')
+            ->addColumn('directorate_name', fn($row) => $row->directorate->name ?? 'N/A')
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
                     'show' => true,
-                    'permission_delete' => 'none', // No delete for shelf
-                    'permission_edit' => 'none',   // No edit for shelf
+                    'permission_delete' => 'none',
+                    'permission_edit' => 'shelf-initiative: edit',
                     'permission_view' => 'shelf-initiative: view',
                 ]);
             })
@@ -38,10 +35,20 @@ class ShelfInitiativesDataTable extends DataTable
 
     public function query(Initiative $model): QueryBuilder
     {
-        return $model->newQuery()->with(['partner', 'initiativeStatus'])
+        $query = $model->newQuery()->with(['objective', 'directorate'])
             ->whereHas('implementationStatus', function ($query) {
                 $query->where('name', 'Shelf');
             });
+
+        if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
+            $query->where('directorate_id', $this->request()->get('directorate_id'));
+        }
+
+        if ($this->request()->has('objective_id') && $this->request()->get('objective_id') != '') {
+            $query->where('objective_id', $this->request()->get('objective_id'));
+        }
+
+        return $query;
     }
 
     public function html(): HtmlBuilder
@@ -49,7 +56,7 @@ class ShelfInitiativesDataTable extends DataTable
         return $this->builder()
             ->setTableId('shelf-initiatives-table')
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.objective_id = $("#filter_objective").val();')
             ->orderBy(1)
             ->selectStyleSingle()
             ->dom(
@@ -76,12 +83,8 @@ class ShelfInitiativesDataTable extends DataTable
         return [
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('name')->title('Initiative Name'),
-            Column::make('start_date')->title('Start Date'),
-            Column::make('end_date')->title('End Date'),
-            Column::make('budget')->title('Budget'),
-            Column::make('partner_name')->title('Partner')->orderable(false),
-            Column::make('completion')->title('Completion')->addClass('text-center'),
-            Column::make('initiative_status_name')->title('Status')->orderable(false),
+            Column::make('objective_name')->title('Objective')->orderable(false),
+            Column::make('directorate_name')->title('Directorate')->orderable(false),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
         ];
     }

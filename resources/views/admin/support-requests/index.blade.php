@@ -18,13 +18,8 @@
         </div>
     </div>
 
-    @php
-        $partners = \App\Models\Partner::all();
-        $requestStatuses = \App\Models\RequestStatus::all();
-        $priorities = \App\Models\SupportRequest::PRIORITIES;
-    @endphp
 
-    <x-partials.support_request_modal :partners="$partners" :requestStatuses="$requestStatuses" :priorities="$priorities" />
+    <x-partials.support_request_modal :partners="$partners" :requestStatuses="$requestStatuses" :priorities="$priorities" :initiatives="$initiatives" />
     <x-show-modals.support_request_show_modal />
 
     @push('scripts')
@@ -77,6 +72,7 @@
                         success: function(response) {
                             if (response.success == 1) {
                                 $('#support_request_id').val(response.supportRequest.id);
+                                $('#initiative_id').val(response.supportRequest.initiative_id);
                                 $('#partner_id').val(response.supportRequest.partner_id);
                                 $('#request_status_id').val(response.supportRequest.request_status_id);
                                 $('#priority').val(response.supportRequest.priority);

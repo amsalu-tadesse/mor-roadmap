@@ -14,7 +14,10 @@ class DraftInitiativeController extends Controller
 {
     public function index(DraftInitiativesDataTable $dataTable)
     {
-        return $dataTable->render('admin.draft-initiatives.index');
+        $objectives = Objective::all();
+        $directorates = Directorate::all();
+        $implementationStatuses = ImplementationStatus::all();
+        return $dataTable->render('admin.draft-initiatives.index', compact('objectives', 'directorates', 'implementationStatuses'));
     }
 
     public function create()

@@ -1,4 +1,4 @@
-@props(['partners', 'initiativeStatuses'])
+@props(['partners', 'initiativeStatuses', 'objectives', 'directorates', 'implementationStatuses'])
 
 <div class="modal fade" id="update_modal">
     <div class="modal-dialog modal-xl">
@@ -13,6 +13,49 @@
                 @csrf
                 <div class="modal-body">
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">Initiative Name<span class="required-field">*</span></label>
+                                    <input type="text" name="name" class="form-control" id="name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="objective_id">Objective<span class="required-field">*</span></label>
+                                    <select name="objective_id" class="form-control" id="objective_id" required>
+                                        <option value="">Select Objective</option>
+                                        @foreach($objectives as $objective)
+                                            <option value="{{ $objective->id }}">{{ $objective->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="directorate_id">Directorate<span class="required-field">*</span></label>
+                                    <select name="directorate_id" class="form-control" id="directorate_id" required>
+                                        <option value="">Select Directorate</option>
+                                        @foreach($directorates as $directorate)
+                                            <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="implementation_status_id">Implementation Status</label>
+                                    <select name="implementation_status_id" class="form-control" id="implementation_status_id">
+                                        <option value="">Select Implementation Status</option>
+                                        @foreach($implementationStatuses as $status)
+                                            <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -80,6 +123,14 @@
                                 <div class="form-group">
                                     <label for="expenditure">Expenditure Details</label>
                                     <textarea name="expenditure" class="form-control" id="expenditure" rows="4" placeholder="Enter Expenditure Details"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="note">Note</label>
+                                    <textarea name="note" class="form-control" id="note" rows="4" placeholder="Enter Note"></textarea>
                                 </div>
                             </div>
                         </div>
