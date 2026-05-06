@@ -48,6 +48,34 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.css" />
 
 
+    <style>
+
+/* Custom Primary Color Override */
+/*.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,*/
+ /* Your Primary Color */
+/*.btn-primary {
+    background-color: rgba(6, 77, 96, 1) !important;
+    color: #ffffff !important;
+}*/
+
+/* Sidebar Background Override */
+/*.main-sidebar {
+    background-color: #264961ff !important;
+}*/
+
+/* Brand Logo Area */
+/*.brand-link {
+    border-bottom: 1px solid rgba(188, 8, 8, 0.1) !important;
+}
+*/
+
+
+    </style>
+
+
+
+
+
     @stack('css')
 
 </head>

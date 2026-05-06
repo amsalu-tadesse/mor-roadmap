@@ -90,8 +90,8 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-     
-     
+
+
         $permissions = [
             'contact-us',
             'custom-exception',
@@ -137,7 +137,7 @@ class DatabaseSeeder extends Seeder
 
         $permission_counter = 0;
         $arrayOfPermissionNames = [];
-        foreach ($permissions as  $permission) {
+        foreach ($permissions as $permission) {
 
             foreach ($permission_activities as $activity) {
                 $permission_counter++;
@@ -256,11 +256,11 @@ class DatabaseSeeder extends Seeder
                 $role->givePermissionTo(Permission::all());
                 $createdUser->assignRole($role);
                 $createdUser->assignRole("Federal Level Data Manager");
-            } else if ($user['email'] == 'fdatamanager@gmail.com') {
+            } elseif ($user['email'] == 'fdatamanager@gmail.com') {
                 $createdUser->assignRole("Federal Level Data Manager");
-            } else if ($user['email'] == 'rdatamanager@gmail.com') {
+            } elseif ($user['email'] == 'rdatamanager@gmail.com') {
                 $createdUser->assignRole("Region Level Data Manager");
-            } else if ($user['email'] == 'suppervisor@gmail.com') {
+            } elseif ($user['email'] == 'suppervisor@gmail.com') {
                 $role = Role::findByName('Suppervisor');
                 // $role->givePermissionTo(Permission::all());
                 $createdUser->assignRole($role);
@@ -707,7 +707,7 @@ class DatabaseSeeder extends Seeder
                 ]
             );
 
-          
+
 
             $zones = $val['zones'];
 
@@ -965,7 +965,7 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $statuses = ['Draft', 'Implementation', 'Shelf'];
+        $statuses = ['Drafting stage', 'Shelfing stage', 'Implementation stage'];
         foreach ($statuses as $status) {
             \App\Models\ImplementationStatus::firstOrCreate(['name' => $status]);
         }
