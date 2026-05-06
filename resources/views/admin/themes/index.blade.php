@@ -11,7 +11,7 @@
                     <div>
                         @can('theme: create')
                             <a href="{{ route('admin.themes.create') }}">
-                                <button type='button' class='btn btn-primary'>Add New Theme</button>
+                                <button type='button' class='btn btn-fancy'>Add New Theme</button>
                             </a>
                         @endcan
                     </div>

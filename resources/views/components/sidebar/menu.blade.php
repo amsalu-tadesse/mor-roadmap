@@ -23,8 +23,8 @@ $menus = config('menus');
                 <p>
                     {{ $menu['name'] }}
                     <i class="fas fa-angle-left right"></i>
-                    <span class="badge badge-info right" style="margin-right:-1%;">
-                        {{ count($menu['menu_item']) }} </span>
+                    {{-- <span class="badge badge-info right" style="margin-right:-1%;">
+                        {{ count($menu['menu_item']) }} </span> --}}
                 </p>
             </a>
             <x-sidebar.menu-item :menu_items="$menu['menu_item']" />

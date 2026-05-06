@@ -49,25 +49,15 @@
 
 
     <style>
-
-/* Custom Primary Color Override */
-/*.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,*/
- /* Your Primary Color */
-/*.btn-primary {
-    background-color: rgba(6, 77, 96, 1) !important;
-    color: #ffffff !important;
+/* Apply to sidebar or cards for a fancy effect */
+/* Apply to sidebar or cards for a fancy effect */
+/*.main-sidebar, .card {
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 }*/
-
-/* Sidebar Background Override */
-/*.main-sidebar {
-    background-color: #264961ff !important;
-}*/
-
-/* Brand Logo Area */
-/*.brand-link {
-    border-bottom: 1px solid rgba(188, 8, 8, 0.1) !important;
-}
-*/
 
 
     </style>
@@ -235,7 +225,7 @@
     </script>
 
     <script>
-        $(function() {
+       /* $(function() {
             var url = window.location;
             // for single sidebar menu
             $('ul.nav-sidebar a').filter(function() {
@@ -248,7 +238,22 @@
             }).parentsUntil(".nav-sidebar > .nav-treeview").css({
                 'display': 'block'
             }).addClass('menu-open').prev('a').addClass('active');
-        });
+        });*/
+
+        $(function () {
+    var url = window.location;
+    // for sidebar menu entirely but not cover treeview
+    $('ul.nav-sidebar a').filter(function () {
+        return this.href == url;
+    }).addClass('active');
+
+    // for treeview
+    $('ul.nav-treeview a').filter(function () {
+        return this.href == url;
+    }).parentsUntil(".nav-sidebar > .nav-treeview").addClass('menu-open').prev('a').addClass('active');
+});
+
+
     </script>
 
 

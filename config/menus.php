@@ -25,8 +25,35 @@ return [
         ]
     ],
 
+
+    'menu_3'                 =>  [
+        'name'                 => 'Initiatives',
+        'menu_icon'           => 'fa-tasks',
+        'permissions'           => ['draft-initiative: list', 'implementation-initiative: list', 'shelf-initiative: list'],
+
+        'menu_item'            =>
+        [
+            [
+                'title'      =>  'Drafting stage',
+                'url'        =>  'admin.draft-initiatives.index',
+                'permission' => 'draft-initiative: list'
+            ],
+             [
+                'title'      =>  'Shelfing stage',
+                'url'        =>  'admin.shelf-initiatives.index',
+                'permission' => 'shelf-initiative: list'
+             ],
+            [
+                'title'      =>  'Implementation stage',
+                'url'        =>  'admin.implementation-initiatives.index',
+                'permission' => 'implementation-initiative: list'
+            ],
+
+        ]
+    ],
+
     'menu_2'                 =>  [
-        'name'                 => 'System Setup',
+        'name'                 => 'Initiative setup',
         'menu_icon'           => 'fa-list-alt',
         'permissions'           => ['directorate: list', 'theme: list', 'objective: list', 'initiative-status: list', 'implementation-status: list', 'partner: list', 'request-status: list', 'support-request: list'],
 
@@ -75,57 +102,6 @@ return [
         ]
     ],
 
-    'menu_3'                 =>  [
-        'name'                 => 'Initiatives',
-        'menu_icon'           => 'fa-tasks',
-        'permissions'           => ['draft-initiative: list', 'implementation-initiative: list', 'shelf-initiative: list'],
-
-        'menu_item'            =>
-        [
-            [
-                'title'      =>  'Drafting stage',
-                'url'        =>  'admin.draft-initiatives.index',
-                'permission' => 'draft-initiative: list'
-            ],
-             [
-                'title'      =>  'Shelfing stage',
-                'url'        =>  'admin.shelf-initiatives.index',
-                'permission' => 'shelf-initiative: list'
-             ],
-            [
-                'title'      =>  'Implementation stage',
-                'url'        =>  'admin.implementation-initiatives.index',
-                'permission' => 'implementation-initiative: list'
-            ],
-
-        ]
-    ],
-
-    'menu_4'                 =>  [
-        'name'                 => 'Countries & Regions',
-        'menu_icon'           => 'fas fa-globe',
-        'permissions'           => ['region: list', 'zone: list', 'country: list'],
-        'menu_item'            =>
-        [
-            [
-                'title'      =>  'Countries',
-                'url'        =>  'admin.countries.index',
-                'permission'   => 'country: list'
-            ],
-            [
-                'title'      =>  'Regions',
-                'url'        =>  'admin.regions.index',
-                'permission'   => 'region: list'
-            ],
-            [
-                'title'      =>  'Zones',
-                'url'        =>  'admin.zones.index',
-                'permission'   => 'zone: list'
-            ],
-
-        ]
-    ],
-
     'menu_5'                 =>  [
         'name'                 => 'Settings',
         'menu_icon'           => 'fas fa-cog',
@@ -166,7 +142,7 @@ return [
 
         ]
     ],
-
+/*
     'menu_6'                 =>  [
         'name'                 => 'Log & Exceptions',
         'menu_icon'           => 'fa-bug',
@@ -190,5 +166,5 @@ return [
             ],
         ],
 
-    ],
+    ],*/
 ];
