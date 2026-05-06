@@ -76,7 +76,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Partner</th>
+                                    <th>Requesting Partner</th>
                                     <th>Activities</th>
                                     <th>Status</th>
                                     <th>Priority</th>

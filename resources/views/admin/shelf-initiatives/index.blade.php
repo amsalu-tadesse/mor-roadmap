@@ -137,16 +137,9 @@
                     success: function(response) {
                         if (response.success == 1) {
                             $('#show_modal #name_show').html(response.initiative.name);
-                            $('#show_modal #start_date_show').html(response.initiative.start_date ? response.initiative.start_date.substring(0, 10) : '');
-                            $('#show_modal #end_date_show').html(response.initiative.end_date ? response.initiative.end_date.substring(0, 10) : '');
-                            $('#show_modal #budget_show').html(response.initiative.budget);
-                            $('#show_modal #expenditure_show').html(response.initiative.expenditure);
-                            $('#show_modal #partner_show').html(response.partnerName);
-                            $('#show_modal #completion_show').html(response.initiative.completion ? response.initiative.completion + '%' : '');
-                            $('#show_modal #initiative_status_show').html(response.initiativeStatusName);
-                            $('#show_modal #request_show').html(response.initiative.request);
-                            $('#show_modal #created_by').html(response.getCreatedBy);
-                            $('#show_modal #created_at').html(response.created_at);
+                            $('#show_modal #objective_show').html(response.objectiveName);
+                            $('#show_modal #directorate_show').html(response.directorateName);
+                            $('#show_modal #note_show').html(response.initiative.note ?? '');
                             $('#show_modal').modal('show');
                         }
                     }
