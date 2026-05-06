@@ -66,7 +66,12 @@
                         </div>
 
                         <hr>
-                        <h5>Support Requests</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5>Support Requests</h5>
+                            <button type="button" class="btn btn-sm btn-primary" id="add_support_request">
+                                <i class="fas fa-plus"></i> Add Support Request
+                            </button>
+                        </div>
                         <table class="table table-sm table-bordered" id="shelf-support-requests-table">
                             <thead>
                                 <tr>

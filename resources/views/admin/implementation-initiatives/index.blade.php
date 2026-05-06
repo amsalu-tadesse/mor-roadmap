@@ -67,7 +67,7 @@
             }
 
             $(document).ready(function() {
-                $('#implementation-initiatives-table').on('click', '#update_row', function() {
+                $(document).on('click', '#update_row', function() {
                     var row_id = $(this).data('row_id');
                     var url = "{{ route('admin.implementation-initiatives.edit', ':id') }}";
                     url = url.replace(':id', row_id);
@@ -96,7 +96,7 @@
                     });
                 });
 
-                $('#implementation-initiatives-table').on('click', '#show_row', function() {
+                $(document).on('click', '#show_row', function() {
                     var row_id = $(this).data('row_id');
                     var url = "{{ route('admin.implementation-initiatives.show', ':id') }}";
                     url = url.replace(':id', row_id);
@@ -120,36 +120,36 @@
                         }
                     });
                 });
-            });
 
-            $('#implementation_initiative_update_form').on('submit', function(e) {
-                e.preventDefault();
-                var form_data = $(this).serialize();
-                var row_id = $('#initiative_id', $(this)).val();
-                var url = "{{ route('admin.implementation-initiatives.update', ':id') }}";
-                url = url.replace(':id', row_id);
-                $.ajax({
-                    url: url, type: 'PATCH', data: form_data, dataType: 'json',
-                    success: function(data) {
-                        if (data.success) {
-                            $('#update_modal').modal('toggle');
-                            window.LaravelDataTables['implementation-initiatives-table'].ajax.reload();
-                            toastr.success('You have successfully updated Implementation Details.');
+                $('#implementation_initiative_update_form').on('submit', function(e) {
+                    e.preventDefault();
+                    var form_data = $(this).serialize();
+                    var row_id = $('#initiative_id', $(this)).val();
+                    var url = "{{ route('admin.implementation-initiatives.update', ':id') }}";
+                    url = url.replace(':id', row_id);
+                    $.ajax({
+                        url: url, type: 'PATCH', data: form_data, dataType: 'json',
+                        success: function(data) {
+                            if (data.success) {
+                                $('#update_modal').modal('toggle');
+                                window.LaravelDataTables['implementation-initiatives-table'].ajax.reload();
+                                toastr.success('You have successfully updated Implementation Details.');
+                            }
+                        },
+                        error: function(xhr) {
+                            if(xhr.responseJSON && xhr.responseJSON.errors) {
+                                let errors = xhr.responseJSON.errors;
+                                let errorHtml = '<ul>';
+                                $.each(errors, function(key, value) {
+                                    errorHtml += '<li>' + value[0] + '</li>';
+                                });
+                                errorHtml += '</ul>';
+                                toastr.error(errorHtml, 'Validation Error');
+                            } else {
+                                toastr.error('An error occurred.', 'Error');
+                            }
                         }
-                    },
-                    error: function(xhr) {
-                        if(xhr.responseJSON && xhr.responseJSON.errors) {
-                            let errors = xhr.responseJSON.errors;
-                            let errorHtml = '<ul>';
-                            $.each(errors, function(key, value) {
-                                errorHtml += '<li>' + value[0] + '</li>';
-                            });
-                            errorHtml += '</ul>';
-                            toastr.error(errorHtml, 'Validation Error');
-                        } else {
-                            toastr.error('An error occurred.', 'Error');
-                        }
-                    }
+                    });
                 });
             });
         </script>

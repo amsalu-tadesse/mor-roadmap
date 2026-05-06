@@ -34,12 +34,15 @@
         <!-- Handle the case when $crime is not set -->
     @endisset
 @else
-    @isset($crime)
-        @can($permission_view)
+    @can($permission_view)
+        @isset($crime)
             <a class='btn btn-sm' href="{{ route($route_detail, [$row_id]) }}" role="button" id="show_row">
                 <i class='text-info far fa-eye'></i></a>
-        @endcan
-    @endisset
+        @else
+            <a class='btn btn-sm' data-row_id="{{ $row_id }}" role="button" id="show_row">
+                <i class='text-info far fa-eye'></i></a>
+        @endisset
+    @endcan
 
 
     @isset($crime)

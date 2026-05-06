@@ -69,14 +69,7 @@ class ImplementationInitiativeController extends Controller
                 'end_date' => $implementationInitiative->end_date ? $implementationInitiative->end_date->format('Y-m-d') : '',
             ]);
         }
-        $objectives = Objective::all();
-        $directorates = Directorate::all();
-        $implementationStatuses = ImplementationStatus::all();
-        $partners = Partner::all();
-        $initiativeStatuses = InitiativeStatus::all();
-        $requestStatuses = RequestStatus::all();
-        $priorities = SupportRequest::PRIORITIES;
-        return view('admin.implementation-initiatives.edit', compact('implementationInitiative', 'objectives', 'directorates', 'implementationStatuses', 'partners', 'initiativeStatuses', 'requestStatuses', 'priorities'));
+        return redirect()->route('admin.implementation-initiatives.index');
     }
 
     public function update(UpdateImplementationInitiativeRequest $request, Initiative $implementationInitiative)

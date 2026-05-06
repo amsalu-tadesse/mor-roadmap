@@ -28,7 +28,6 @@ class ImplementationInitiativesDataTable extends DataTable
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
                     'show' => true,
-                    'crime' => true, // This flag makes it a link instead of a modal trigger
                     'route' => 'admin.implementation-initiatives.edit',
                     'route_detail' => 'admin.implementation-initiatives.show',
                     'permission_delete' => 'implementation-initiative: delete',

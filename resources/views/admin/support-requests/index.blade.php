@@ -72,12 +72,12 @@
                         success: function(response) {
                             if (response.success == 1) {
                                 $('#support_request_id').val(response.supportRequest.id);
-                                $('#initiative_id').val(response.supportRequest.initiative_id);
-                                $('#partner_id').val(response.supportRequest.partner_id);
-                                $('#request_status_id').val(response.supportRequest.request_status_id);
-                                $('#priority').val(response.supportRequest.priority);
-                                $('#activities').val(response.supportRequest.activities);
-                                $('#update_modal').modal('show');
+                                $('#sr_initiative_id').val(response.supportRequest.initiative_id);
+                                $('#sr_partner_id').val(response.supportRequest.partner_id);
+                                $('#sr_request_status_id').val(response.supportRequest.request_status_id);
+                                $('#sr_priority').val(response.supportRequest.priority);
+                                $('#sr_activities').val(response.supportRequest.activities);
+                                $('#support_request_modal').modal('show');
                             }
                         }
                     });
@@ -104,7 +104,7 @@
                 });
             });
 
-            $('#support_request_update_form').on('submit', function(e) {
+            $('#support_request_form').on('submit', function(e) {
                 e.preventDefault();
                 var form_data = $(this).serialize();
                 var row_id = $('#support_request_id', $(this)).val();
@@ -114,7 +114,7 @@
                     url: url, type: 'PATCH', data: form_data, dataType: 'json',
                     success: function(data) {
                         if (data.success) {
-                            $('#update_modal').modal('toggle');
+                            $('#support_request_modal').modal('toggle');
                             window.LaravelDataTables['support-requests-table'].ajax.reload();
                             toastr.success('You have successfully updated the Support Request.');
                         }

@@ -1,23 +1,24 @@
 @props(['partners', 'requestStatuses', 'priorities', 'initiatives'])
 
-<div class="modal fade" id="update_modal">
+<div class="modal fade" id="support_request_modal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Update Support Request</h4>
+                <h4 class="modal-title" id="support_modal_title">Update Support Request</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="support_request_update_form">
+            <form id="support_request_form">
                 @csrf
+                <input type="hidden" id="support_method" value="PUT">
                 <div class="modal-body">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="initiative_id">Initiative</label>
-                                    <select name="initiative_id" class="form-control" id="initiative_id">
+                                    <select name="initiative_id" class="form-control" id="sr_initiative_id">
                                         <option value="">Select Initiative</option>
                                         @foreach($initiatives as $initiative)
                                             <option value="{{ $initiative->id }}">{{ $initiative->name }}</option>
@@ -30,7 +31,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="partner_id">Partner<span class="required-field">*</span></label>
-                                    <select name="partner_id" class="form-control" id="partner_id" required>
+                                    <select name="partner_id" class="form-control" id="sr_partner_id" required>
                                         <option value="">Select Partner</option>
                                         @foreach($partners as $partner)
                                             <option value="{{ $partner->id }}">{{ $partner->name }}</option>
@@ -41,7 +42,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="request_status_id">Request Status<span class="required-field">*</span></label>
-                                    <select name="request_status_id" class="form-control" id="request_status_id" required>
+                                    <select name="request_status_id" class="form-control" id="sr_request_status_id" required>
                                         <option value="">Select Status</option>
                                         @foreach($requestStatuses as $status)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
@@ -54,7 +55,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="priority">Priority<span class="required-field">*</span></label>
-                                    <select name="priority" class="form-control" id="priority" required>
+                                    <select name="priority" class="form-control" id="sr_priority" required>
                                         <option value="">Select Priority</option>
                                         @foreach($priorities as $key => $label)
                                             <option value="{{ $key }}">{{ $label }}</option>
@@ -67,7 +68,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="activities">Activities<span class="required-field">*</span></label>
-                                    <textarea name="activities" class="form-control" id="activities" rows="4" placeholder="Enter Activities" required></textarea>
+                                    <textarea name="activities" class="form-control" id="sr_activities" rows="4" placeholder="Enter Activities" required></textarea>
                                 </div>
                             </div>
                         </div>
