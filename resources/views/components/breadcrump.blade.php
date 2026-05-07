@@ -11,8 +11,8 @@
                     href="{{ route('admin.helps.create') }}?route={{ request()->route()->getName() }}"><i
                         class="fa fa-plus-circle" aria-hidden="true" style="color:green"></i></a>
                     @endcan
-                    <i class="fa fa-question-circle" aria-hidden="true" style="color:green" class="btn btn-none "
-                        data-toggle="modal" data-target="#exampleModalLong"></i>
+                    {{-- <i class="fa fa-question-circle" aria-hidden="true" style="color:green" class="btn btn-none "
+                        data-toggle="modal" data-target="#exampleModalLong"></i> --}}
 
                 </h5>
             </div><!-- /.col -->
