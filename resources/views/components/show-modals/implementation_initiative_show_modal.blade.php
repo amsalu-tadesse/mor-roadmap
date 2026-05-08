@@ -9,13 +9,30 @@
             </div>
             <div class="modal-body">
                 <div class="card-body">
-                    <table class="table table-bordered">
+                    <h5 class="text-info border-bottom pb-2 mb-3">Base Initiative Details</h5>
+                    <table class="table table-bordered mb-4">
                         <tr>
                             <th style="width: 30%">Initiative Name</th>
                             <td id="name_show"></td>
                         </tr>
                         <tr>
-                            <th>Start Date</th>
+                            <th>Directorate</th>
+                            <td id="directorate_show"></td>
+                        </tr>
+                        <tr>
+                            <th>Theme</th>
+                            <td id="theme_show"></td>
+                        </tr>
+                        <tr>
+                            <th>Objective</th>
+                            <td id="objective_show"></td>
+                        </tr>
+                    </table>
+
+                    <h5 class="text-info border-bottom pb-2 mb-3">Implementation Details</h5>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 30%">Start Date</th>
                             <td id="start_date_show"></td>
                         </tr>
                         <tr>

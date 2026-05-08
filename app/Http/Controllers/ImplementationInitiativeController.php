@@ -13,15 +13,17 @@ use App\Models\Objective;
 use App\Models\Partner;
 use App\Models\RequestStatus;
 use App\Models\SupportRequest;
+use App\Models\Theme;
 
 class ImplementationInitiativeController extends Controller
 {
     public function index(ImplementationInitiativesDataTable $dataTable)
     {
         $objectives = Objective::all();
+        $themes = Theme::all();
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
-        return $dataTable->render('admin.implementation-initiatives.index', compact('objectives', 'directorates', 'implementationStatuses'));
+        return $dataTable->render('admin.implementation-initiatives.index', compact('objectives', 'themes', 'directorates', 'implementationStatuses'));
     }
 
     public function create()
@@ -43,13 +45,16 @@ class ImplementationInitiativeController extends Controller
     public function show(Initiative $implementationInitiative)
     {
         if (request()->ajax()) {
-            $implementationInitiative->load(['partner', 'initiativeStatus']);
+            $implementationInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'theme']);
             $creator = \App\Models\User::find($implementationInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
 
             return response()->json([
                 'success' => 1,
                 'initiative' => $implementationInitiative,
+                'objectiveName' => $implementationInitiative->objective->name ?? 'N/A',
+                'themeName' => $implementationInitiative->theme->name ?? 'N/A',
+                'directorateName' => $implementationInitiative->directorate->name ?? 'N/A',
                 'partnerName' => $implementationInitiative->partner->name ?? 'N/A',
                 'initiativeStatusName' => $implementationInitiative->initiativeStatus->name ?? 'N/A',
                 'getCreatedBy' => $getCreatedBy,

@@ -4,7 +4,7 @@
     <div class='card'>
         <div class='card-header'>
             <div class="row">
-                <div class='col-md-4'>
+                <div class='col-md-3'>
                     <div class="form-group">
                         <select id="filter_directorate" class="form-control select2">
                             <option value="">All Directorates</option>
@@ -14,7 +14,17 @@
                         </select>
                     </div>
                 </div>
-                <div class='col-md-4'>
+                <div class='col-md-3'>
+                    <div class="form-group">
+                        <select id="filter_theme" class="form-control select2">
+                            <option value="">All Themes</option>
+                            @foreach($themes as $theme)
+                                <option value="{{ $theme->id }}">{{ $theme->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class='col-md-3'>
                     <div class="form-group">
                         <select id="filter_objective" class="form-control select2">
                             <option value="">All Objectives</option>
@@ -24,7 +34,7 @@
                         </select>
                     </div>
                 </div>
-                <div class='col-md-4'>
+                <div class='col-md-3'>
                     <div style='display: flex; justify-content:flex-end; align-items: flex-end; height: 100%;'>
                         @can('draft-initiative: create')
                             <a href="{{ route('admin.draft-initiatives.create') }}">
@@ -42,7 +52,7 @@
 
 
     <x-partials.draft_initiative_modal :objectives="$objectives" :directorates="$directorates"
-        :implementationStatuses="$implementationStatuses" />
+        :implementationStatuses="$implementationStatuses" :themes="$themes" />
     <x-show-modals.draft_initiative_show_modal />
 
     @push('scripts')
@@ -94,6 +104,40 @@
                     window.LaravelDataTables['draft-initiatives-table'].ajax.reload();
                 });
 
+                // When theme filter changes, reload objectives filter options then reload table
+                $('#filter_theme').on('change', function () {
+                    var themeId = $(this).val();
+                    if (themeId) {
+                        $.ajax({
+                            url: "{{ route('admin.get-objectives-by-theme') }}",
+                            type: "GET",
+                            data: { theme_id: themeId },
+                            dataType: "json",
+                            success: function (data) {
+                                $('#filter_objective').empty();
+                                $('#filter_objective').append('<option value="">All Objectives</option>');
+                                $.each(data, function (key, value) {
+                                    $('#filter_objective').append('<option value="' + value.id + '">' + value.name + '</option>');
+                                });
+                                if ($('#filter_objective').hasClass('select2-hidden-accessible')) {
+                                    $('#filter_objective').trigger('change.select2');
+                                }
+                                window.LaravelDataTables['draft-initiatives-table'].ajax.reload();
+                            }
+                        });
+                    } else {
+                        $('#filter_objective').empty();
+                        $('#filter_objective').append('<option value="">All Objectives</option>');
+                        @foreach($objectives as $objective)
+                            $('#filter_objective').append('<option value="{{ $objective->id }}">{{ $objective->name }}</option>');
+                        @endforeach
+                        if ($('#filter_objective').hasClass('select2-hidden-accessible')) {
+                            $('#filter_objective').trigger('change.select2');
+                        }
+                        window.LaravelDataTables['draft-initiatives-table'].ajax.reload();
+                    }
+                });
+
                 $('#draft-initiatives-table').on('click', '#update_row', function () {
                     var row_id = $(this).data('row_id');
                     var url = "{{ route('admin.draft-initiatives.edit', ':id') }}";
@@ -103,12 +147,36 @@
                         url: url, type: 'GET', dataType: 'json',
                         success: function (response) {
                             if (response.success == 1) {
-                                $('#initiative_id').val(response.initiative.id);
-                                $('#name').val(response.initiative.name);
-                                $('#objective_id').val(response.initiative.objective_id);
-                                $('#directorate_id').val(response.initiative.directorate_id);
-                                $('#implementation_status_id').val(response.initiative.implementation_status_id);
-                                $('#note').val(response.initiative.note);
+                                var initiative = response.initiative;
+                                $('#initiative_id').val(initiative.id);
+                                $('#name').val(initiative.name);
+                                $('#directorate_id').val(initiative.directorate_id);
+                                $('#implementation_status_id').val(initiative.implementation_status_id);
+                                $('#note').val(initiative.note);
+
+                                // Load objectives for the selected theme, then set values
+                                var themeId = initiative.theme_id;
+                                if (themeId) {
+                                    $.ajax({
+                                        url: "{{ route('admin.get-objectives-by-theme') }}",
+                                        type: "GET",
+                                        data: { theme_id: themeId },
+                                        dataType: "json",
+                                        success: function (data) {
+                                            $('#objective_id_modal').empty();
+                                            $('#objective_id_modal').append('<option value="">Select Objective</option>');
+                                            $.each(data, function (key, value) {
+                                                $('#objective_id_modal').append('<option value="' + value.id + '">' + value.name + '</option>');
+                                            });
+                                            $('#theme_id_modal').val(themeId);
+                                            $('#objective_id_modal').val(initiative.objective_id);
+                                        }
+                                    });
+                                } else {
+                                    $('#theme_id_modal').val('');
+                                    $('#objective_id_modal').val(initiative.objective_id);
+                                }
+
                                 $('#update_modal').modal('show');
                             }
                         }
@@ -124,8 +192,9 @@
                         success: function (response) {
                             if (response.success == 1) {
                                 $('#show_modal #name_show').html(response.initiative.name);
-                                $('#show_modal #objective_show').html(response.objectiveName);
                                 $('#show_modal #directorate_show').html(response.directorateName);
+                                $('#show_modal #theme_show').html(response.themeName);
+                                $('#show_modal #objective_show').html(response.objectiveName);
                                 $('#show_modal #implementation_status_show').html(response.implementationStatusName);
                                 $('#show_modal #note_show').html(response.initiative.note);
                                 $('#show_modal #created_by').html(response.getCreatedBy);

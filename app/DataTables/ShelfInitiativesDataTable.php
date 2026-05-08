@@ -19,6 +19,7 @@ class ShelfInitiativesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
+            ->addColumn('theme_name', fn($row) => $row->theme->name ?? 'N/A')
             ->addColumn('objective_name', fn($row) => $row->objective->name ?? 'N/A')
             ->addColumn('directorate_name', fn($row) => $row->directorate->name ?? 'N/A')
             ->addColumn('action', function ($row) {
@@ -35,13 +36,17 @@ class ShelfInitiativesDataTable extends DataTable
 
     public function query(Initiative $model): QueryBuilder
     {
-        $query = $model->newQuery()->with(['objective', 'directorate'])
+        $query = $model->newQuery()->with(['objective', 'directorate', 'theme'])
             ->whereHas('implementationStatus', function ($query) {
                 $query->where('name', 'Shelf');
             });
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
             $query->where('directorate_id', $this->request()->get('directorate_id'));
+        }
+
+        if ($this->request()->has('theme_id') && $this->request()->get('theme_id') != '') {
+            $query->where('theme_id', $this->request()->get('theme_id'));
         }
 
         if ($this->request()->has('objective_id') && $this->request()->get('objective_id') != '') {
@@ -56,7 +61,7 @@ class ShelfInitiativesDataTable extends DataTable
         return $this->builder()
             ->setTableId('shelf-initiatives-table')
             ->columns($this->getColumns())
-            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.objective_id = $("#filter_objective").val();')
+            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.theme_id = $("#filter_theme").val(); data.objective_id = $("#filter_objective").val();')
             ->orderBy(1)
             ->selectStyleSingle()
             ->dom(
@@ -83,8 +88,9 @@ class ShelfInitiativesDataTable extends DataTable
         return [
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('name')->title('Initiative Name'),
-            Column::make('objective_name')->title('Objective')->orderable(false),
             Column::make('directorate_name')->title('Directorate')->orderable(false),
+            Column::make('theme_name')->title('Theme')->orderable(false),
+            Column::make('objective_name')->title('Objective')->orderable(false),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
         ];
     }

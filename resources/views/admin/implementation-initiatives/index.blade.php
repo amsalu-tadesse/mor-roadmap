@@ -6,11 +6,6 @@
             <div class='col'>
                 <div style='display: flex; justify-content:space-between'>
                     <h3 class="card-title mt-2">Manage Implementation Details</h3>
-                    @can('implementation-initiative: create')
-                        <a href="{{ route('admin.implementation-initiatives.create') }}">
-                            <button type='button' class='btn btn-primary'>Add New Initiative</button>
-                        </a>
-                    @endcan
                 </div>
             </div>
         </div>
@@ -24,7 +19,7 @@
         $initiativeStatuses = \App\Models\InitiativeStatus::all();
     @endphp
 
-    <x-partials.implementation_initiative_modal :partners="$partners" :initiativeStatuses="$initiativeStatuses" :objectives="$objectives" :directorates="$directorates" :implementationStatuses="$implementationStatuses" />
+    <x-partials.implementation_initiative_modal :partners="$partners" :initiativeStatuses="$initiativeStatuses" :objectives="$objectives" :directorates="$directorates" :implementationStatuses="$implementationStatuses" :themes="$themes" />
     <x-show-modals.implementation_initiative_show_modal />
 
     @push('scripts')
@@ -76,20 +71,43 @@
                         url: url, type: 'GET', dataType: 'json',
                         success: function(response) {
                             if (response.success == 1) {
-                                $('#initiative_id').val(response.initiative.id);
-                                $('#name').val(response.initiative.name);
-                                $('#objective_id').val(response.initiative.objective_id);
-                                $('#directorate_id').val(response.initiative.directorate_id);
-                                $('#implementation_status_id').val(response.initiative.implementation_status_id);
+                                var initiative = response.initiative;
+                                $('#initiative_id').val(initiative.id);
+                                $('#name').val(initiative.name);
+                                $('#directorate_id').val(initiative.directorate_id);
+                                $('#implementation_status_id').val(initiative.implementation_status_id);
                                 $('#start_date').val(response.start_date);
                                 $('#end_date').val(response.end_date);
-                                $('#budget').val(response.initiative.budget);
-                                $('#expenditure').val(response.initiative.expenditure);
-                                $('#partner_id').val(response.initiative.partner_id);
-                                $('#completion').val(response.initiative.completion);
-                                $('#initiative_status_id').val(response.initiative.initiative_status_id);
-                                $('#request').val(response.initiative.request);
-                                $('#note').val(response.initiative.note);
+                                $('#budget').val(initiative.budget);
+                                $('#expenditure').val(initiative.expenditure);
+                                $('#partner_id').val(initiative.partner_id);
+                                $('#completion').val(initiative.completion);
+                                $('#initiative_status_id').val(initiative.initiative_status_id);
+                                $('#request').val(initiative.request);
+                                $('#note').val(initiative.note);
+
+                                var themeId = initiative.theme_id;
+                                if (themeId) {
+                                    $.ajax({
+                                        url: "{{ route('admin.get-objectives-by-theme') }}",
+                                        type: "GET",
+                                        data: { theme_id: themeId },
+                                        dataType: "json",
+                                        success: function(data) {
+                                            $('#objective_id_modal').empty();
+                                            $('#objective_id_modal').append('<option value="">Select Objective</option>');
+                                            $.each(data, function(key, value) {
+                                                $('#objective_id_modal').append('<option value="' + value.id + '">' + value.name + '</option>');
+                                            });
+                                            $('#theme_id_modal').val(themeId);
+                                            $('#objective_id_modal').val(initiative.objective_id);
+                                        }
+                                    });
+                                } else {
+                                    $('#theme_id_modal').val('');
+                                    $('#objective_id_modal').val(initiative.objective_id);
+                                }
+
                                 $('#update_modal').modal('show');
                             }
                         }
@@ -105,6 +123,9 @@
                         success: function(response) {
                             if (response.success == 1) {
                                 $('#show_modal #name_show').html(response.initiative.name);
+                                $('#show_modal #directorate_show').html(response.directorateName);
+                                $('#show_modal #theme_show').html(response.themeName);
+                                $('#show_modal #objective_show').html(response.objectiveName);
                                 $('#show_modal #start_date_show').html(response.initiative.start_date ? response.initiative.start_date.substring(0, 10) : '');
                                 $('#show_modal #end_date_show').html(response.initiative.end_date ? response.initiative.end_date.substring(0, 10) : '');
                                 $('#show_modal #budget_show').html(response.initiative.budget);

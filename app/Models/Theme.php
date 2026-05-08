@@ -13,4 +13,9 @@ class Theme extends Model
     use HasFactory, SoftDeletes, CreatedUpdatedBy;
 
     protected $fillable = ['name', 'created_by', 'updated_by'];
+
+    public function objectives()
+    {
+        return $this->hasMany(Objective::class);
+    }
 }

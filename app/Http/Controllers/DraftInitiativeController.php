@@ -9,23 +9,26 @@ use App\Models\Directorate;
 use App\Models\ImplementationStatus;
 use App\Models\Initiative;
 use App\Models\Objective;
+use App\Models\Theme;
 
 class DraftInitiativeController extends Controller
 {
     public function index(DraftInitiativesDataTable $dataTable)
     {
         $objectives = Objective::all();
+        $themes = Theme::all();
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
-        return $dataTable->render('admin.draft-initiatives.index', compact('objectives', 'directorates', 'implementationStatuses'));
+        return $dataTable->render('admin.draft-initiatives.index', compact('objectives', 'themes', 'directorates', 'implementationStatuses'));
     }
 
     public function create()
     {
         $objectives = Objective::all();
+        $themes = Theme::all();
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
-        return view('admin.draft-initiatives.new', compact('objectives', 'directorates', 'implementationStatuses'));
+        return view('admin.draft-initiatives.new', compact('objectives', 'themes', 'directorates', 'implementationStatuses'));
     }
 
     public function store(StoreDraftInitiativeRequest $request)
@@ -37,7 +40,7 @@ class DraftInitiativeController extends Controller
     public function show(Initiative $draftInitiative)
     {
         if (request()->ajax()) {
-            $draftInitiative->load(['objective', 'directorate', 'implementationStatus']);
+            $draftInitiative->load(['objective', 'directorate', 'implementationStatus', 'theme']);
             $creator = \App\Models\User::find($draftInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
 
@@ -45,6 +48,7 @@ class DraftInitiativeController extends Controller
                 'success' => 1,
                 'initiative' => $draftInitiative,
                 'objectiveName' => $draftInitiative->objective->name ?? 'N/A',
+                'themeName' => $draftInitiative->theme->name ?? 'N/A',
                 'directorateName' => $draftInitiative->directorate->name ?? 'N/A',
                 'implementationStatusName' => $draftInitiative->implementationStatus->name ?? 'N/A',
                 'getCreatedBy' => $getCreatedBy,
@@ -63,9 +67,10 @@ class DraftInitiativeController extends Controller
             ]);
         }
         $objectives = Objective::all();
+        $themes = Theme::all();
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
-        return view('admin.draft-initiatives.edit', compact('draftInitiative', 'objectives', 'directorates', 'implementationStatuses'));
+        return view('admin.draft-initiatives.edit', compact('draftInitiative', 'objectives', 'themes', 'directorates', 'implementationStatuses'));
     }
 
     public function update(UpdateDraftInitiativeRequest $request, Initiative $draftInitiative)

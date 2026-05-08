@@ -96,4 +96,11 @@ class ObjectiveController extends Controller
         }
         return redirect()->route('admin.objectives.index')->with('success_delete', 'Objective deleted successfully!');
     }
+
+    public function getObjectivesByTheme(Request $request)
+    {
+        $themeId = $request->theme_id;
+        $objectives = Objective::where('theme_id', $themeId)->get();
+        return response()->json($objectives);
+    }
 }

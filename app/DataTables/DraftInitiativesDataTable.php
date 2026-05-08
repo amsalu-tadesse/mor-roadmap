@@ -19,6 +19,7 @@ class DraftInitiativesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
+            ->addColumn('theme_name', fn($row) => $row->theme->name ?? 'N/A')
             ->addColumn('objective_name', fn($row) => $row->objective->name ?? 'N/A')
             ->addColumn('directorate_name', fn($row) => $row->directorate->name ?? 'N/A')
             ->addColumn('implementation_status_name', fn($row) => $row->implementationStatus->name ?? 'N/A')
@@ -36,13 +37,17 @@ class DraftInitiativesDataTable extends DataTable
 
     public function query(Initiative $model): QueryBuilder
     {
-        $query = $model->newQuery()->with(['objective', 'directorate', 'implementationStatus'])
+        $query = $model->newQuery()->with(['objective', 'directorate', 'implementationStatus', 'theme'])
             ->whereHas('implementationStatus', function ($query) {
                 $query->where('name', 'Draft');
             });
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
             $query->where('directorate_id', $this->request()->get('directorate_id'));
+        }
+
+        if ($this->request()->has('theme_id') && $this->request()->get('theme_id') != '') {
+            $query->where('theme_id', $this->request()->get('theme_id'));
         }
 
         if ($this->request()->has('objective_id') && $this->request()->get('objective_id') != '') {
@@ -57,7 +62,7 @@ class DraftInitiativesDataTable extends DataTable
         return $this->builder()
             ->setTableId('draft-initiatives-table')
             ->columns($this->getColumns())
-            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.objective_id = $("#filter_objective").val();')
+            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.theme_id = $("#filter_theme").val(); data.objective_id = $("#filter_objective").val();')
             ->orderBy(1)
             ->selectStyleSingle()
             ->dom(
@@ -84,8 +89,9 @@ class DraftInitiativesDataTable extends DataTable
         return [
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('name')->title('Initiative Name'),
-            Column::make('objective_name')->title('Objective')->orderable(false),
             Column::make('directorate_name')->title('Directorate')->orderable(false),
+            Column::make('theme_name')->title('Theme')->orderable(false),
+            Column::make('objective_name')->title('Objective')->orderable(false),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
         ];
     }

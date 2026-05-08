@@ -14,6 +14,7 @@ class Initiative extends Model
     protected $fillable = [
         'name',
         'objective_id',
+        'theme_id',
         'directorate_id',
         'implementation_status_id',
         'note',
@@ -33,6 +34,11 @@ class Initiative extends Model
         'start_date' => 'date',
         'end_date' => 'date',
     ];
+
+    public function theme()
+    {
+        return $this->belongsTo(Theme::class);
+    }
 
     public function objective()
     {

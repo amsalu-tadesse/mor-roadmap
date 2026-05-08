@@ -12,12 +12,14 @@ use App\Models\Objective;
 use App\Models\Partner;
 use App\Models\RequestStatus;
 use App\Models\SupportRequest;
+use App\Models\Theme;
 
 class ShelfInitiativeController extends Controller
 {
     public function index(ShelfInitiativesDataTable $dataTable)
     {
         $objectives = Objective::all();
+        $themes = Theme::all();
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
         $partners = Partner::all();
@@ -26,7 +28,7 @@ class ShelfInitiativeController extends Controller
         $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
             $q->whereIn('name', ['Implementation', 'Shelf']);
         })->get();
-        return $dataTable->render('admin.shelf-initiatives.index', compact('objectives', 'directorates', 'implementationStatuses', 'partners', 'requestStatuses', 'priorities', 'initiatives'));
+        return $dataTable->render('admin.shelf-initiatives.index', compact('objectives', 'themes', 'directorates', 'implementationStatuses', 'partners', 'requestStatuses', 'priorities', 'initiatives'));
     }
 
     public function create()
@@ -48,7 +50,7 @@ class ShelfInitiativeController extends Controller
     public function show(Initiative $shelfInitiative)
     {
         if (request()->ajax()) {
-            $shelfInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'implementationStatus']);
+            $shelfInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'implementationStatus', 'theme']);
             $creator = \App\Models\User::find($shelfInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
 
@@ -56,6 +58,7 @@ class ShelfInitiativeController extends Controller
                 'success' => 1,
                 'initiative' => $shelfInitiative,
                 'objectiveName' => $shelfInitiative->objective->name ?? 'N/A',
+                'themeName' => $shelfInitiative->theme->name ?? 'N/A',
                 'directorateName' => $shelfInitiative->directorate->name ?? 'N/A',
                 'implementationStatusName' => $shelfInitiative->implementationStatus->name ?? 'N/A',
                 'partnerName' => $shelfInitiative->partner->name ?? 'N/A',

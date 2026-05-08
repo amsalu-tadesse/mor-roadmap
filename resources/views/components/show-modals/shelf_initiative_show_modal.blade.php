@@ -15,12 +15,16 @@
                             <td id="name_show"></td>
                         </tr>
                         <tr>
-                            <th>Objective</th>
-                            <td id="objective_show"></td>
-                        </tr>
-                        <tr>
                             <th>Directorate</th>
                             <td id="directorate_show"></td>
+                        </tr>
+                        <tr>
+                            <th>Theme</th>
+                            <td id="theme_show"></td>
+                        </tr>
+                        <tr>
+                            <th>Objective</th>
+                            <td id="objective_show"></td>
                         </tr>
                         <tr>
                             <th>Note</th>

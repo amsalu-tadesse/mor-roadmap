@@ -1,4 +1,4 @@
-@props(['objectives', 'directorates', 'implementationStatuses'])
+@props(['objectives', 'directorates', 'implementationStatuses', 'themes'])
 
 <div class="modal fade" id="update_modal">
     <div class="modal-dialog modal-xl">
@@ -22,8 +22,32 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="objective_id">Objective<span class="required-field text-danger">*</span></label>
-                                    <select name="objective_id" class="form-control" id="objective_id" required>
+                                    <label for="directorate_id">Directorate<span class="required-field text-danger">*</span></label>
+                                    <select name="directorate_id" class="form-control" id="directorate_id" required>
+                                        <option value="">Select Directorate</option>
+                                        @foreach($directorates as $directorate)
+                                            <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="theme_id_modal">Theme<span class="required-field text-danger">*</span></label>
+                                    <select name="theme_id" class="form-control" id="theme_id_modal" required>
+                                        <option value="">Select Theme</option>
+                                        @foreach($themes as $theme)
+                                            <option value="{{ $theme->id }}">{{ $theme->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="objective_id_modal">Objective<span class="required-field text-danger">*</span></label>
+                                    <select name="objective_id" class="form-control" id="objective_id_modal" required>
                                         <option value="">Select Objective</option>
                                         @foreach($objectives as $objective)
                                             <option value="{{ $objective->id }}">{{ $objective->name }}</option>
@@ -35,17 +59,6 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="directorate_id">Directorate<span class="required-field text-danger">*</span></label>
-                                    <select name="directorate_id" class="form-control" id="directorate_id" required>
-                                        <option value="">Select Directorate</option>
-                                        @foreach($directorates as $directorate)
-                                            <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
                                     <label for="implementation_status_id">Implementation Status</label>
                                     <select name="implementation_status_id" class="form-control" id="implementation_status_id">
                                         <option value="">Select Implementation Status</option>
@@ -55,12 +68,10 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="note">Note</label>
-                                    <textarea name="note" class="form-control" id="note" rows="3"></textarea>
+                                    <textarea name="note" class="form-control" id="note" rows="1"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -98,3 +109,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#theme_id_modal').on('change', function () {
+            var themeId = $(this).val();
+            if (themeId) {
+                $.ajax({
+                    url: "{{ route('admin.get-objectives-by-theme') }}",
+                    type: "GET",
+                    data: { theme_id: themeId },
+                    dataType: "json",
+                    success: function (data) {
+                        $('#objective_id_modal').empty();
+                        $('#objective_id_modal').append('<option value="">Select Objective</option>');
+                        $.each(data, function (key, value) {
+                            $('#objective_id_modal').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#objective_id_modal').empty();
+                $('#objective_id_modal').append('<option value="">Select Objective</option>');
+            }
+        });
+    });
+</script>
