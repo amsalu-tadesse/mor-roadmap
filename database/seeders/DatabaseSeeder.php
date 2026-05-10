@@ -162,9 +162,9 @@ class DatabaseSeeder extends Seeder
 
         $roles = [
             'Super Admin',
-            'Federal Level Data Manager',
-            'Region Level Data Manager',
-            'Suppervisor',
+            'Planning Directorate',
+            'Directorates',
+            'Higher level officials',
         ];
 
 
@@ -255,16 +255,15 @@ class DatabaseSeeder extends Seeder
                 $role = Role::findByName('Super Admin');
                 $role->givePermissionTo(Permission::all());
                 $createdUser->assignRole($role);
-                $createdUser->assignRole("Federal Level Data Manager");
-            } elseif ($user['email'] == 'fdatamanager@gmail.com') {
-                $createdUser->assignRole("Federal Level Data Manager");
-            } elseif ($user['email'] == 'rdatamanager@gmail.com') {
-                $createdUser->assignRole("Region Level Data Manager");
-            } elseif ($user['email'] == 'suppervisor@gmail.com') {
-                $role = Role::findByName('Suppervisor');
-                // $role->givePermissionTo(Permission::all());
+                // $createdUser->assignRole("Federal Level Data Manager");
+                // } elseif ($user['email'] == 'fdatamanager@gmail.com') {
+                //     $createdUser->assignRole("Federal Level Data Manager");
+                // } elseif ($user['email'] == 'rdatamanager@gmail.com') {
+                //     $createdUser->assignRole("Region Level Data Manager");
+                // } elseif ($user['email'] == 'suppervisor@gmail.com') {
+                /*$role = Role::findByName('Suppervisor');
                 $createdUser->assignRole($role);
-                $createdUser->assignRole("Suppervisor");
+                $createdUser->assignRole("Suppervisor");*/
             }
 
 
