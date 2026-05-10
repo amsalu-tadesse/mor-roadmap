@@ -194,7 +194,7 @@ class DatabaseSeeder extends Seeder
                 'created_by' => 1,
                 'updated_by' => 1,
             ],
-            [
+           /* [
                 'first_name' => 'Federal Level',
                 'middle_name' => 'Data Manager',
                 'last_name' => '',
@@ -229,7 +229,7 @@ class DatabaseSeeder extends Seeder
                 'created_by' => 1,
                 'updated_by' => 1,
                 'email' => 'suppervisor@gmail.com',
-            ],
+            ],*/
 
 
         ];
