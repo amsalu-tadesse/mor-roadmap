@@ -59,7 +59,7 @@ class DirectoratesDataTable extends DataTable
             ->setTableId('directorates-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(1)
+            ->orderBy(0, 'desc')
             ->selectStyleSingle()
             ->dom(
                 "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-6'B>
@@ -116,6 +116,7 @@ class DirectoratesDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            Column::make('id')->visible(false),
             Column::make('no')
                 ->title('No')
                 ->addClass('text-center')

@@ -45,7 +45,7 @@ class ImplementationInitiativeController extends Controller
     public function show(Initiative $implementationInitiative)
     {
         if (request()->ajax()) {
-            $implementationInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'theme']);
+            $implementationInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'theme', 'supportRequests.partner', 'supportRequests.requestStatus']);
             $creator = \App\Models\User::find($implementationInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
 
@@ -57,6 +57,7 @@ class ImplementationInitiativeController extends Controller
                 'directorateName' => $implementationInitiative->directorate->name ?? 'N/A',
                 'partnerName' => $implementationInitiative->partner->name ?? 'N/A',
                 'initiativeStatusName' => $implementationInitiative->initiativeStatus->name ?? 'N/A',
+                'supportRequests' => $implementationInitiative->supportRequests,
                 'getCreatedBy' => $getCreatedBy,
                 'created_at' => $implementationInitiative->created_at->format('Y-m-d H:i:s'),
             ]);

@@ -30,8 +30,25 @@
                             <th>Note</th>
                             <td id="note_show"></td>
                         </tr>
-
                     </table>
+
+                    <h5 class="mt-4">Support Requests</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered table-striped" id="support_requests_show_table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Partner</th>
+                                    <th>Activities</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- To be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer justify-content-end">

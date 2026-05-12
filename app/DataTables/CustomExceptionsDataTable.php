@@ -76,7 +76,7 @@ class CustomExceptionsDataTable extends DataTable
         return $this->builder()
             ->setTableId('customExceptions-table')
             ->columns($this->getColumns())
-            ->orderBy(4)
+            ->orderBy(4, 'desc')
             ->minifiedAjax()
             ->selectStyleSingle()
             ->dom("<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-6'B>

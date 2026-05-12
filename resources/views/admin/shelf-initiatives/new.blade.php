@@ -23,7 +23,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="objective_id">Objective<span class="required-field">*</span></label>
-                            <select name="objective_id" class="form-control @error('objective_id') is-invalid @enderror" id="objective_id">
+                            <select name="objective_id" class="form-control select2 @error('objective_id') is-invalid @enderror" id="objective_id">
                                 <option value="">Select Objective</option>
                                 @foreach($objectives as $objective)
                                     <option value="{{ $objective->id }}" {{ old('objective_id') == $objective->id ? 'selected' : '' }}>
@@ -41,7 +41,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="directorate_id">Directorate<span class="required-field">*</span></label>
-                            <select name="directorate_id" class="form-control @error('directorate_id') is-invalid @enderror" id="directorate_id">
+                            <select name="directorate_id" class="form-control select2 @error('directorate_id') is-invalid @enderror" id="directorate_id">
                                 <option value="">Select Directorate</option>
                                 @foreach($directorates as $directorate)
                                     <option value="{{ $directorate->id }}" {{ old('directorate_id') == $directorate->id ? 'selected' : '' }}>
@@ -57,7 +57,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="implementation_status_id">Implementation Status</label>
-                            <select name="implementation_status_id" class="form-control @error('implementation_status_id') is-invalid @enderror" id="implementation_status_id">
+                            <select name="implementation_status_id" class="form-control select2 @error('implementation_status_id') is-invalid @enderror" id="implementation_status_id">
                                 <option value="">Select Implementation Status</option>
                                 @foreach($implementationStatuses as $status)
                                     <option value="{{ $status->id }}" {{ old('implementation_status_id') == $status->id ? 'selected' : '' }}>
@@ -117,7 +117,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="partner_id">Partner</label>
-                            <select name="partner_id" class="form-control @error('partner_id') is-invalid @enderror" id="partner_id">
+                            <select name="partner_id" class="form-control select2 @error('partner_id') is-invalid @enderror" id="partner_id">
                                 <option value="">Select Partner</option>
                                 @foreach($partners as $partner)
                                     <option value="{{ $partner->id }}" {{ old('partner_id') == $partner->id ? 'selected' : '' }}>
@@ -133,7 +133,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="initiative_status_id">Initiative Status</label>
-                            <select name="initiative_status_id" class="form-control @error('initiative_status_id') is-invalid @enderror" id="initiative_status_id">
+                            <select name="initiative_status_id" class="form-control select2 @error('initiative_status_id') is-invalid @enderror" id="initiative_status_id">
                                 <option value="">Select Status</option>
                                 @foreach($initiativeStatuses as $status)
                                     <option value="{{ $status->id }}" {{ old('initiative_status_id') == $status->id ? 'selected' : '' }}>
@@ -149,7 +149,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="request">Request</label>
-                            <select name="request" class="form-control @error('request') is-invalid @enderror" id="request">
+                            <select name="request" class="form-control select2 @error('request') is-invalid @enderror" id="request">
                                 <option value="">Select Request Type</option>
                                 <option value="New" {{ old('request') == 'New' ? 'selected' : '' }}>New</option>
                                 <option value="Current" {{ old('request') == 'Current' ? 'selected' : '' }}>Current</option>
@@ -189,6 +189,16 @@
             </div>
         </form>
     </div>
+    @push('scripts')
+        <script>
+            $(document).ready(function () {
+                $('.select2').select2({
+                    theme: 'bootstrap4',
+                    width: '100%'
+                });
+            });
+        </script>
+    @endpush
 </x-layout>
 
 <style>

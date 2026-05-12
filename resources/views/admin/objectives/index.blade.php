@@ -85,6 +85,13 @@
             }
 
             $(document).ready(function() {
+                // Initialize modal selects
+                $('#update_modal .select2').select2({
+                    theme: 'bootstrap4',
+                    width: '100%',
+                    dropdownParent: $('#update_modal')
+                });
+
                 // Update record popup
                 $('#objectives-table').on('click', '#update_row', function() {
                     var row_id = $(this).data('row_id');
@@ -102,7 +109,7 @@
                             if (response.success == 1) {
                                 $('#objective_id').val(objective.id);
                                 $('#name').val(objective.name);
-                                $('#theme_id').val(objective.theme_id);
+                                $('#theme_id').val(objective.theme_id).trigger('change');
                                 $('#update_modal').modal('show');
                             } else {
                                 alert('Invalid ID.');

@@ -17,7 +17,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name">Directorate Name<span class="required-field">*</span></label>
-                                <input type="text" name="name" class="form-control" id="name" placeholder="Enter Directorate Name">
+                                <input type="text" name="name" class="form-control" id="name"
+                                    placeholder="Enter Directorate Name">
                             </div>
                             <div class="form-group">
                                 <label for="user_id">Director<span class="required-field">*</span></label>

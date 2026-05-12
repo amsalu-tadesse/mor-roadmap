@@ -62,7 +62,7 @@ class ShelfInitiativesDataTable extends DataTable
             ->setTableId('shelf-initiatives-table')
             ->columns($this->getColumns())
             ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.theme_id = $("#filter_theme").val(); data.objective_id = $("#filter_objective").val();')
-            ->orderBy(1)
+            ->orderBy(0, 'desc')
             ->selectStyleSingle()
             ->dom(
                 "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-6'B>
@@ -86,6 +86,7 @@ class ShelfInitiativesDataTable extends DataTable
     protected function getColumns(): array
     {
         return [
+            Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('name')->title('Initiative Name'),
             Column::make('directorate_name')->title('Directorate')->orderable(false),

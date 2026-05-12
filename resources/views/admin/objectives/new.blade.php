@@ -42,6 +42,18 @@
             </div>
         </form>
     </div>
+
+    @push('scripts')
+        <script>
+            $(document).ready(function () {
+                $('#theme_id').select2({
+                    theme: 'bootstrap4',
+                    width: '100%',
+                    placeholder: 'Select Theme'
+                });
+            });
+        </script>
+    @endpush
 </x-layout>
 
 <style>

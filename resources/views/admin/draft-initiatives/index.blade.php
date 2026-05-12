@@ -95,9 +95,17 @@
             }
 
             $(document).ready(function () {
-                $('.select2').select2({
+                // Initialize filters (not in modal)
+                $('.card-header .select2').select2({
                     theme: 'bootstrap4',
                     width: '100%'
+                });
+
+                // Initialize modal selects
+                $('#update_modal .select2').select2({
+                    theme: 'bootstrap4',
+                    width: '100%',
+                    dropdownParent: $('#update_modal')
                 });
 
                 $('#filter_directorate, #filter_objective').on('change', function () {
@@ -150,8 +158,8 @@
                                 var initiative = response.initiative;
                                 $('#initiative_id').val(initiative.id);
                                 $('#name').val(initiative.name);
-                                $('#directorate_id').val(initiative.directorate_id);
-                                $('#implementation_status_id').val(initiative.implementation_status_id);
+                                $('#directorate_id').val(initiative.directorate_id).trigger('change');
+                                $('#implementation_status_id').val(initiative.implementation_status_id).trigger('change');
                                 $('#note').val(initiative.note);
 
                                 // Load objectives for the selected theme, then set values
@@ -168,13 +176,13 @@
                                             $.each(data, function (key, value) {
                                                 $('#objective_id_modal').append('<option value="' + value.id + '">' + value.name + '</option>');
                                             });
-                                            $('#theme_id_modal').val(themeId);
-                                            $('#objective_id_modal').val(initiative.objective_id);
+                                            $('#theme_id_modal').val(themeId).trigger('change');
+                                            $('#objective_id_modal').val(initiative.objective_id).trigger('change');
                                         }
                                     });
                                 } else {
-                                    $('#theme_id_modal').val('');
-                                    $('#objective_id_modal').val(initiative.objective_id);
+                                    $('#theme_id_modal').val('').trigger('change');
+                                    $('#objective_id_modal').val(initiative.objective_id).trigger('change');
                                 }
 
                                 $('#update_modal').modal('show');

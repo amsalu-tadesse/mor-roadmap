@@ -50,7 +50,7 @@ class ShelfInitiativeController extends Controller
     public function show(Initiative $shelfInitiative)
     {
         if (request()->ajax()) {
-            $shelfInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'implementationStatus', 'theme']);
+            $shelfInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'implementationStatus', 'theme', 'supportRequests.partner', 'supportRequests.requestStatus']);
             $creator = \App\Models\User::find($shelfInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
 
@@ -63,6 +63,7 @@ class ShelfInitiativeController extends Controller
                 'implementationStatusName' => $shelfInitiative->implementationStatus->name ?? 'N/A',
                 'partnerName' => $shelfInitiative->partner->name ?? 'N/A',
                 'initiativeStatusName' => $shelfInitiative->initiativeStatus->name ?? 'N/A',
+                'supportRequests' => $shelfInitiative->supportRequests,
                 'getCreatedBy' => $getCreatedBy,
                 'created_at' => $shelfInitiative->created_at->format('Y-m-d H:i:s'),
             ]);

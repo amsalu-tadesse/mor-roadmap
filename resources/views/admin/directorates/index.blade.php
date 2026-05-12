@@ -62,7 +62,7 @@
                             type: 'DELETE',
                             url: url,
                             dataType: 'json',
-                            success: function(data) {
+                            success: function (data) {
                                 if (data.success) {
                                     window.LaravelDataTables['directorates-table'].ajax.reload();
                                     swalWithBootstrapButtons.fire(
@@ -72,7 +72,7 @@
                                     )
                                 }
                             },
-                            error: function(error) {
+                            error: function (error) {
                                 console.log('Error deleting directorate');
                             }
                         })
@@ -84,9 +84,15 @@
                 toastr.success('You have successfully added a new Directorate')
             }
 
-            $(document).ready(function() {
+            $(document).ready(function () {
+                $('#update_modal .select2').select2({
+                    theme: 'bootstrap4',
+                    width: '100%',
+                    dropdownParent: $('#update_modal')
+                });
+
                 // Update record popup
-                $('#directorates-table').on('click', '#update_row', function() {
+                $('#directorates-table').on('click', '#update_row', function () {
                     var row_id = $(this).data('row_id');
                     var url = "{{ route('admin.directorates.edit', ':id') }}";
                     url = url.replace(':id', row_id);
@@ -97,7 +103,7 @@
                         url: url,
                         type: 'GET',
                         dataType: 'json',
-                        success: function(response) {
+                        success: function (response) {
                             var directorate = response.directorate
                             if (response.success == 1) {
                                 $('#directorate_id').val(directorate.id);
@@ -112,7 +118,7 @@
                 });
 
                 //show
-                $('#directorates-table').on('click', '#show_row', function() {
+                $('#directorates-table').on('click', '#show_row', function () {
                     var row_id = $(this).data('row_id');
                     var url = "{{ route('admin.directorates.show', ':id') }}";
                     url = url.replace(':id', row_id);
@@ -122,7 +128,7 @@
                         url: url,
                         type: 'GET',
                         dataType: 'json',
-                        success: function(response) {
+                        success: function (response) {
                             if (response.success == 1) {
                                 var directorate = response.directorate;
                                 $('#show_modal #name').html(directorate.name);
@@ -138,7 +144,7 @@
                 });
             });
 
-            $('#directorate_update_form').on('submit', function(e) {
+            $('#directorate_update_form').on('submit', function (e) {
                 e.preventDefault();
                 form_data = $(this).serialize();
                 row_id = $('#directorate_id', $(this)).val()
@@ -152,14 +158,14 @@
                     type: 'PATCH',
                     data: form_data,
                     dataType: 'json',
-                    success: function(data) {
+                    success: function (data) {
                         if (data.success) {
                             $('#update_modal').modal('toggle');
                             window.LaravelDataTables['directorates-table'].ajax.reload();
                             toastr.success('You have successfully updated the Directorate.')
                         }
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.log('Error updating directorate');
                     }
                 });

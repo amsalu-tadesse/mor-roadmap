@@ -46,6 +46,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.css" />
+    <!-- bootstrap-datepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
 
     <style>
@@ -161,6 +163,8 @@
 
     <!-- for date time rage selector -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.min.js"></script>
+    <!-- bootstrap-datepicker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
     <!-- amchart -->
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>

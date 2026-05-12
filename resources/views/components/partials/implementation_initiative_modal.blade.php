@@ -24,7 +24,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="directorate_id">Directorate<span class="required-field text-danger">*</span></label>
-                                    <select name="directorate_id" class="form-control" id="directorate_id" required>
+                                    <select name="directorate_id" class="form-control select2" id="directorate_id" required>
                                         <option value="">Select Directorate</option>
                                         @foreach($directorates as $directorate)
                                             <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
@@ -37,7 +37,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="theme_id_modal">Theme<span class="required-field text-danger">*</span></label>
-                                    <select name="theme_id" class="form-control" id="theme_id_modal" required>
+                                    <select name="theme_id" class="form-control select2" id="theme_id_modal" required>
                                         <option value="">Select Theme</option>
                                         @foreach($themes as $theme)
                                             <option value="{{ $theme->id }}">{{ $theme->name }}</option>
@@ -48,7 +48,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="objective_id_modal">Objective<span class="required-field text-danger">*</span></label>
-                                    <select name="objective_id" class="form-control" id="objective_id_modal" required>
+                                    <select name="objective_id" class="form-control select2" id="objective_id_modal" required>
                                         <option value="">Select Objective</option>
                                         @foreach($objectives as $objective)
                                             <option value="{{ $objective->id }}">{{ $objective->name }}</option>
@@ -61,7 +61,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="implementation_status_id">Implementation Status</label>
-                                    <select name="implementation_status_id" class="form-control" id="implementation_status_id">
+                                    <select name="implementation_status_id" class="form-control select2" id="implementation_status_id">
                                         <option value="">Select Implementation Status</option>
                                         @foreach($implementationStatuses as $status)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
@@ -75,13 +75,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="start_date">Start Date</label>
-                                    <input type="date" name="start_date" class="form-control" id="start_date">
+                                    <input type="text" name="start_date" class="form-control datepicker" id="start_date" autocomplete="off">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="end_date">End Date</label>
-                                    <input type="date" name="end_date" class="form-control" id="end_date">
+                                    <input type="text" name="end_date" class="form-control datepicker" id="end_date" autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="partner_id">Partner</label>
-                                    <select name="partner_id" class="form-control" id="partner_id">
+                                    <select name="partner_id" class="form-control select2" id="partner_id">
                                         <option value="">Select Partner</option>
                                         @foreach($partners as $partner)
                                             <option value="{{ $partner->id }}">{{ $partner->name }}</option>
@@ -114,7 +114,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="initiative_status_id">Initiative Status</label>
-                                    <select name="initiative_status_id" class="form-control" id="initiative_status_id">
+                                    <select name="initiative_status_id" class="form-control select2" id="initiative_status_id">
                                         <option value="">Select Status</option>
                                         @foreach($initiativeStatuses as $status)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
@@ -125,7 +125,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="request">Request</label>
-                                    <select name="request" class="form-control" id="request">
+                                    <select name="request" class="form-control select2" id="request">
                                         <option value="">Select Request Type</option>
                                         <option value="New">New</option>
                                         <option value="Current">Current</option>

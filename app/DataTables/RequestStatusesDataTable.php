@@ -42,7 +42,7 @@ class RequestStatusesDataTable extends DataTable
             ->setTableId('request-statuses-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(1)
+            ->orderBy(0, 'desc')
             ->selectStyleSingle()
             ->dom(
                 "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-6'B>
@@ -66,6 +66,7 @@ class RequestStatusesDataTable extends DataTable
     protected function getColumns(): array
     {
         return [
+            Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('name')->title('Status Name'),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),

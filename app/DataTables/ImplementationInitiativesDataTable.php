@@ -52,7 +52,7 @@ class ImplementationInitiativesDataTable extends DataTable
             ->setTableId('implementation-initiatives-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(1)
+            ->orderBy(7, 'desc')
             ->selectStyleSingle()
             ->dom(
                 "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-6'B>
@@ -83,6 +83,7 @@ class ImplementationInitiativesDataTable extends DataTable
             Column::make('budget')->title('Budget'),
             Column::make('partner_name')->title('Partner')->orderable(false),
             Column::make('completion')->title('Completion')->addClass('text-center'),
+            Column::make('created_at')->title('Created At')->visible(false),
             Column::make('initiative_status_name')->title('Status')->orderable(false),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
         ];

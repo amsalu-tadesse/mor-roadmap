@@ -72,6 +72,24 @@
                             <td id="created_at"></td>
                         </tr>
                     </table>
+
+                    <h5 class="text-info border-bottom pb-2 mb-3 mt-4">Support Requests</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered table-striped" id="support_requests_show_table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Partner</th>
+                                    <th>Activities</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- To be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer justify-content-end">

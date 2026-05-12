@@ -3,13 +3,35 @@
 
     <div class='card'>
         <div class='card-header'>
-            <div class='col'>
-                <div style='display: flex; justify-content:flex-end'>
-                    @can('support-request: create')
-                        <a href="{{ route('admin.support-requests.create') }}">
-                            <button type='button' class='btn btn-primary'>Add New Support Request</button>
-                        </a>
-                    @endcan
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <select id="partner_filter" class="form-control select2">
+                            <option value="">All Partners</option>
+                            @foreach($partners as $partner)
+                                <option value="{{ $partner->id }}">{{ $partner->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <select id="status_filter" class="form-control select2">
+                            <option value="">All Statuses</option>
+                            @foreach($requestStatuses as $status)
+                                <option value="{{ $status->id }}">{{ $status->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class='col-md-6 text-right'>
+                    <div class="form-group">
+                        @can('support-request: create')
+                            <a href="{{ route('admin.support-requests.create') }}">
+                                <button type='button' class='btn btn-primary'>Add New Support Request</button>
+                            </a>
+                        @endcan
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,6 +84,24 @@
             }
 
             $(document).ready(function() {
+                // Initialize modal selects
+                $('#support_request_modal .select2').select2({
+                    theme: 'bootstrap4',
+                    width: '100%',
+                    dropdownParent: $('#support_request_modal')
+                });
+
+                // Initialize filter selects
+                $('#partner_filter, #status_filter').select2({
+                    theme: 'bootstrap4',
+                    width: '100%'
+                });
+
+                // Filter change events
+                $('#partner_filter, #status_filter').on('change', function() {
+                    window.LaravelDataTables['support-requests-table'].ajax.reload();
+                });
+
                 $('#support-requests-table').on('click', '#update_row', function() {
                     var row_id = $(this).data('row_id');
                     var url = "{{ route('admin.support-requests.edit', ':id') }}";
@@ -72,10 +112,10 @@
                         success: function(response) {
                             if (response.success == 1) {
                                 $('#support_request_id').val(response.supportRequest.id);
-                                $('#sr_initiative_id').val(response.supportRequest.initiative_id);
-                                $('#sr_partner_id').val(response.supportRequest.partner_id);
-                                $('#sr_request_status_id').val(response.supportRequest.request_status_id);
-                                $('#sr_priority').val(response.supportRequest.priority);
+                                $('#sr_initiative_id').val(response.supportRequest.initiative_id).trigger('change');
+                                $('#sr_partner_id').val(response.supportRequest.partner_id).trigger('change');
+                                $('#sr_request_status_id').val(response.supportRequest.request_status_id).trigger('change');
+                                $('#sr_priority').val(response.supportRequest.priority).trigger('change');
                                 $('#sr_activities').val(response.supportRequest.activities);
                                 $('#support_request_modal').modal('show');
                             }

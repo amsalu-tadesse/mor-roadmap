@@ -62,6 +62,19 @@
             }
 
             $(document).ready(function() {
+                $('.datepicker').datepicker({
+                    format: 'yyyy-mm-dd',
+                    autoclose: true,
+                    todayHighlight: true
+                });
+
+                // Initialize modal selects
+                $('#update_modal .select2').select2({
+                    theme: 'bootstrap4',
+                    width: '100%',
+                    dropdownParent: $('#update_modal')
+                });
+
                 $(document).on('click', '#update_row', function() {
                     var row_id = $(this).data('row_id');
                     var url = "{{ route('admin.implementation-initiatives.edit', ':id') }}";
@@ -74,16 +87,16 @@
                                 var initiative = response.initiative;
                                 $('#initiative_id').val(initiative.id);
                                 $('#name').val(initiative.name);
-                                $('#directorate_id').val(initiative.directorate_id);
-                                $('#implementation_status_id').val(initiative.implementation_status_id);
+                                $('#directorate_id').val(initiative.directorate_id).trigger('change');
+                                $('#implementation_status_id').val(initiative.implementation_status_id).trigger('change');
                                 $('#start_date').val(response.start_date);
                                 $('#end_date').val(response.end_date);
                                 $('#budget').val(initiative.budget);
                                 $('#expenditure').val(initiative.expenditure);
-                                $('#partner_id').val(initiative.partner_id);
+                                $('#partner_id').val(initiative.partner_id).trigger('change');
                                 $('#completion').val(initiative.completion);
-                                $('#initiative_status_id').val(initiative.initiative_status_id);
-                                $('#request').val(initiative.request);
+                                $('#initiative_status_id').val(initiative.initiative_status_id).trigger('change');
+                                $('#request').val(initiative.request).trigger('change');
                                 $('#note').val(initiative.note);
 
                                 var themeId = initiative.theme_id;
@@ -99,13 +112,13 @@
                                             $.each(data, function(key, value) {
                                                 $('#objective_id_modal').append('<option value="' + value.id + '">' + value.name + '</option>');
                                             });
-                                            $('#theme_id_modal').val(themeId);
-                                            $('#objective_id_modal').val(initiative.objective_id);
+                                            $('#theme_id_modal').val(themeId).trigger('change');
+                                            $('#objective_id_modal').val(initiative.objective_id).trigger('change');
                                         }
                                     });
                                 } else {
-                                    $('#theme_id_modal').val('');
-                                    $('#objective_id_modal').val(initiative.objective_id);
+                                    $('#theme_id_modal').val('').trigger('change');
+                                    $('#objective_id_modal').val(initiative.objective_id).trigger('change');
                                 }
 
                                 $('#update_modal').modal('show');
@@ -136,6 +149,26 @@
                                 $('#show_modal #request_show').html(response.initiative.request);
                                 $('#show_modal #created_by').html(response.getCreatedBy);
                                 $('#show_modal #created_at').html(response.created_at);
+
+                                // Populate Support Requests
+                                $('#support_requests_show_table tbody').empty();
+                                if (response.supportRequests && response.supportRequests.length > 0) {
+                                    response.supportRequests.forEach(function(sr, index) {
+                                        let priorityClass = sr.priority == 'H' ? 'danger' : (sr.priority == 'M' ? 'warning' : 'info');
+                                        let priorityLabel = sr.priority == 'H' ? 'High' : (sr.priority == 'M' ? 'Medium' : 'Low');
+                                        let row = `<tr>
+                                            <td>${index + 1}</td>
+                                            <td>${sr.partner ? sr.partner.name : 'N/A'}</td>
+                                            <td>${sr.activities}</td>
+                                            <td>${sr.request_status ? sr.request_status.name : 'N/A'}</td>
+                                            <td><span class="badge badge-${priorityClass}">${priorityLabel}</span></td>
+                                        </tr>`;
+                                        $('#support_requests_show_table tbody').append(row);
+                                    });
+                                } else {
+                                    $('#support_requests_show_table tbody').append('<tr><td colspan="5" class="text-center">No support requests found</td></tr>');
+                                }
+
                                 $('#show_modal').modal('show');
                             }
                         }

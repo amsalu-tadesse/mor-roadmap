@@ -18,7 +18,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="initiative_id">Initiative</label>
-                                    <select name="initiative_id" class="form-control" id="sr_initiative_id">
+                                    <select name="initiative_id" class="form-control select2" id="sr_initiative_id">
                                         <option value="">Select Initiative</option>
                                         @foreach($initiatives as $initiative)
                                             <option value="{{ $initiative->id }}">{{ $initiative->name }}</option>
@@ -31,7 +31,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="partner_id">Partner<span class="required-field">*</span></label>
-                                    <select name="partner_id" class="form-control" id="sr_partner_id" required>
+                                    <select name="partner_id" class="form-control select2" id="sr_partner_id" required>
                                         <option value="">Select Partner</option>
                                         @foreach($partners as $partner)
                                             <option value="{{ $partner->id }}">{{ $partner->name }}</option>
@@ -42,7 +42,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="request_status_id">Request Status<span class="required-field">*</span></label>
-                                    <select name="request_status_id" class="form-control" id="sr_request_status_id" required>
+                                    <select name="request_status_id" class="form-control select2" id="sr_request_status_id" required>
                                         <option value="">Select Status</option>
                                         @foreach($requestStatuses as $status)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
@@ -55,7 +55,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="priority">Priority<span class="required-field">*</span></label>
-                                    <select name="priority" class="form-control" id="sr_priority" required>
+                                    <select name="priority" class="form-control select2" id="sr_priority" required>
                                         <option value="">Select Priority</option>
                                         @foreach($priorities as $key => $label)
                                             <option value="{{ $key }}">{{ $label }}</option>

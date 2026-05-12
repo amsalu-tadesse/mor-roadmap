@@ -22,7 +22,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="directorate_id">Directorate<span class="required-field">*</span></label>
-                            <select name="directorate_id" class="form-control @error('directorate_id') is-invalid @enderror" id="directorate_id">
+                            <select name="directorate_id" class="form-control select2 @error('directorate_id') is-invalid @enderror" id="directorate_id">
                                 <option value="">Select Directorate</option>
                                 @foreach($directorates as $directorate)
                                     <option value="{{ $directorate->id }}" {{ old('directorate_id') == $directorate->id ? 'selected' : '' }}>
@@ -40,7 +40,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="theme_id">Theme<span class="required-field">*</span></label>
-                            <select name="theme_id" class="form-control @error('theme_id') is-invalid @enderror" id="theme_id">
+                            <select name="theme_id" class="form-control select2 @error('theme_id') is-invalid @enderror" id="theme_id">
                                 <option value="">Select Theme</option>
                                 @foreach($themes as $theme)
                                     <option value="{{ $theme->id }}" {{ old('theme_id') == $theme->id ? 'selected' : '' }}>
@@ -56,7 +56,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="objective_id">Objective<span class="required-field">*</span></label>
-                            <select name="objective_id" class="form-control @error('objective_id') is-invalid @enderror" id="objective_id">
+                            <select name="objective_id" class="form-control select2 @error('objective_id') is-invalid @enderror" id="objective_id">
                                 <option value="">Select Objective</option>
                                 @if(old('theme_id'))
                                     @foreach($objectives->where('theme_id', old('theme_id')) as $objective)
@@ -76,7 +76,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="implementation_status_id">Implementation Status</label>
-                            <select name="implementation_status_id" class="form-control @error('implementation_status_id') is-invalid @enderror" id="implementation_status_id">
+                            <select name="implementation_status_id" class="form-control select2 @error('implementation_status_id') is-invalid @enderror" id="implementation_status_id">
                                 <option value="">Select Implementation Status</option>
                                 @foreach($implementationStatuses as $status)
                                     <option value="{{ $status->id }}" {{ old('implementation_status_id') == $status->id ? 'selected' : '' }}>
@@ -110,6 +110,11 @@
     @push('scripts')
         <script>
             $(document).ready(function () {
+                $('.select2').select2({
+                    theme: 'bootstrap4',
+                    width: '100%'
+                });
+
                 $('#theme_id').on('change', function () {
                     var themeId = $(this).val();
                     if (themeId) {

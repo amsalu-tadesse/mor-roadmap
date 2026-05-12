@@ -82,7 +82,7 @@ class EmailDataTable extends DataTable
         return $this->builder()
             ->setTableId('emails-table')
             ->columns($this->getColumns())
-            ->orderBy(5)
+            ->orderBy(5, 'desc')
             ->minifiedAjax()
             ->selectStyleSingle()
             ->dom("<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-6'B>

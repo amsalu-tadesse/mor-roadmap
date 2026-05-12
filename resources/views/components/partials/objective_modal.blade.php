@@ -22,7 +22,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="theme_id">Theme<span class="required-field">*</span></label>
-                                <select name="theme_id" class="form-control" id="theme_id">
+                                <select name="theme_id" class="form-control select2" id="theme_id">
                                     <option value="">Select Theme</option>
                                     @foreach($themes as $theme)
                                         <option value="{{ $theme->id }}">{{ $theme->name }}</option>

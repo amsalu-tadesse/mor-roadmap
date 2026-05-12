@@ -70,7 +70,7 @@ class OrganizationDataTable extends DataTable
         return $this->builder()
             ->setTableId('organizations-table')
             ->columns($this->getColumns())
-            ->orderBy(3)
+            ->orderBy(3, 'desc')
             ->minifiedAjax()
             ->selectStyleSingle()
             ->dom("'<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-6'B>

@@ -44,7 +44,14 @@ class SupportRequestsDataTable extends DataTable
 
     public function query(SupportRequest $model): QueryBuilder
     {
-        return $model->newQuery()->with(['partner', 'requestStatus']);
+        return $model->newQuery()
+            ->with(['partner', 'requestStatus'])
+            ->when($this->request()->get('partner_id'), function ($query, $partner_id) {
+                $query->where('partner_id', $partner_id);
+            })
+            ->when($this->request()->get('request_status_id'), function ($query, $status_id) {
+                $query->where('request_status_id', $status_id);
+            });
     }
 
     public function html(): HtmlBuilder
@@ -52,8 +59,14 @@ class SupportRequestsDataTable extends DataTable
         return $this->builder()
             ->setTableId('support-requests-table')
             ->columns($this->getColumns())
-            ->minifiedAjax()
-            ->orderBy(1)
+            ->ajax([
+                'url' => route('admin.support-requests.index'),
+                'data' => 'function(d) {
+                    d.partner_id = $("#partner_filter").val();
+                    d.request_status_id = $("#status_filter").val();
+                }',
+            ])
+            ->orderBy(0, 'desc')
             ->selectStyleSingle()
             ->dom(
                 "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-6'B>
@@ -77,6 +90,7 @@ class SupportRequestsDataTable extends DataTable
     protected function getColumns(): array
     {
         return [
+            Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('partner_name')->title('Partner')->orderable(false),
             Column::make('activities_short')->title('Activities')->orderable(false),

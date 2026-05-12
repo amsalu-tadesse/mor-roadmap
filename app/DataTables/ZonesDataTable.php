@@ -81,7 +81,7 @@ class ZonesDataTable extends DataTable
         return $this->builder()
             ->setTableId('zones-table')
             ->columns($this->getColumns())
-            ->orderBy(4)
+            ->orderBy(4, 'desc')
             // ->minifiedAjax()
             ->ajax([
                 'url' => route('admin.zones.index'), // Update the route name to match your route definition

@@ -13,17 +13,20 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="name">Directorate Name<span class="required-field">*</span></label>
-                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Enter Directorate Name" value="{{ old('name') }}">
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+                                id="name" placeholder="Enter Directorate Name" value="{{ old('name') }}">
                             @error('name')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label for="user_id">Director<span class="required-field">*</span></label>
-                            <select name="user_id" class="form-control select2 @error('user_id') is-invalid @enderror" id="user_id" style="width: 100%;">
+                            <select name="user_id" class="form-control select2 @error('user_id') is-invalid @enderror"
+                                id="user_id" style="width: 100%;">
                                 <option value="">Select Director</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                        {{ $user->name }}</option>
                                 @endforeach
                             </select>
                             @error('user_id')
@@ -40,6 +43,18 @@
             </div>
         </form>
     </div>
+
+    @push('scripts')
+        <script>
+            $(document).ready(function () {
+                $('#user_id').select2({
+                    theme: 'bootstrap4',
+                    width: '100%',
+                    placeholder: 'Select Director'
+                });
+            });
+        </script>
+    @endpush
 </x-layout>
 
 <style>

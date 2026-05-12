@@ -118,7 +118,7 @@ class UsersDataTable extends DataTable
 
                 }',
             ])
-            ->orderBy(6)
+            ->orderBy(6, 'desc')
             ->selectStyleSingle()
             ->dom(
                 "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-6'B>
