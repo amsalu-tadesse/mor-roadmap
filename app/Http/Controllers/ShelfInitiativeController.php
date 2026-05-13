@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Constants;
 use App\DataTables\ShelfInitiativesDataTable;
 use App\Http\Requests\StoreShelfInitiativeRequest;
 use App\Models\Directorate;
@@ -25,12 +26,11 @@ class ShelfInitiativeController extends Controller
         $partners = Partner::all();
         $requestStatuses = RequestStatus::all();
         $priorities = SupportRequest::PRIORITIES;
-        // $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
-        //     $q->whereIn('name', ['Implementation stage', 'Shelfing stage']);
-        // })->get();
-        $initiatives = Initiative::all();
+        $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
+            $q->where('id', Constants::IMPLEMENTATION_STATUS_DRAFTING);
+        })->get();
 
-        // dd($initiatives);
+
         return $dataTable->render('admin.shelf-initiatives.index', compact('objectives', 'themes', 'directorates', 'implementationStatuses', 'partners', 'requestStatuses', 'priorities', 'initiatives'));
     }
 

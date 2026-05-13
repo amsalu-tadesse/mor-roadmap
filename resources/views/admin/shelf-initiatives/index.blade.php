@@ -81,11 +81,19 @@
             });
 
             $(document).on('click', '#add_support_request', function() {
+                var currentInitiativeId = $('#initiative_id').val();
                 $('#support_request_form')[0].reset();
                 $('#support_modal_title').text('Add Support Request');
                 $('#support_request_form').attr('action', "{{ route('admin.support-requests.store') }}");
                 $('#support_method').val('POST');
-                $('#sr_initiative_id').val($('#initiative_id').val()).trigger('change').attr('disabled', true);
+
+                // Pre-select the current initiative and disable the field
+                // Use setTimeout to ensure Select2 renders after the form reset cycle
+                setTimeout(function() {
+                    $('#sr_initiative_id').val(currentInitiativeId).trigger('change');
+                    $('#sr_initiative_id').prop('disabled', true);
+                }, 50);
+
                 $('#support_request_modal').modal('show');
             });
 
