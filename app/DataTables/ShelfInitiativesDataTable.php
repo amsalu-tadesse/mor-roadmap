@@ -19,9 +19,9 @@ class ShelfInitiativesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
-            ->addColumn('theme_name', fn($row) => $row->theme->name ?? 'N/A')
-            ->addColumn('objective_name', fn($row) => $row->objective->name ?? 'N/A')
-            ->addColumn('directorate_name', fn($row) => $row->directorate->name ?? 'N/A')
+            ->addColumn('theme_name', fn ($row) => $row->theme->name ?? 'N/A')
+            ->addColumn('objective_name', fn ($row) => $row->objective->name ?? 'N/A')
+            ->addColumn('directorate_name', fn ($row) => $row->directorate->name ?? 'N/A')
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
@@ -38,7 +38,7 @@ class ShelfInitiativesDataTable extends DataTable
     {
         $query = $model->newQuery()->with(['objective', 'directorate', 'theme'])
             ->whereHas('implementationStatus', function ($query) {
-                $query->where('name', 'Shelf');
+                $query->where('id', Constants::IMPLEMENTATION_STATUS_SHELFING);
             });
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {

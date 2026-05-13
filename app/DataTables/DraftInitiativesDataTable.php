@@ -19,10 +19,10 @@ class DraftInitiativesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
-            ->addColumn('theme_name', fn($row) => $row->theme->name ?? 'N/A')
-            ->addColumn('objective_name', fn($row) => $row->objective->name ?? 'N/A')
-            ->addColumn('directorate_name', fn($row) => $row->directorate->name ?? 'N/A')
-            ->addColumn('implementation_status_name', fn($row) => $row->implementationStatus->name ?? 'N/A')
+            ->addColumn('theme_name', fn ($row) => $row->theme->name ?? 'N/A')
+            ->addColumn('objective_name', fn ($row) => $row->objective->name ?? 'N/A')
+            ->addColumn('directorate_name', fn ($row) => $row->directorate->name ?? 'N/A')
+            ->addColumn('implementation_status_name', fn ($row) => $row->implementationStatus->name ?? 'N/A')
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
@@ -39,7 +39,7 @@ class DraftInitiativesDataTable extends DataTable
     {
         $query = $model->newQuery()->with(['objective', 'directorate', 'implementationStatus', 'theme'])
             ->whereHas('implementationStatus', function ($query) {
-                $query->where('name', 'Draft');
+                $query->where('id', Constants::IMPLEMENTATION_STATUS_DRAFTING);
             });
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {

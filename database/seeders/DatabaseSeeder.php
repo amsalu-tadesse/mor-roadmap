@@ -93,23 +93,16 @@ class DatabaseSeeder extends Seeder
 
 
         $permissions = [
-            'contact-us',
+
             'custom-exception',
             'email',
-            'f-a-q',
-            'file-category',
-            'region',
             'setting',
             'site-admin',
             'user',
             'audit',
-            'zone',
             'role',
-            'organization',
-            'suggestion',
-            'archive-crimes',
+            // 'organization',
             'crud-generator',
-            'country',
             'notification',
             'login-attempt',
             'directorate',
@@ -921,6 +914,65 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
+        $themes = [
+            [
+                "name" => "Sustainable Industrial Capacity development",
+            ],
+            [
+                 "name" => "Theme2: Sustainable Industrial Capacity development",
+            ],
+            [
+                "name" => "Theme: the Sustainable Industrial Capacity development",
+            ],
+        ];
+        $directorates = [
+            [
+                "name" => "Human resource management",
+            ],
+            [
+                 "name" => "e-Data division",
+            ],
+            [
+                "name" => "Property administration",
+            ],
+        ];
+        $objecitves = [
+            [
+                "name" => "Attraction, retaining, and enhancing the efficiency of human resource",
+            ],
+            [
+                 "name" => "Improving IT capital and utilization",
+            ],
+            [
+                "name" => "Objective3: Improving IT capital and utilization",
+            ],
+        ];
+
+        foreach ($themes as $theme) {
+            $th = \App\Models\Theme::factory()->create(
+                [
+                    "name" => $theme["name"],
+                ]
+            );
+
+            foreach ($objecitves as $objecitve) {
+                \App\Models\Objective::factory()->create(
+                    [
+                        "name" => $objecitve["name"],
+                        "theme_id" => $th->id,
+                    ]
+                );
+            }
+
+        }
+        foreach ($directorates as $directorate) {
+            \App\Models\Directorate::factory()->create(
+                [
+                    "name" => $directorate["name"],
+                ]
+            );
+        }
+
         foreach ($organizations as $organization) {
             \App\Models\Organization::factory()->create(
                 [
@@ -929,6 +981,7 @@ class DatabaseSeeder extends Seeder
                 ]
             );
         }
+
 
         $statuses = ['Drafting stage', 'Shelfing stage', 'Implementation stage'];
         foreach ($statuses as $status) {

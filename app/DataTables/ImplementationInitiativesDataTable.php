@@ -19,11 +19,11 @@ class ImplementationInitiativesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
-            ->addColumn('start_date', fn($row) => $row->start_date ? $row->start_date->format('Y-m-d') : 'N/A')
-            ->addColumn('end_date', fn($row) => $row->end_date ? $row->end_date->format('Y-m-d') : 'N/A')
-            ->addColumn('partner_name', fn($row) => $row->partner->name ?? 'N/A')
-            ->addColumn('initiative_status_name', fn($row) => $row->initiativeStatus->name ?? 'N/A')
-            ->addColumn('completion', fn($row) => $row->completion ? $row->completion . '%' : 'N/A')
+            ->addColumn('start_date', fn ($row) => $row->start_date ? $row->start_date->format('Y-m-d') : 'N/A')
+            ->addColumn('end_date', fn ($row) => $row->end_date ? $row->end_date->format('Y-m-d') : 'N/A')
+            ->addColumn('partner_name', fn ($row) => $row->partner->name ?? 'N/A')
+            ->addColumn('initiative_status_name', fn ($row) => $row->initiativeStatus->name ?? 'N/A')
+            ->addColumn('completion', fn ($row) => $row->completion ? $row->completion . '%' : 'N/A')
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
@@ -42,7 +42,7 @@ class ImplementationInitiativesDataTable extends DataTable
     {
         return $model->newQuery()->with(['partner', 'initiativeStatus'])
             ->whereHas('implementationStatus', function ($query) {
-                $query->where('name', 'Implementation');
+                $query->where('id', Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION);
             });
     }
 

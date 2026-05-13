@@ -25,9 +25,12 @@ class ShelfInitiativeController extends Controller
         $partners = Partner::all();
         $requestStatuses = RequestStatus::all();
         $priorities = SupportRequest::PRIORITIES;
-        $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
-            $q->whereIn('name', ['Implementation', 'Shelf']);
-        })->get();
+        // $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
+        //     $q->whereIn('name', ['Implementation stage', 'Shelfing stage']);
+        // })->get();
+        $initiatives = Initiative::all();
+
+        // dd($initiatives);
         return $dataTable->render('admin.shelf-initiatives.index', compact('objectives', 'themes', 'directorates', 'implementationStatuses', 'partners', 'requestStatuses', 'priorities', 'initiatives'));
     }
 
