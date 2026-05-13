@@ -38,7 +38,7 @@ class ShelfInitiativesDataTable extends DataTable
     {
         $query = $model->newQuery()->with(['objective', 'directorate', 'theme'])
             ->whereHas('implementationStatus', function ($query) {
-                $query->where('name', 'Shelf');
+                $query->where('name', 'Shelfing stage');
             });
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {

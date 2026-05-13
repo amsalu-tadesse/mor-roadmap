@@ -39,7 +39,7 @@ class DraftInitiativesDataTable extends DataTable
     {
         $query = $model->newQuery()->with(['objective', 'directorate', 'implementationStatus', 'theme'])
             ->whereHas('implementationStatus', function ($query) {
-                $query->where('name', 'Draft');
+                $query->where('name', 'Drafting stage');
             });
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {

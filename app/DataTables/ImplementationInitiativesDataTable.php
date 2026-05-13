@@ -42,7 +42,7 @@ class ImplementationInitiativesDataTable extends DataTable
     {
         return $model->newQuery()->with(['partner', 'initiativeStatus'])
             ->whereHas('implementationStatus', function ($query) {
-                $query->where('name', 'Implementation');
+                $query->where('name', 'Implementation stage');
             });
     }
 

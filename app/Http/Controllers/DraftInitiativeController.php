@@ -33,7 +33,17 @@ class DraftInitiativeController extends Controller
 
     public function store(StoreDraftInitiativeRequest $request)
     {
-        Initiative::create($request->validated());
+        $data = $request->validated();
+
+        // Default to "Drafting stage" if no implementation status is selected
+        if (empty($data['implementation_status_id'])) {
+            $draftingStatus = \App\Models\ImplementationStatus::where('name', 'Drafting stage')->first();
+            if ($draftingStatus) {
+                $data['implementation_status_id'] = $draftingStatus->id;
+            }
+        }
+
+        Initiative::create($data);
         return redirect()->route('admin.draft-initiatives.index')->with('success_create', 'Draft Initiative created successfully!');
     }
 
