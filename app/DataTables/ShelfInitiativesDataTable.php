@@ -19,7 +19,7 @@ class ShelfInitiativesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
-            ->addColumn('theme_name', fn ($row) => $row->theme->name ?? 'N/A')
+            ->addColumn('theme_name', fn ($row) => $row->objective->theme->name ?? 'N/A')
             ->addColumn('objective_name', fn ($row) => $row->objective->name ?? 'N/A')
             ->addColumn('directorate_name', fn ($row) => $row->directorate->name ?? 'N/A')
             ->addColumn('action', function ($row) {
@@ -36,7 +36,7 @@ class ShelfInitiativesDataTable extends DataTable
 
     public function query(Initiative $model): QueryBuilder
     {
-        $query = $model->newQuery()->with(['objective', 'directorate', 'theme'])
+        $query = $model->newQuery()->with(['objective.theme', 'directorate']) // Load theme through objective
             ->whereHas('implementationStatus', function ($query) {
                 $query->where('id', Constants::IMPLEMENTATION_STATUS_SHELFING);
             });
@@ -44,9 +44,11 @@ class ShelfInitiativesDataTable extends DataTable
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
             $query->where('directorate_id', $this->request()->get('directorate_id'));
         }
-
+        
         if ($this->request()->has('theme_id') && $this->request()->get('theme_id') != '') {
-            $query->where('theme_id', $this->request()->get('theme_id'));
+            $query->whereHas('objective', function($q) {
+                $q->where('theme_id', $this->request()->get('theme_id'));
+            });
         }
 
         if ($this->request()->has('objective_id') && $this->request()->get('objective_id') != '') {

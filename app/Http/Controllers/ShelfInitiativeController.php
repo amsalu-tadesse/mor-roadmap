@@ -53,22 +53,27 @@ class ShelfInitiativeController extends Controller
     public function show(Initiative $shelfInitiative)
     {
         if (request()->ajax()) {
-            $shelfInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'implementationStatus', 'theme', 'supportRequests.partner', 'supportRequests.requestStatus']);
-            $creator = \App\Models\User::find($shelfInitiative->created_by);
+            $shelfInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'implementationStatus', 'theme', 'supportRequests.partner', 'supportRequests.requestStatus']);            $creator = \App\Models\User::find($shelfInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
-
+        // dd([
+        //     'initiative_id' => $shelfInitiative->id,
+        //     'objective_id' => $shelfInitiative->objective_id,
+        //     'objective' => $shelfInitiative->objective,
+        //     'theme' => $shelfInitiative->objective->theme ?? null,
+        //     'theme_name' => $shelfInitiative->objective->theme->name ?? 'N/A',
+        // ]);
             return response()->json([
                 'success' => 1,
                 'initiative' => $shelfInitiative,
                 'objectiveName' => $shelfInitiative->objective->name ?? 'N/A',
-                'themeName' => $shelfInitiative->theme->name ?? 'N/A',
+                'themeName' => $shelfInitiative->objective->theme->name ?? 'N/A',
                 'directorateName' => $shelfInitiative->directorate->name ?? 'N/A',
                 'implementationStatusName' => $shelfInitiative->implementationStatus->name ?? 'N/A',
                 'partnerName' => $shelfInitiative->partner->name ?? 'N/A',
                 'initiativeStatusName' => $shelfInitiative->initiativeStatus->name ?? 'N/A',
                 'supportRequests' => $shelfInitiative->supportRequests,
                 'getCreatedBy' => $getCreatedBy,
-                'created_at' => $shelfInitiative->created_at->format('Y-m-d H:i:s'),
+                'created_at' => $shelfInitiative->created_at ? $shelfInitiative->created_at->format('Y-m-d H:i:s') : null,
             ]);
         }
         return view('admin.shelf-initiatives.show', compact('shelfInitiative'));
