@@ -629,272 +629,12 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $arr = [
-            ['name' => 'Tigray', 'latitude' => '13.881272999776511', 'longitude' => '39.127495', 'ordering' => 3, 'is_cityadministration' => 0, 'zones' => ['Central Tigray', 'East Tigray', 'North West Tigray', 'South Tigray', 'South East Tigray', 'West Tigray', 'Mekelle'], 'color' => '#FF5733'],
-            ['name' => 'Afar', 'latitude' => '11.710820599554784', 'longitude' => '41.03308659999999', 'ordering' => 4, 'is_cityadministration' => 0, 'zones' => ['Awsi Rasu', 'Kilbet Rasu', 'Gabi Rasu', 'Fanti Rasu', 'Hari Rasu', 'Mahi Rasu', 'Argobba'], 'color' => '#33FF57'],
-            ['name' => 'Amhara', 'latitude' => '11.49999999953709', 'longitude' => '38.5', 'ordering' => 5, 'is_cityadministration' => 0, 'zones' => [' Agew Awi', 'East Gojjam', 'Oromia zone', '  North Gondar', 'North Shewa', ' North Wollo', '  South Gondar', ' South Wollo', ' Wag Hemra', 'West Gojjam', 'Bahir Dar '], 'color' => '#5733FF'],
-            ['name' => 'Oromia', 'latitude' => '7.672164399392472', 'longitude' => '40.0299727', 'ordering' => 6, 'is_cityadministration' => 0, 'zones' => ['Arsi Zone', 'Bale Zone', 'Borena Zone', 'Buno Bedele Zone', 'East Hararghe Zone', 'East Shewa Zone', 'East Welega Zone', 'Guji Zone', 'Horo Guduru Welega Zone', 'Illu Aba Bora Zone', 'Jimma Zone', 'Kelam Welega Zone', 'North Shewa Zone', 'Southwest Shewa Zone', 'West Arsi Zone', 'West Guji Zone', 'West Hararghe Zone', 'West Shewa Zone', 'West Welega Zone', 'Oromia Special Zone Surrounding Finfinne'], 'color' => '#33FF33'],
-            ['name' => 'Somali', 'latitude' => '7.262984399398904', 'longitude' => '43.5360531', 'ordering' => 7, 'is_cityadministration' => 0, 'zones' => ['Afder Zone', 'Dhawa Zone', 'Dollo Zone', 'Erer Zone', 'Fafan Zone', 'Jarar Zone', 'Korahe Zone', 'Liben Zone', 'Nogob Zone', 'Shabelle Zone', 'Sitti Zone'], 'color' => '#FF3366'],
-            ['name' => 'Benishangul-Gumuz', 'latitude' => '10.78028890', 'longitude' => '35.56578620', 'ordering' => 8, 'is_cityadministration' => 0, 'zones' => ['Asosa', 'Kamashi', 'Metekel'], 'color' => '#FF9933'],
-            ['name' => 'Southern Nations, Nationalities, and Peoples', 'latitude' => '6.453652499423955', 'longitude' => '36.6605637', 'ordering' => 9, 'is_cityadministration' => 0, 'zones' => ['Gamo Zone', 'Gofa Zone', 'Gedeo Zone', 'Gurage Zone', 'Hadiya Zone', 'Kembata Tembaro Zone', 'Silte Zone', 'Debub Omo Zone', 'Wolayita Zone', 'Alaba Zone', 'Amaro special woreda', 'Alle Special Woreda', 'Basketo special woreda', 'Burji special woreda', 'Dirashe special woreda', 'Konso Zone', 'Yem special woreda'], 'color' => '#9966FF'],
-            ['name' => 'Gambela', 'latitude' => '7.810264699391271', 'longitude' => '34.1822172', 'ordering' => 10, 'is_cityadministration' => 0, 'zones' => [], 'color' => '#FFCC33'],
-            ['name' => 'Harari', 'latitude' => '9.290551699409448', 'longitude' => '42.188567199999994', 'ordering' => 11, 'is_cityadministration' => 0, 'zones' => [], 'color' => '#66FFFF'],
-            ['name' => 'Sidama', 'latitude' => '7.06205', 'longitude' => '38.47635', 'ordering' => 12, 'is_cityadministration' => 0, 'zones' => ['Aleta Chuko', 'Aleta Wendo', 'Arbegona', 'Aroresa', 'Hawassa Zuria', 'Bensa', 'Bona Zuria', 'Boricha', 'Bursa', 'Chere', 'Dale', 'Dara', 'Gorche', 'Hawassa', 'Hula', 'Loko Abaya', 'Malga', 'Shebedino', 'Wensho', 'Wondo Genet'], 'color' => '#FF66CC'],
-            ['name' => 'South West Ethiopia Peoples', 'latitude' => '6.7678', 'longitude' => '35.6344', 'ordering' => 13, 'is_cityadministration' => 0, 'zones' => ['	Bench Maji Zone', 'Dawro Zone', 'Keffa Zone', 'Sheka Zone', 'West Omo Zone', 'Konta Zone'], 'color' => '#CCFF66'],
-            ['name' => 'Addis Ababa', 'latitude' => '8.99999999940141', 'longitude' => '38.75', 'ordering' => 1, 'is_cityadministration' => 1, 'zones' => ['Addis Ketema', '	Akaky Kaliti', 'Arada', 'Bole', 'Gullele', 'Kirkos', 'Kolfe Keranio', 'Lideta', 'Nifas Silk-Lafto', 'Yeka'], 'color' => '#66CCFF'],
-            ['name' => 'Dire Dawa', 'latitude' => '9.591219599420022', 'longitude' => '41.97971909999999', 'ordering' => 2, 'is_cityadministration' => 1, 'zones' => ['Dire Dawa city', 'Gurgura'], 'color' => '#FF6666'],
-        ];
 
 
 
 
-        $cc = 0;
-        foreach ($arr as $key => $val) {
-
-            $cc++;
-            \App\Models\Region::factory()->create(
-                [
-                    'name' => $val['name'],
-                    'ordering' => $val['ordering'],
-                    'latitude' => $val['latitude'],
-                    'longitude' => $val['longitude'],
-                    'is_cityadministration' => $val['is_cityadministration'],
-                    'color' => $val["color"],
-                    'created_by' => 1,
-                    'updated_by' => 1,
-                ]
-            );
 
 
-
-            $zones = $val['zones'];
-
-            foreach ($zones as $zone) {
-
-                \App\Models\Zone::factory()->create(
-                    [
-                        'name' => $zone,
-                        'region_id' => $cc,
-                        'created_by' => 1,
-                        'updated_by' => 1,
-                    ]
-                );
-            }
-        };
-
-
-
-        $countries = [
-            ['name' => 'Afghanistan', 'nationality' => 'Afghan'],
-            ['name' => 'Albania', 'nationality' => 'Albanian'],
-            ['name' => 'Algeria', 'nationality' => 'Algerian'],
-            ['name' => 'Andorra', 'nationality' => 'Andorran'],
-            ['name' => 'Angola', 'nationality' => 'Angolan'],
-            ['name' => 'Antigua and Barbuda', 'nationality' => 'Antiguan'],
-            ['name' => 'Argentina', 'nationality' => 'Argentinian'],
-            ['name' => 'Armenia', 'nationality' => 'Armenian'],
-            ['name' => 'Australia', 'nationality' => 'Australian'],
-            ['name' => 'Austria', 'nationality' => 'Austrian'],
-            ['name' => 'Azerbaijan', 'nationality' => 'Azerbaijani'],
-            ['name' => 'The Bahamas', 'nationality' => 'Bahamian'],
-            ['name' => 'Bahrain', 'nationality' => 'Bahraini'],
-            ['name' => 'Bangladesh', 'nationality' => 'Bangladeshi'],
-            ['name' => 'Barbados', 'nationality' => 'Barbadian'],
-            ['name' => 'Belarus', 'nationality' => 'Belarusian'],
-            ['name' => 'Belgium', 'nationality' => 'Belgian'],
-            ['name' => 'Belize', 'nationality' => 'Belizean'],
-            ['name' => 'Benin', 'nationality' => 'Beninese'],
-            ['name' => 'Bhutan', 'nationality' => 'Bhutanese'],
-            ['name' => 'Bolivia', 'nationality' => 'Bolivian'],
-            ['name' => 'Bosnia and Herzegovina', 'nationality' => 'Bosnian'],
-            ['name' => 'Botswana', 'nationality' => 'Motswana'],
-            ['name' => 'Brazil', 'nationality' => 'Brazilian'],
-            ['name' => 'Brunei', 'nationality' => 'Bruneian'],
-            ['name' => 'Bulgaria', 'nationality' => 'Bulgarian'],
-            ['name' => 'Burkina Faso', 'nationality' => 'Burkinabe'],
-            ['name' => 'Burundi', 'nationality' => 'Burundian'],
-            ['name' => 'Cabo Verde', 'nationality' => 'Cape Verdean'],
-            ['name' => 'Cambodia', 'nationality' => 'Cambodian'],
-            ['name' => 'Cameroon', 'nationality' => 'Cameroonian'],
-            ['name' => 'Canada', 'nationality' => 'Canadian'],
-            ['name' => 'Central African Republic', 'nationality' => 'Central African'],
-            ['name' => 'Chad', 'nationality' => 'Chadian'],
-            ['name' => 'Chile', 'nationality' => 'Chilean'],
-            ['name' => 'China', 'nationality' => 'Chinese'],
-            ['name' => 'Colombia', 'nationality' => 'Colombian'],
-            ['name' => 'Comoros', 'nationality' => 'Comoran'],
-            ['name' => 'Congo, Democratic Republic of the', 'nationality' => 'Congolese'],
-            ['name' => 'Congo, Republic of the', 'nationality' => 'Congolese'],
-            ['name' => 'Costa Rica', 'nationality' => 'Costa Rican'],
-            ['name' => 'Côte d’Ivoire', 'nationality' => 'Ivorian'],
-            ['name' => 'Croatia', 'nationality' => 'Croatian'],
-            ['name' => 'Cuba', 'nationality' => 'Cuban'],
-            ['name' => 'Cyprus', 'nationality' => 'Cypriot'],
-            ['name' => 'Czech Republic', 'nationality' => 'Czech'],
-            ['name' => 'Denmark', 'nationality' => 'Danish'],
-            ['name' => 'Djibouti', 'nationality' => 'Djiboutian'],
-            ['name' => 'Dominica', 'nationality' => 'Dominican'],
-            ['name' => 'Dominican Republic', 'nationality' => 'Dominican'],
-            ['name' => 'East Timor (Timor-Leste)', 'nationality' => 'Timorese'],
-            ['name' => 'Ecuador', 'nationality' => 'Ecuadorian'],
-            ['name' => 'Egypt', 'nationality' => 'Egyptian'],
-            ['name' => 'El Salvador', 'nationality' => 'Salvadoran'],
-            ['name' => 'Equatorial Guinea', 'nationality' => 'Equatorial Guinean'],
-            ['name' => 'Eritrea', 'nationality' => 'Eritrean'],
-            ['name' => 'Estonia', 'nationality' => 'Estonian'],
-            ['name' => 'Eswatini', 'nationality' => 'Swazi'],
-            ['name' => 'Ethiopia', 'nationality' => 'Ethiopian'],
-            ['name' => 'Fiji', 'nationality' => 'Fijian'],
-            ['name' => 'Finland', 'nationality' => 'Finnish'],
-            ['name' => 'France', 'nationality' => 'French'],
-            ['name' => 'Gabon', 'nationality' => 'Gabonese'],
-            ['name' => 'The Gambia', 'nationality' => 'Gambian'],
-            ['name' => 'Georgia', 'nationality' => 'Georgian'],
-            ['name' => 'Germany', 'nationality' => 'German'],
-            ['name' => 'Ghana', 'nationality' => 'Ghanaian'],
-            ['name' => 'Greece', 'nationality' => 'Greek'],
-            ['name' => 'Grenada', 'nationality' => 'Grenadian'],
-            ['name' => 'Guatemala', 'nationality' => 'Guatemalan'],
-            ['name' => 'Guinea', 'nationality' => 'Guinean'],
-            ['name' => 'Guinea-Bissau', 'nationality' => 'Bissau-Guinean'],
-            ['name' => 'Guyana', 'nationality' => 'Guyanese'],
-            ['name' => 'Haiti', 'nationality' => 'Haitian'],
-            ['name' => 'Honduras', 'nationality' => 'Honduran'],
-            ['name' => 'Hungary', 'nationality' => 'Hungarian'],
-            ['name' => 'Iceland', 'nationality' => 'Icelandic'],
-            ['name' => 'India', 'nationality' => 'Indian'],
-            ['name' => 'Indonesia', 'nationality' => 'Indonesian'],
-            ['name' => 'Iran', 'nationality' => 'Iranian'],
-            ['name' => 'Iraq', 'nationality' => 'Iraqi'],
-            ['name' => 'Ireland', 'nationality' => 'Irish'],
-            ['name' => 'Israel', 'nationality' => 'Israeli'],
-            ['name' => 'Italy', 'nationality' => 'Italian'],
-            ['name' => 'Jamaica', 'nationality' => 'Jamaican'],
-            ['name' => 'Japan', 'nationality' => 'Japanese'],
-            ['name' => 'Jordan', 'nationality' => 'Jordanian'],
-            ['name' => 'Kazakhstan', 'nationality' => 'Kazakhstani'],
-            ['name' => 'Kenya', 'nationality' => 'Kenyan'],
-            ['name' => 'Kiribati', 'nationality' => 'I-Kiribati'],
-            ['name' => 'Korea, North', 'nationality' => 'North Korean'],
-            ['name' => 'Korea, South', 'nationality' => 'South Korean'],
-            ['name' => 'Kosovo', 'nationality' => 'Kosovar'],
-            ['name' => 'Kuwait', 'nationality' => 'Kuwaiti'],
-            ['name' => 'Kyrgyzstan', 'nationality' => 'Kyrgyzstani'],
-            ['name' => 'Laos', 'nationality' => 'Laotian'],
-            ['name' => 'Latvia', 'nationality' => 'Latvian'],
-            ['name' => 'Lebanon', 'nationality' => 'Lebanese'],
-            ['name' => 'Lesotho', 'nationality' => 'Mosotho'],
-            ['name' => 'Liberia', 'nationality' => 'Liberian'],
-            ['name' => 'Libya', 'nationality' => 'Libyan'],
-            ['name' => 'Liechtenstein', 'nationality' => 'Liechtensteiner'],
-            ['name' => 'Lithuania', 'nationality' => 'Lithuanian'],
-            ['name' => 'Luxembourg', 'nationality' => 'Luxembourger'],
-            ['name' => 'Madagascar', 'nationality' => 'Malagasy'],
-            ['name' => 'Malawi', 'nationality' => 'Malawian'],
-            ['name' => 'Malaysia', 'nationality' => 'Malaysian'],
-            ['name' => 'Maldives', 'nationality' => 'Maldivian'],
-            ['name' => 'Mali', 'nationality' => 'Malian'],
-            ['name' => 'Malta', 'nationality' => 'Maltese'],
-            ['name' => 'Marshall Islands', 'nationality' => 'Marshallese'],
-            ['name' => 'Mauritania', 'nationality' => 'Mauritanian'],
-            ['name' => 'Mauritius', 'nationality' => 'Mauritian'],
-            ['name' => 'Mexico', 'nationality' => 'Mexican'],
-            ['name' => 'Micronesia, Federated States of', 'nationality' => 'Micronesian'],
-            ['name' => 'Moldova', 'nationality' => 'Moldovan'],
-            ['name' => 'Monaco', 'nationality' => 'Monacan'],
-            ['name' => 'Mongolia', 'nationality' => 'Mongolian'],
-            ['name' => 'Montenegro', 'nationality' => 'Montenegrin'],
-            ['name' => 'Morocco', 'nationality' => 'Moroccan'],
-            ['name' => 'Mozambique', 'nationality' => 'Mozambican'],
-            ['name' => 'Myanmar (Burma)', 'nationality' => 'Burmese'],
-            ['name' => 'Namibia', 'nationality' => 'Namibian'],
-            ['name' => 'Nauru', 'nationality' => 'Nauruan'],
-            ['name' => 'Nepal', 'nationality' => 'Nepali'],
-            ['name' => 'Netherlands', 'nationality' => 'Dutch'],
-            ['name' => 'New Zealand', 'nationality' => 'New Zealander'],
-            ['name' => 'Nicaragua', 'nationality' => 'Nicaraguan'],
-            ['name' => 'Niger', 'nationality' => 'Nigerien'],
-            ['name' => 'Nigeria', 'nationality' => 'Nigerian'],
-            ['name' => 'North Macedonia', 'nationality' => 'Macedonian'],
-            ['name' => 'Norway', 'nationality' => 'Norwegian'],
-            ['name' => 'Oman', 'nationality' => 'Omani'],
-            ['name' => 'Pakistan', 'nationality' => 'Pakistani'],
-            ['name' => 'Palau', 'nationality' => 'Palauan'],
-            ['name' => 'Panama', 'nationality' => 'Panamanian'],
-            ['name' => 'Papua New Guinea', 'nationality' => 'Papua New Guinean'],
-            ['name' => 'Paraguay', 'nationality' => 'Paraguayan'],
-            ['name' => 'Peru', 'nationality' => 'Peruvian'],
-            ['name' => 'Philippines', 'nationality' => 'Filipino'],
-            ['name' => 'Poland', 'nationality' => 'Polish'],
-            ['name' => 'Portugal', 'nationality' => 'Portuguese'],
-            ['name' => 'Qatar', 'nationality' => 'Qatari'],
-            ['name' => 'Romania', 'nationality' => 'Romanian'],
-            ['name' => 'Russia', 'nationality' => 'Russian'],
-            ['name' => 'Rwanda', 'nationality' => 'Rwandan'],
-            ['name' => 'Saint Kitts and Nevis', 'nationality' => 'Kittitian/Nevisian'],
-            ['name' => 'Saint Lucia', 'nationality' => 'Saint Lucian'],
-            ['name' => 'Saint Vincent and the Grenadines', 'nationality' => 'Saint Vincentian'],
-            ['name' => 'Samoa', 'nationality' => 'Samoan'],
-            ['name' => 'San Marino', 'nationality' => 'Sammarinese'],
-            ['name' => 'Sao Tome and Principe', 'nationality' => 'Sao Tomean'],
-            ['name' => 'Saudi Arabia', 'nationality' => 'Saudi'],
-            ['name' => 'Senegal', 'nationality' => 'Senegalese'],
-            ['name' => 'Serbia', 'nationality' => 'Serbian'],
-            ['name' => 'Seychelles', 'nationality' => 'Seychellois'],
-            ['name' => 'Sierra Leone', 'nationality' => 'Sierra Leonean'],
-            ['name' => 'Singapore', 'nationality' => 'Singaporean'],
-            ['name' => 'Slovakia', 'nationality' => 'Slovak'],
-            ['name' => 'Slovenia', 'nationality' => 'Slovenian'],
-            ['name' => 'Solomon Islands', 'nationality' => 'Solomon Islander'],
-            ['name' => 'Somalia', 'nationality' => 'Somali'],
-            ['name' => 'South Africa', 'nationality' => 'South African'],
-            ['name' => 'Spain', 'nationality' => 'Spanish'],
-            ['name' => 'Sri Lanka', 'nationality' => 'Sri Lankan'],
-            ['name' => 'Sudan', 'nationality' => 'Sudanese'],
-            ['name' => 'Sudan, South', 'nationality' => 'South Sudanese'],
-            ['name' => 'Suriname', 'nationality' => 'Surinamese'],
-            ['name' => 'Sweden', 'nationality' => 'Swedish'],
-            ['name' => 'Switzerland', 'nationality' => 'Swiss'],
-            ['name' => 'Syria', 'nationality' => 'Syrian'],
-            ['name' => 'Taiwan', 'nationality' => 'Taiwanese'],
-            ['name' => 'Tajikistan', 'nationality' => 'Tajik'],
-            ['name' => 'Tanzania', 'nationality' => 'Tanzanian'],
-            ['name' => 'Thailand', 'nationality' => 'Thai'],
-            ['name' => 'Togo', 'nationality' => 'Togolese'],
-            ['name' => 'Tonga', 'nationality' => 'Tongan'],
-            ['name' => 'Trinidad and Tobago', 'nationality' => 'Trinidadian/Tobagonian'],
-            ['name' => 'Tunisia', 'nationality' => 'Tunisian'],
-            ['name' => 'Turkey', 'nationality' => 'Turkish'],
-            ['name' => 'Turkmenistan', 'nationality' => 'Turkmen'],
-            ['name' => 'Tuvalu', 'nationality' => 'Tuvaluan'],
-            ['name' => 'Uganda', 'nationality' => 'Ugandan'],
-            ['name' => 'Ukraine', 'nationality' => 'Ukrainian'],
-            ['name' => 'United Arab Emirates', 'nationality' => 'Emirati'],
-            ['name' => 'United Kingdom', 'nationality' => 'British'],
-            ['name' => 'United States', 'nationality' => 'American'],
-            ['name' => 'Uruguay', 'nationality' => 'Uruguayan'],
-            ['name' => 'Uzbekistan', 'nationality' => 'Uzbek'],
-            ['name' => 'Vanuatu', 'nationality' => 'Ni-Vanuatu'],
-            ['name' => 'Vatican City', 'nationality' => 'Vatican'],
-            ['name' => 'Venezuela', 'nationality' => 'Venezuelan'],
-            ['name' => 'Vietnam', 'nationality' => 'Vietnamese'],
-            ['name' => 'Yemen', 'nationality' => 'Yemeni'],
-            ['name' => 'Zambia', 'nationality' => 'Zambian'],
-            ['name' => 'Zimbabwe', 'nationality' => 'Zimbabwean'],
-        ];
-
-
-
-
-        foreach ($countries as $country) {
-
-            \App\Models\Country::factory()->create(
-                [
-                    'name' => $country['name'],
-                    'nationality' => $country['nationality'],
-                ]
-            );
-        }
 
 
 
@@ -948,39 +688,39 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        foreach ($themes as $theme) {
-            $th = \App\Models\Theme::factory()->create(
-                [
-                    "name" => $theme["name"],
-                ]
-            );
+        /* foreach ($themes as $theme) {
+             $th = \App\Models\Theme::factory()->create(
+                 [
+                     "name" => $theme["name"],
+                 ]
+             );
 
-            foreach ($objecitves as $objecitve) {
-                \App\Models\Objective::factory()->create(
-                    [
-                        "name" => $objecitve["name"],
-                        "theme_id" => $th->id,
-                    ]
-                );
-            }
+             foreach ($objecitves as $objecitve) {
+                 \App\Models\Objective::factory()->create(
+                     [
+                         "name" => $objecitve["name"],
+                         "theme_id" => $th->id,
+                     ]
+                 );
+             }
 
-        }
-        foreach ($directorates as $directorate) {
-            \App\Models\Directorate::factory()->create(
-                [
-                    "name" => $directorate["name"],
-                ]
-            );
-        }
+         }
+         foreach ($directorates as $directorate) {
+             \App\Models\Directorate::factory()->create(
+                 [
+                     "name" => $directorate["name"],
+                 ]
+             );
+         }
 
-        foreach ($organizations as $organization) {
-            \App\Models\Organization::factory()->create(
-                [
-                    "name" => $organization["name"],
-                    "description" => $organization["description"]
-                ]
-            );
-        }
+         foreach ($organizations as $organization) {
+             \App\Models\Organization::factory()->create(
+                 [
+                     "name" => $organization["name"],
+                     "description" => $organization["description"]
+                 ]
+             );
+         }*/
 
 
         $statuses = ['Drafting stage', 'Shelfing stage', 'Implementation stage'];

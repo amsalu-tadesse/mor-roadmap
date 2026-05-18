@@ -17,8 +17,9 @@ class Constants
 
     public const ROLE_SUPER_ADMIN = "Super Admin";
 
-    public const IMPLEMENTATION_STATUS_SHELFING = 1;
-    public const IMPLEMENTATION_STATUS_DRAFTING = 2;
+
+    public const IMPLEMENTATION_STATUS_DRAFTING = 1;
+    public const IMPLEMENTATION_STATUS_SHELFING = 2;
     public const IMPLEMENTATION_STATUS_IMPLEMENTATION = 3;
 
     public static function PAGE_NUMBER()

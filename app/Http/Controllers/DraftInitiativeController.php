@@ -80,6 +80,7 @@ class DraftInitiativeController extends Controller
         $themes = Theme::all();
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
+
         return view('admin.draft-initiatives.edit', compact('draftInitiative', 'objectives', 'themes', 'directorates', 'implementationStatuses'));
     }
 

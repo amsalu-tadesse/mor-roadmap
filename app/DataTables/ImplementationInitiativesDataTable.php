@@ -80,7 +80,7 @@ class ImplementationInitiativesDataTable extends DataTable
             Column::make('name')->title('Initiative Name'),
             Column::make('start_date')->title('Start Date'),
             Column::make('end_date')->title('End Date'),
-            Column::make('budget')->title('Budget'),
+            Column::make('budget')->title('Budget')->visible(false),
             Column::make('partner_name')->title('Partner')->orderable(false),
             Column::make('completion')->title('Completion')->addClass('text-center'),
             Column::make('created_at')->title('Created At')->visible(false),
