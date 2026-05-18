@@ -40,10 +40,26 @@ class ImplementationInitiativesDataTable extends DataTable
 
     public function query(Initiative $model): QueryBuilder
     {
-        return $model->newQuery()->with(['partner', 'initiativeStatus'])
+        $query = $model->newQuery()->with(['partner', 'initiativeStatus', 'objective.theme', 'directorate'])
             ->whereHas('implementationStatus', function ($query) {
                 $query->where('id', Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION);
             });
+
+        if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
+            $query->where('directorate_id', $this->request()->get('directorate_id'));
+        }
+        
+        if ($this->request()->has('theme_id') && $this->request()->get('theme_id') != '') {
+            $query->whereHas('objective', function($q) {
+                $q->where('theme_id', $this->request()->get('theme_id'));
+            });
+        }
+
+        if ($this->request()->has('objective_id') && $this->request()->get('objective_id') != '') {
+            $query->where('objective_id', $this->request()->get('objective_id'));
+        }
+
+        return $query;
     }
 
     public function html(): HtmlBuilder
@@ -51,7 +67,7 @@ class ImplementationInitiativesDataTable extends DataTable
         return $this->builder()
             ->setTableId('implementation-initiatives-table')
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.theme_id = $("#filter_theme").val(); data.objective_id = $("#filter_objective").val();')
             ->orderBy(7, 'desc')
             ->selectStyleSingle()
             ->dom(

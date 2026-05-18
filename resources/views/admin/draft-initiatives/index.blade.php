@@ -165,21 +165,8 @@
                                 // Load objectives for the selected theme, then set values
                                 var themeId = initiative.theme_id;
                                 if (themeId) {
-                                    $.ajax({
-                                        url: "{{ route('admin.get-objectives-by-theme') }}",
-                                        type: "GET",
-                                        data: { theme_id: themeId },
-                                        dataType: "json",
-                                        success: function (data) {
-                                            $('#objective_id_modal').empty();
-                                            $('#objective_id_modal').append('<option value="">Select Objective</option>');
-                                            $.each(data, function (key, value) {
-                                                $('#objective_id_modal').append('<option value="' + value.id + '">' + value.name + '</option>');
-                                            });
-                                            $('#theme_id_modal').val(themeId).trigger('change');
-                                            $('#objective_id_modal').val(initiative.objective_id).trigger('change');
-                                        }
-                                    });
+                                    $('#theme_id_modal').data('selected-objective', initiative.objective_id);
+                                    $('#theme_id_modal').val(themeId).trigger('change');
                                 } else {
                                     $('#theme_id_modal').val('').trigger('change');
                                     $('#objective_id_modal').val(initiative.objective_id).trigger('change');

@@ -27,7 +27,7 @@ class ShelfInitiativeController extends Controller
         $requestStatuses = RequestStatus::all();
         $priorities = SupportRequest::PRIORITIES;
         $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
-            $q->where('id', Constants::IMPLEMENTATION_STATUS_DRAFTING);
+            $q->where('id', Constants::IMPLEMENTATION_STATUS_SHELFING);
         })->get();
 
 
@@ -36,17 +36,22 @@ class ShelfInitiativeController extends Controller
 
     public function create()
     {
+        $themes = Theme::all();
         $objectives = Objective::all();
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
         $partners = Partner::all();
         $initiativeStatuses = InitiativeStatus::all();
-        return view('admin.shelf-initiatives.new', compact('objectives', 'directorates', 'implementationStatuses', 'partners', 'initiativeStatuses'));
+        return view('admin.shelf-initiatives.new', compact('themes', 'objectives', 'directorates', 'implementationStatuses', 'partners', 'initiativeStatuses'));
     }
 
     public function store(StoreShelfInitiativeRequest $request)
     {
-        Initiative::create($request->validated());
+        $data = $request->validated();
+        if (empty($data['implementation_status_id'])) {
+            $data['implementation_status_id'] = Constants::IMPLEMENTATION_STATUS_SHELFING;
+        }
+        Initiative::create($data);
         return redirect()->route('admin.shelf-initiatives.index')->with('success_create', 'Shelf Initiative created successfully!');
     }
 
@@ -82,7 +87,7 @@ class ShelfInitiativeController extends Controller
     public function edit(Initiative $shelfInitiative)
     {
         if (request()->ajax()) {
-            $shelfInitiative->load(['supportRequests.partner', 'supportRequests.requestStatus']);
+            $shelfInitiative->load(['supportRequests.partner', 'supportRequests.requestStatus', 'objective']);
             return response()->json([
                 'success' => 1,
                 'initiative' => $shelfInitiative,

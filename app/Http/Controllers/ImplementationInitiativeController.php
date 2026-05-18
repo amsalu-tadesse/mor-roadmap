@@ -28,17 +28,22 @@ class ImplementationInitiativeController extends Controller
 
     public function create()
     {
+        $themes = Theme::all();
         $objectives = Objective::all();
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
         $partners = Partner::all();
         $initiativeStatuses = InitiativeStatus::all();
-        return view('admin.implementation-initiatives.new', compact('objectives', 'directorates', 'implementationStatuses', 'partners', 'initiativeStatuses'));
+        return view('admin.implementation-initiatives.new', compact('themes', 'objectives', 'directorates', 'implementationStatuses', 'partners', 'initiativeStatuses'));
     }
 
     public function store(StoreImplementationInitiativeRequest $request)
     {
-        Initiative::create($request->validated());
+        $data = $request->validated();
+        if (empty($data['implementation_status_id'])) {
+            $data['implementation_status_id'] = \App\Constants\Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION;
+        }
+        Initiative::create($data);
         return redirect()->route('admin.implementation-initiatives.index')->with('success_create', 'Implementation Initiative created successfully!');
     }
 
@@ -68,6 +73,7 @@ class ImplementationInitiativeController extends Controller
     public function edit(Initiative $implementationInitiative)
     {
         if (request()->ajax()) {
+            $implementationInitiative->load(['partner', 'initiativeStatus', 'objective']);
             return response()->json([
                 'success' => 1,
                 'initiative' => $implementationInitiative,

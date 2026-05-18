@@ -114,6 +114,7 @@
     $(document).ready(function () {
         $('#theme_id_modal').on('change', function () {
             var themeId = $(this).val();
+            var targetObjectiveId = $(this).data('selected-objective');
             if (themeId) {
                 $.ajax({
                     url: "{{ route('admin.get-objectives-by-theme') }}",
@@ -126,6 +127,10 @@
                         $.each(data, function (key, value) {
                             $('#objective_id_modal').append('<option value="' + value.id + '">' + value.name + '</option>');
                         });
+                        if (targetObjectiveId) {
+                            $('#objective_id_modal').val(targetObjectiveId).trigger('change');
+                            $('#theme_id_modal').removeData('selected-objective');
+                        }
                     }
                 });
             } else {

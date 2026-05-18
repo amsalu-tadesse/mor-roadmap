@@ -3,9 +3,43 @@
 
     <div class='card'>
         <div class='card-header'>
-            <div class='col'>
-                <div style='display: flex; justify-content:space-between'>
-                    <h3 class="card-title mt-2">Manage Implementation Details</h3>
+            <div class="row align-items-center">
+                <div class='col-md-3'>
+                    <div class="form-group mb-0">
+                        <select id="filter_directorate" class="form-control select2">
+                            <option value="">All Directorates</option>
+                            @foreach($directorates as $directorate)
+                                <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class='col-md-3'>
+                    <div class="form-group mb-0">
+                        <select id="filter_theme" class="form-control select2">
+                            <option value="">All Themes</option>
+                            @foreach($themes as $theme)
+                                <option value="{{ $theme->id }}">{{ $theme->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class='col-md-3'>
+                    <div class="form-group mb-0">
+                        <select id="filter_objective" class="form-control select2">
+                            <option value="">All Objectives</option>
+                            @foreach($objectives as $objective)
+                                <option value="{{ $objective->id }}">{{ $objective->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class='col-md-3 text-right'>
+                    @can('implementation-initiative: create')
+                        <a href="{{ route('admin.implementation-initiatives.create') }}" class="btn btn-primary">
+                            Add New Initiative
+                        </a>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -62,6 +96,12 @@
             }
 
             $(document).ready(function() {
+                // Initialize filters (not in modal)
+                $('.card-header .select2').select2({
+                    theme: 'bootstrap4',
+                    width: '100%'
+                });
+
                 $('.datepicker').datepicker({
                     format: 'yyyy-mm-dd',
                     autoclose: true,
@@ -73,6 +113,44 @@
                     theme: 'bootstrap4',
                     width: '100%',
                     dropdownParent: $('#update_modal')
+                });
+
+                $(document).on('change', '#filter_directorate, #filter_objective', function() {
+                    window.LaravelDataTables['implementation-initiatives-table'].ajax.reload();
+                });
+
+                // When theme filter changes, reload objective options then reload table
+                $(document).on('change', '#filter_theme', function() {
+                    var themeId = $(this).val();
+                    if (themeId) {
+                        $.ajax({
+                            url: "{{ route('admin.get-objectives-by-theme') }}",
+                            type: "GET",
+                            data: { theme_id: themeId },
+                            dataType: "json",
+                            success: function(data) {
+                                $('#filter_objective').empty();
+                                $('#filter_objective').append('<option value="">All Objectives</option>');
+                                $.each(data, function(key, value) {
+                                    $('#filter_objective').append('<option value="' + value.id + '">' + value.name + '</option>');
+                                });
+                                if ($('#filter_objective').hasClass('select2-hidden-accessible')) {
+                                    $('#filter_objective').trigger('change.select2');
+                                }
+                                window.LaravelDataTables['implementation-initiatives-table'].ajax.reload();
+                            }
+                        });
+                    } else {
+                        $('#filter_objective').empty();
+                        $('#filter_objective').append('<option value="">All Objectives</option>');
+                        @foreach($objectives as $objective)
+                            $('#filter_objective').append('<option value="{{ $objective->id }}">{{ $objective->name }}</option>');
+                        @endforeach
+                        if ($('#filter_objective').hasClass('select2-hidden-accessible')) {
+                            $('#filter_objective').trigger('change.select2');
+                        }
+                        window.LaravelDataTables['implementation-initiatives-table'].ajax.reload();
+                    }
                 });
 
                 $(document).on('click', '#update_row', function() {
@@ -99,23 +177,10 @@
                                 $('#request').val(initiative.request).trigger('change');
                                 $('#note').val(initiative.note);
 
-                                var themeId = initiative.theme_id;
+                                var themeId = initiative.theme_id || (initiative.objective ? initiative.objective.theme_id : null);
                                 if (themeId) {
-                                    $.ajax({
-                                        url: "{{ route('admin.get-objectives-by-theme') }}",
-                                        type: "GET",
-                                        data: { theme_id: themeId },
-                                        dataType: "json",
-                                        success: function(data) {
-                                            $('#objective_id_modal').empty();
-                                            $('#objective_id_modal').append('<option value="">Select Objective</option>');
-                                            $.each(data, function(key, value) {
-                                                $('#objective_id_modal').append('<option value="' + value.id + '">' + value.name + '</option>');
-                                            });
-                                            $('#theme_id_modal').val(themeId).trigger('change');
-                                            $('#objective_id_modal').val(initiative.objective_id).trigger('change');
-                                        }
-                                    });
+                                    $('#theme_id_modal').data('selected-objective', initiative.objective_id);
+                                    $('#theme_id_modal').val(themeId).trigger('change');
                                 } else {
                                     $('#theme_id_modal').val('').trigger('change');
                                     $('#objective_id_modal').val(initiative.objective_id).trigger('change');
