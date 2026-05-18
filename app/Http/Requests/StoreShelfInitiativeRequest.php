@@ -14,6 +14,7 @@ class StoreShelfInitiativeRequest extends FormRequest
             // Required base fields
             'name' => 'required|string|max:255',
             'objective_id' => 'required|exists:objectives,id',
+            'theme_id' => 'required|exists:themes,id',
             'directorate_id' => 'required|exists:directorates,id',
             'implementation_status_id' => 'nullable|exists:implementation_statuses,id',
             'note' => 'nullable|string',

@@ -1,12 +1,12 @@
 <x-layout>
-    <x-breadcrump title='Add New Shelf Initiative' parent='Shelf Initiatives' child='Add New' index="shelf-initiatives" />
+    <x-breadcrump title='Add New Implementation Initiative' parent='Implementation Initiatives' child='Add New' index="implementation-initiatives" />
 
     <div class="card card-info">
         <div class="card-header">
-            <h3 class="card-title">Add Shelf Initiative Form</h3>
+            <h3 class="card-title">Add Implementation Initiative Form</h3>
         </div>
 
-        <form action="{{ route('admin.shelf-initiatives.store') }}" method="post">
+        <form action="{{ route('admin.implementation-initiatives.store') }}" method="post">
             @csrf
             <div class="card-body">
                 <h5 class="text-info border-bottom pb-2 mb-3">Base Initiative Details</h5>
