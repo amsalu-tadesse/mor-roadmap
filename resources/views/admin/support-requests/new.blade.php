@@ -3,7 +3,7 @@
 
     <div class="card card-info">
         <div class="card-header">
-            <h3 class="card-title">Add Support Request Form</h3>
+            <h3 class="card-title">Add Donor Request Form</h3>
         </div>
 
         <form action="{{ route('admin.support-requests.store') }}" method="post">

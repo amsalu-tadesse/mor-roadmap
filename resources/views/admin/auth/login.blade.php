@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>UserMangment | Log in </title>
+    <title>Reform initiatives | Log in </title>
 
     <style>
         body {
@@ -34,7 +34,7 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center" style="font-weight: bold; font-size:40px">
-           UserMangment
+           Reform initiatives
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
@@ -101,7 +101,7 @@
                     <a href="{{ route('forget.password.get') }}">I forgot my password</a>
                 </p>
 
-               
+
             </div>
             <!-- /.card-body -->
         </div>

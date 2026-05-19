@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>UserMangment</title>
+    <title>Reform initiatives</title>
 </head>
 <body>
     {{-- <h1>{{ $content['title'] }}</h1> --}}

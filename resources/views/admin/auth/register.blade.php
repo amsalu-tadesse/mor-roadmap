@@ -21,7 +21,7 @@
   <div class="register-box">
     <div class="card card-outline card-primary">
     <div class="card-header text-center" style="font-weight: bold; font-size:40px">
-          UserMangment
+          Reform initiatives
             </div>
       <div class="card-body">
         <p class="login-box-msg">Register a new membership</p>

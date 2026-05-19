@@ -1,6 +1,8 @@
 <x-layout>
     <x-breadcrump title='Implementation Initiatives List' parent='Implementation Initiatives' child='List' index="implementation-initiatives" />
 
+
+</style>
     <div class='card'>
         <div class='card-header'>
             <div class="row align-items-center">
@@ -34,13 +36,13 @@
                         </select>
                     </div>
                 </div>
-                <div class='col-md-3 text-right'>
+                {{-- <div class='col-md-3 text-right'>
                     @can('implementation-initiative: create')
                         <a href="{{ route('admin.implementation-initiatives.create') }}" class="btn btn-primary">
-                            Add New Initiative
+                            Add New Initiative+
                         </a>
                     @endcan
-                </div>
+                </div> --}}
             </div>
         </div>
         <div class='card-body'>
@@ -109,11 +111,29 @@
                 });
 
                 // Initialize modal selects
-                $('#update_modal .select2').select2({
-                    theme: 'bootstrap4',
-                    width: '100%',
-                    dropdownParent: $('#update_modal')
-                });
+                // $('#update_modal .select2').select2({
+                //     theme: 'bootstrap4',
+                //     width: '100%',
+                //      dropdownParent: $('#update_modal')
+                // });
+
+                 // Fix Bootstrap modal + Select2 focus issue
+    // $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+
+    // Initialize Select2 when modal opens
+  $('#update_modal').on('shown.bs.modal', function () {
+
+   // Initialize modal selects
+     $('#update_modal .select2').select2({
+         theme: 'bootstrap4',
+         width: '100%',
+          dropdownParent: $('#update_modal')
+     });
+;
+
+});
+
+
 
                 $(document).on('change', '#filter_directorate, #filter_objective', function() {
                     window.LaravelDataTables['implementation-initiatives-table'].ajax.reload();

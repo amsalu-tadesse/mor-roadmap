@@ -11,7 +11,7 @@ class Constants
     // public const DOMAIN = 'http://econsultation.wobetu.com';
     public const DOMAIN = 'http://127.0.0.1:8000';
     public const EXCEPTION_EMAIL_ADDRESSS = 'tadesseamsalu@gmail.com';
-    public const EXCEPTION_EMAIL_TITLE = 'UserMangment Exception';
+    public const EXCEPTION_EMAIL_TITLE = 'Reform initiatives Exception';
     public const CRON_EXECUTION_TIME = 5;
     public const APP_NAME = "DRIMT Management";
 

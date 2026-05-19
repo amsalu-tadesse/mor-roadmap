@@ -60,7 +60,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="implementation_status_id">Implementation Status</label>
-                                    <select name="implementation_status_id" class="form-control select2" id="implementation_status_id">
+                                    <select name="implementation_status_id" class="form-control " id="implementation_status_id">
                                         <option value="">Select Implementation Status</option>
                                         @foreach($implementationStatuses as $status)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
@@ -80,7 +80,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h5>Support Requests</h5>
                             <button type="button" class="btn btn-sm btn-primary" id="add_support_request">
-                                <i class="fas fa-plus"></i> Add Support Request
+                                <i class="fas fa-plus"></i> Add Donor Request
                             </button>
                         </div>
                         <table class="table table-sm table-bordered" id="shelf-support-requests-table">

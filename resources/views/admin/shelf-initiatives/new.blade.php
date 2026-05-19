@@ -117,7 +117,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="budget">Budget</label>
-                            <input type="text" name="budget" class="form-control @error('budget') is-invalid @enderror" id="budget" placeholder="e.g. $10,000" value="{{ old('budget') }}">
+                            <input type="text" name="budget" class="form-control @error('budget') is-invalid @enderror" id="budget" placeholder="e.g. 10,000" value="{{ old('budget') }}">
                             @error('budget')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror

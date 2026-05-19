@@ -5,7 +5,7 @@
     <script src="{{ asset('js/inactivity.js') }}"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>UserMangment </title>
+    <title>Reform initiatives </title>
     <!-- Csrf token -->
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
@@ -60,6 +60,8 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 }*/
+
+
 
 
     </style>

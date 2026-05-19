@@ -60,11 +60,12 @@
                 });
 
                 // Initialize modal selects
-                $('#update_modal .select2').select2({
-                    theme: 'bootstrap4',
-                    width: '100%',
-                    dropdownParent: $('#update_modal')
-                });
+                // $('#update_modal .select2').select2({
+                //     theme: 'bootstrap4',
+                //     width: '100%',
+                //      dropdownParent: $('#update_modal')
+                // });
+
 
                 $('#support_request_modal .select2').select2({
                     theme: 'bootstrap4',
@@ -80,10 +81,22 @@
                 }
             });
 
+            $('#update_modal').on('shown.bs.modal', function () {
+
+    $(this).find('.select2').select2({
+        theme: 'bootstrap4',
+        width: '100%',
+        dropdownParent: $('#update_modal')
+    });
+
+});
+
+
+
             $(document).on('click', '#add_support_request', function() {
                 var currentInitiativeId = $('#initiative_id').val();
                 $('#support_request_form')[0].reset();
-                $('#support_modal_title').text('Add Support Request');
+                $('#support_modal_title').text('Add Donor Request');
                 $('#support_request_form').attr('action', "{{ route('admin.support-requests.store') }}");
                 $('#support_method').val('POST');
 
@@ -307,7 +320,7 @@
             $(document).on('click', '.delete-sr', function() {
                 let id = $(this).data('id');
                 let url = "/admin/support-requests/" + id;
-                
+
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: { confirmButton: 'btn btn-success mx-1', cancelButton: 'btn btn-danger' },
                     buttonsStyling: false

@@ -131,6 +131,8 @@
                         success: function (response) {
                             if (response.success == 1) {
                                 var directorate = response.directorate;
+                                console.log(response);
+                                console.log("**************");
                                 $('#show_modal #name').html(directorate.name);
                                 $('#show_modal #director').html(response.director ? response.director.first_name + ' ' + response.director.last_name : 'N/A');
                                 $('#show_modal #created_by').html(response.getCreatedBy);

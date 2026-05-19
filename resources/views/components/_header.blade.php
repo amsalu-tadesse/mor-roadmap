@@ -44,7 +44,7 @@
 
         <ul class="navbar-nav ml-auto">
             <li class="nav-item d-none d-sm-inline-block">
-                <p class="nav-link">UserMangment</p>
+                <p class="nav-link">Reform initiatives</p>
             </li>
         </ul>
 

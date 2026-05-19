@@ -1,5 +1,5 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
-    {{-- <aside class="main-sidebar sidebar-light-secondary elevation-1"> --}}
+{{-- <aside class="main-sidebar sidebar-dark-primary elevation-4"> --}}
+    <aside class="main-sidebar sidebar-dark-primary elevation-1">
     <!-- Brand Logo -->
     <x-brand-logo />
 
