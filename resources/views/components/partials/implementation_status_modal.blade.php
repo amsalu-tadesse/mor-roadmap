@@ -1,5 +1,5 @@
 <!-- /.modal -->
-<div class="modal fade" id="update_modal">
+<div class="modal fade" id="update_modal" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

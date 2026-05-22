@@ -97,7 +97,12 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="start_date">Start Date</label>
-                            <input type="date" name="start_date" class="form-control @error('start_date') is-invalid @enderror" id="start_date" value="{{ old('start_date') }}">
+                            <div class="input-group date" id="start_date_group" data-target-input="nearest">
+                                <input type="text" name="start_date" class="form-control datetimepicker-input @error('start_date') is-invalid @enderror" data-target="#start_date_group" id="start_date" value="{{ old('start_date') }}" autocomplete="off">
+                                <div class="input-group-append" data-target="#start_date_group" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
                             @error('start_date')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
@@ -106,7 +111,12 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="end_date">End Date</label>
-                            <input type="date" name="end_date" class="form-control @error('end_date') is-invalid @enderror" id="end_date" value="{{ old('end_date') }}">
+                            <div class="input-group date" id="end_date_group" data-target-input="nearest">
+                                <input type="text" name="end_date" class="form-control datetimepicker-input @error('end_date') is-invalid @enderror" data-target="#end_date_group" id="end_date" value="{{ old('end_date') }}" autocomplete="off">
+                                <div class="input-group-append" data-target="#end_date_group" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
                             @error('end_date')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
@@ -215,6 +225,47 @@
                 $('.select2').select2({
                     theme: 'bootstrap4',
                     width: '100%'
+                });
+
+                $('#start_date_group').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    icons: {
+                        time: 'far fa-clock',
+                        date: 'far fa-calendar',
+                        up: 'fas fa-arrow-up',
+                        down: 'fas fa-arrow-down',
+                        previous: 'fas fa-chevron-left',
+                        next: 'fas fa-chevron-right',
+                        today: 'far fa-calendar-check-o',
+                        clear: 'far fa-trash-alt',
+                        close: 'far fa-times-circle'
+                    },
+                    buttons: {
+                        showToday: true,
+                        showClear: true,
+                        showClose: true
+                    }
+                });
+
+                $('#end_date_group').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    useCurrent: false,
+                    icons: {
+                        time: 'far fa-clock',
+                        date: 'far fa-calendar',
+                        up: 'fas fa-arrow-up',
+                        down: 'fas fa-arrow-down',
+                        previous: 'fas fa-chevron-left',
+                        next: 'fas fa-chevron-right',
+                        today: 'far fa-calendar-check-o',
+                        clear: 'far fa-trash-alt',
+                        close: 'far fa-times-circle'
+                    },
+                    buttons: {
+                        showToday: true,
+                        showClear: true,
+                        showClose: true
+                    }
                 });
 
                 $('#theme_id').on('change', function () {

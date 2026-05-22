@@ -104,10 +104,45 @@
                     width: '100%'
                 });
 
-                $('.datepicker').datepicker({
-                    format: 'yyyy-mm-dd',
-                    autoclose: true,
-                    todayHighlight: true
+                $('#edit_start_date_group').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    icons: {
+                        time: 'far fa-clock',
+                        date: 'far fa-calendar',
+                        up: 'fas fa-arrow-up',
+                        down: 'fas fa-arrow-down',
+                        previous: 'fas fa-chevron-left',
+                        next: 'fas fa-chevron-right',
+                        today: 'far fa-calendar-check-o',
+                        clear: 'far fa-trash-alt',
+                        close: 'far fa-times-circle'
+                    },
+                    buttons: {
+                        showToday: true,
+                        showClear: true,
+                        showClose: true
+                    }
+                });
+
+                $('#edit_end_date_group').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    useCurrent: false,
+                    icons: {
+                        time: 'far fa-clock',
+                        date: 'far fa-calendar',
+                        up: 'fas fa-arrow-up',
+                        down: 'fas fa-arrow-down',
+                        previous: 'fas fa-chevron-left',
+                        next: 'fas fa-chevron-right',
+                        today: 'far fa-calendar-check-o',
+                        clear: 'far fa-trash-alt',
+                        close: 'far fa-times-circle'
+                    },
+                    buttons: {
+                        showToday: true,
+                        showClear: true,
+                        showClose: true
+                    }
                 });
 
                 // Initialize modal selects

@@ -1,6 +1,6 @@
 @props(['partners', 'initiativeStatuses', 'objectives', 'directorates', 'implementationStatuses', 'themes'])
 
-<div class="modal fade" id="update_modal" >
+<div class="modal fade" id="update_modal" data-backdrop="static">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -90,14 +90,24 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="start_date">Start Date</label>
-                                    <input type="text" name="start_date" class="form-control datepicker" id="start_date" autocomplete="off">
+                                    <div class="input-group date" id="edit_start_date_group" data-target-input="nearest">
+                                        <input type="text" name="start_date" class="form-control datetimepicker-input" data-target="#edit_start_date_group" id="start_date" autocomplete="off">
+                                        <div class="input-group-append" data-target="#edit_start_date_group" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="end_date">End Date</label>
-                                    <input type="text" name="end_date" class="form-control datepicker" id="end_date" autocomplete="off">
+                                    <div class="input-group date" id="edit_end_date_group" data-target-input="nearest">
+                                        <input type="text" name="end_date" class="form-control datetimepicker-input" data-target="#edit_end_date_group" id="end_date" autocomplete="off">
+                                        <div class="input-group-append" data-target="#edit_end_date_group" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
