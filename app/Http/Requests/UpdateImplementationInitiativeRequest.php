@@ -13,16 +13,9 @@ class UpdateImplementationInitiativeRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'objective_id' => 'required|exists:objectives,id',
-            'directorate_id' => 'required|exists:directorates,id',
+            'directorates' => 'required|array|min:1',
+            'directorates.*' => 'exists:directorates,id',
             'implementation_status_id' => 'required|exists:implementation_statuses,id',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'budget' => 'nullable|string|max:255',
-            'expenditure' => 'nullable|string',
-            'partner_id' => 'nullable|exists:partners,id',
-            'completion' => 'nullable|numeric|min:0|max:100',
-            'initiative_status_id' => 'nullable|exists:initiative_statuses,id',
-            'request' => 'nullable|in:New,Current',
             'note' => 'nullable|string',
         ];
     }

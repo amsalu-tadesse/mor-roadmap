@@ -19,11 +19,9 @@ class ImplementationInitiativesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
-            ->addColumn('start_date', fn ($row) => $row->start_date ? $row->start_date->format('Y-m-d') : 'N/A')
-            ->addColumn('end_date', fn ($row) => $row->end_date ? $row->end_date->format('Y-m-d') : 'N/A')
-            ->addColumn('partner_name', fn ($row) => $row->partner->name ?? 'N/A')
-            ->addColumn('initiative_status_name', fn ($row) => $row->initiativeStatus->name ?? 'N/A')
-            ->addColumn('completion', fn ($row) => $row->completion ? $row->completion . '%' : 'N/A')
+            ->addColumn('theme_name', fn ($row) => $row->objective->theme->name ?? 'N/A')
+            ->addColumn('objective_name', fn ($row) => $row->objective->name ?? 'N/A')
+            ->addColumn('directorate_name', fn ($row) => $row->directorates->pluck('name')->join(', ') ?: 'N/A')
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
@@ -40,13 +38,15 @@ class ImplementationInitiativesDataTable extends DataTable
 
     public function query(Initiative $model): QueryBuilder
     {
-        $query = $model->newQuery()->with(['partner', 'initiativeStatus', 'objective.theme', 'directorate'])
+        $query = $model->newQuery()->with(['objective.theme', 'directorates'])
             ->whereHas('implementationStatus', function ($query) {
                 $query->where('id', Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION);
             });
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
-            $query->where('directorate_id', $this->request()->get('directorate_id'));
+            $query->whereHas('directorates', function ($q) {
+                $q->where('directorates.id', $this->request()->get('directorate_id'));
+            });
         }
         
         if ($this->request()->has('theme_id') && $this->request()->get('theme_id') != '') {
@@ -68,7 +68,7 @@ class ImplementationInitiativesDataTable extends DataTable
             ->setTableId('implementation-initiatives-table')
             ->columns($this->getColumns())
             ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.theme_id = $("#filter_theme").val(); data.objective_id = $("#filter_objective").val();')
-            ->orderBy(7, 'desc')
+            ->orderBy(0, 'desc')
             ->selectStyleSingle()
             ->dom(
                 "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-6'B>
@@ -92,15 +92,12 @@ class ImplementationInitiativesDataTable extends DataTable
     protected function getColumns(): array
     {
         return [
+            Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('name')->title('Initiative Name'),
-            Column::make('start_date')->title('Start Date'),
-            Column::make('end_date')->title('End Date'),
-            Column::make('budget')->title('Budget')->visible(false),
-            Column::make('partner_name')->title('Partner')->orderable(false),
-            Column::make('completion')->title('Completion')->addClass('text-center'),
-            Column::make('created_at')->title('Created At')->visible(false),
-            Column::make('initiative_status_name')->title('Status')->orderable(false),
+            Column::make('directorate_name')->title('Directorates')->orderable(false),
+            Column::make('theme_name')->title('Theme')->orderable(false),
+            Column::make('objective_name')->title('Objective')->orderable(false),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
         ];
     }

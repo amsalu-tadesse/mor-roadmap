@@ -21,16 +21,18 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="directorate_id">Directorate<span class="required-field">*</span></label>
-                            <select name="directorate_id" class="form-control select2 @error('directorate_id') is-invalid @enderror" id="directorate_id">
-                                <option value="">Select Directorate</option>
+                            <label for="directorates">Directorates<span class="required-field">*</span></label>
+                            <select name="directorates[]" class="form-control select2 @error('directorates') is-invalid @enderror" id="directorates" multiple="multiple" data-placeholder="Select Directorates">
                                 @foreach($directorates as $directorate)
-                                    <option value="{{ $directorate->id }}" {{ old('directorate_id') == $directorate->id ? 'selected' : '' }}>
+                                    <option value="{{ $directorate->id }}" {{ (is_array(old('directorates')) && in_array($directorate->id, old('directorates'))) ? 'selected' : '' }}>
                                         {{ $directorate->name }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('directorate_id')
+                            @error('directorates')
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                            @enderror
+                            @error('directorates.*')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
                         </div>

@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Constants\Constants;
+use App\DataTables\InitiativeActivitiesDataTable;
 use App\DataTables\ShelfInitiativesDataTable;
 use App\Http\Requests\StoreShelfInitiativeRequest;
 use App\Models\Directorate;
 use App\Models\ImplementationStatus;
 use App\Models\Initiative;
-use App\Models\InitiativeStatus;
+use App\Models\ActivityStatus;
 use App\Models\Objective;
 use App\Models\Partner;
 use App\Models\RequestStatus;
-use App\Models\SupportRequest;
+use App\Models\Activity;
 use App\Models\Theme;
+use Illuminate\Support\Arr;
 
 class ShelfInitiativeController extends Controller
 {
@@ -25,13 +27,25 @@ class ShelfInitiativeController extends Controller
         $implementationStatuses = ImplementationStatus::all();
         $partners = Partner::all();
         $requestStatuses = RequestStatus::all();
-        $priorities = SupportRequest::PRIORITIES;
+        $priorities = Activity::PRIORITIES;
         $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
             $q->where('id', Constants::IMPLEMENTATION_STATUS_SHELFING);
         })->get();
+        $activityStatuses = ActivityStatus::all();
 
+        $initiativeActivitiesEditTable = app(InitiativeActivitiesDataTable::class)
+            ->setTableId('initiative-activities-edit-table')
+            ->setShowActions(true);
 
-        return $dataTable->render('admin.shelf-initiatives.index', compact('objectives', 'themes', 'directorates', 'implementationStatuses', 'partners', 'requestStatuses', 'priorities', 'initiatives'));
+        $initiativeActivitiesShowTable = app(InitiativeActivitiesDataTable::class)
+            ->setTableId('initiative-activities-show-table')
+            ->setShowActions(false);
+
+        return $dataTable->render('admin.shelf-initiatives.index', compact(
+            'objectives', 'themes', 'directorates', 'implementationStatuses',
+            'partners', 'requestStatuses', 'priorities', 'initiatives', 'activityStatuses',
+            'initiativeActivitiesEditTable', 'initiativeActivitiesShowTable'
+        ));
     }
 
     public function create()
@@ -41,8 +55,8 @@ class ShelfInitiativeController extends Controller
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
         $partners = Partner::all();
-        $initiativeStatuses = InitiativeStatus::all();
-        return view('admin.shelf-initiatives.new', compact('themes', 'objectives', 'directorates', 'implementationStatuses', 'partners', 'initiativeStatuses'));
+        $activityStatuses = ActivityStatus::all();
+        return view('admin.shelf-initiatives.new', compact('themes', 'objectives', 'directorates', 'implementationStatuses', 'partners', 'activityStatuses'));
     }
 
     public function store(StoreShelfInitiativeRequest $request)
@@ -51,14 +65,16 @@ class ShelfInitiativeController extends Controller
         if (empty($data['implementation_status_id'])) {
             $data['implementation_status_id'] = Constants::IMPLEMENTATION_STATUS_SHELFING;
         }
-        Initiative::create($data);
+        $initiative = Initiative::create(Arr::except($data, ['directorates']));
+        $initiative->directorates()->sync($data['directorates']);
         return redirect()->route('admin.shelf-initiatives.index')->with('success_create', 'Shelf Initiative created successfully!');
     }
 
     public function show(Initiative $shelfInitiative)
     {
         if (request()->ajax()) {
-            $shelfInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'implementationStatus', 'theme', 'supportRequests.partner', 'supportRequests.requestStatus']);            $creator = \App\Models\User::find($shelfInitiative->created_by);
+            $shelfInitiative->load(['objective', 'directorates', 'implementationStatus', 'theme']);
+            $creator = \App\Models\User::find($shelfInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
         // dd([
         //     'initiative_id' => $shelfInitiative->id,
@@ -72,11 +88,8 @@ class ShelfInitiativeController extends Controller
                 'initiative' => $shelfInitiative,
                 'objectiveName' => $shelfInitiative->objective->name ?? 'N/A',
                 'themeName' => $shelfInitiative->objective->theme->name ?? 'N/A',
-                'directorateName' => $shelfInitiative->directorate->name ?? 'N/A',
+                'directorateName' => $shelfInitiative->directorates->pluck('name')->join(', ') ?: 'N/A',
                 'implementationStatusName' => $shelfInitiative->implementationStatus->name ?? 'N/A',
-                'partnerName' => $shelfInitiative->partner->name ?? 'N/A',
-                'initiativeStatusName' => $shelfInitiative->initiativeStatus->name ?? 'N/A',
-                'supportRequests' => $shelfInitiative->supportRequests,
                 'getCreatedBy' => $getCreatedBy,
                 'created_at' => $shelfInitiative->created_at ? $shelfInitiative->created_at->format('Y-m-d H:i:s') : null,
             ]);
@@ -87,11 +100,11 @@ class ShelfInitiativeController extends Controller
     public function edit(Initiative $shelfInitiative)
     {
         if (request()->ajax()) {
-            $shelfInitiative->load(['supportRequests.partner', 'supportRequests.requestStatus', 'objective']);
+            $shelfInitiative->load(['objective', 'directorates']);
             return response()->json([
                 'success' => 1,
                 'initiative' => $shelfInitiative,
-                'supportRequests' => $shelfInitiative->supportRequests,
+                'directorates' => $shelfInitiative->directorates->pluck('id')->toArray(),
             ]);
         }
         $objectives = Objective::all();
@@ -102,7 +115,9 @@ class ShelfInitiativeController extends Controller
 
     public function update(\App\Http\Requests\UpdateDraftInitiativeRequest $request, Initiative $shelfInitiative)
     {
-        $shelfInitiative->update($request->validated());
+        $data = $request->validated();
+        $shelfInitiative->update(Arr::except($data, ['directorates']));
+        $shelfInitiative->directorates()->sync($data['directorates']);
         if (request()->ajax()) {
             return response()->json(['success' => true]);
         }

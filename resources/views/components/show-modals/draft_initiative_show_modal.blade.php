@@ -15,7 +15,7 @@
                             <td id="name_show"></td>
                         </tr>
                         <tr>
-                            <th>Directorate</th>
+                            <th>Directorates</th>
                             <td id="directorate_show"></td>
                         </tr>
                         <tr>

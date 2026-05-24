@@ -15,24 +15,10 @@ class Initiative extends Model
         'name',
         'objective_id',
         'theme_id',
-        'directorate_id',
         'implementation_status_id',
         'note',
-        'start_date',
-        'end_date',
-        'budget',
-        'expenditure',
-        'partner_id',
-        'completion',
-        'initiative_status_id',
-        'request',
         'created_by',
         'updated_by',
-    ];
-
-    protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
     ];
 
     public function theme()
@@ -45,9 +31,9 @@ class Initiative extends Model
         return $this->belongsTo(Objective::class);
     }
 
-    public function directorate()
+    public function directorates()
     {
-        return $this->belongsTo(Directorate::class);
+        return $this->belongsToMany(Directorate::class, 'directorate_initiative');
     }
 
     public function implementationStatus()
@@ -55,18 +41,8 @@ class Initiative extends Model
         return $this->belongsTo(ImplementationStatus::class);
     }
 
-    public function partner()
+    public function activities()
     {
-        return $this->belongsTo(Partner::class);
-    }
-
-    public function initiativeStatus()
-    {
-        return $this->belongsTo(InitiativeStatus::class);
-    }
-
-    public function supportRequests()
-    {
-        return $this->hasMany(SupportRequest::class);
+        return $this->hasMany(Activity::class);
     }
 }

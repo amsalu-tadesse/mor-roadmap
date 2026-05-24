@@ -22,9 +22,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="directorate_id">Directorate<span class="required-field">*</span></label>
-                                    <select name="directorate_id" class="form-control select2" id="directorate_id" required>
-                                        <option value="">Select Directorate</option>
+                                    <label for="directorates">Directorates<span class="required-field">*</span></label>
+                                    <select name="directorates[]" class="form-control select2" id="directorates" multiple="multiple" data-placeholder="Select Directorates" required>
                                         @foreach($directorates as $directorate)
                                             <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
                                         @endforeach

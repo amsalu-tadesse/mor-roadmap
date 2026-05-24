@@ -1,4 +1,4 @@
-@props(['objectives', 'directorates', 'implementationStatuses', 'themes'])
+@props(['objectives', 'directorates', 'implementationStatuses', 'themes', 'initiativeActivitiesEditTable'])
 
 <div class="modal fade" id="update_modal">
     <div class="modal-dialog modal-xl">
@@ -22,9 +22,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="directorate_id">Directorate<span class="required-field text-danger">*</span></label>
-                                    <select name="directorate_id" class="form-control select2" id="directorate_id" required>
-                                        <option value="">Select Directorate</option>
+                                    <label for="directorates">Directorates<span class="required-field text-danger">*</span></label>
+                                    <select name="directorates[]" class="form-control select2" id="directorates" multiple="multiple" data-placeholder="Select Directorates" required>
                                         @foreach($directorates as $directorate)
                                             <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
                                         @endforeach
@@ -60,7 +59,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="implementation_status_id">Implementation Status</label>
-                                    <select name="implementation_status_id" class="form-control " id="implementation_status_id">
+                                    <select name="implementation_status_id" class="form-control select2" id="implementation_status_id">
                                         <option value="">Select Implementation Status</option>
                                         @foreach($implementationStatuses as $status)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
@@ -78,26 +77,12 @@
 
                         <hr>
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h5>Support Requests</h5>
-                            <button type="button" class="btn btn-sm btn-primary" id="add_support_request">
-                                <i class="fas fa-plus"></i> Add Donor Request
+                            <h5>Activities</h5>
+                            <button type="button" class="btn btn-sm btn-primary" id="add_activity">
+                                <i class="fas fa-plus"></i> Add Activity
                             </button>
                         </div>
-                        <table class="table table-sm table-bordered" id="shelf-support-requests-table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Requesting Partner</th>
-                                    <th>Activities</th>
-                                    <th>Status</th>
-                                    <th>Priority</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Populated via AJAX -->
-                            </tbody>
-                        </table>
+                        <x-partials.initiative_activities_datatable :dataTable="$initiativeActivitiesEditTable" />
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

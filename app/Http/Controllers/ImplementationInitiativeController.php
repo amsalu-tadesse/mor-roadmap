@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\ImplementationInitiativesDataTable;
+use App\DataTables\InitiativeActivitiesDataTable;
 use App\Http\Requests\StoreImplementationInitiativeRequest;
 use App\Http\Requests\UpdateImplementationInitiativeRequest;
 use App\Models\Directorate;
 use App\Models\ImplementationStatus;
 use App\Models\Initiative;
-use App\Models\InitiativeStatus;
+use App\Models\ActivityStatus;
 use App\Models\Objective;
 use App\Models\Partner;
 use App\Models\RequestStatus;
-use App\Models\SupportRequest;
+use App\Models\Activity;
 use App\Models\Theme;
+use Illuminate\Support\Arr;
 
 class ImplementationInitiativeController extends Controller
 {
@@ -23,7 +25,27 @@ class ImplementationInitiativeController extends Controller
         $themes = Theme::all();
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
-        return $dataTable->render('admin.implementation-initiatives.index', compact('objectives', 'themes', 'directorates', 'implementationStatuses'));
+        $partners = Partner::all();
+        $requestStatuses = RequestStatus::all();
+        $priorities = Activity::PRIORITIES;
+        $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
+            $q->where('id', \App\Constants\Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION);
+        })->get();
+        $activityStatuses = ActivityStatus::all();
+
+        $initiativeActivitiesEditTable = app(InitiativeActivitiesDataTable::class)
+            ->setTableId('initiative-activities-edit-table')
+            ->setShowActions(true);
+
+        $initiativeActivitiesShowTable = app(InitiativeActivitiesDataTable::class)
+            ->setTableId('initiative-activities-show-table')
+            ->setShowActions(false);
+
+        return $dataTable->render('admin.implementation-initiatives.index', compact(
+            'objectives', 'themes', 'directorates', 'implementationStatuses',
+            'partners', 'requestStatuses', 'priorities', 'initiatives', 'activityStatuses',
+            'initiativeActivitiesEditTable', 'initiativeActivitiesShowTable'
+        ));
     }
 
     public function create()
@@ -33,8 +55,8 @@ class ImplementationInitiativeController extends Controller
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
         $partners = Partner::all();
-        $initiativeStatuses = InitiativeStatus::all();
-        return view('admin.implementation-initiatives.new', compact('themes', 'objectives', 'directorates', 'implementationStatuses', 'partners', 'initiativeStatuses'));
+        $activityStatuses = ActivityStatus::all();
+        return view('admin.implementation-initiatives.new', compact('themes', 'objectives', 'directorates', 'implementationStatuses', 'partners', 'activityStatuses'));
     }
 
     public function store(StoreImplementationInitiativeRequest $request)
@@ -43,14 +65,15 @@ class ImplementationInitiativeController extends Controller
         if (empty($data['implementation_status_id'])) {
             $data['implementation_status_id'] = \App\Constants\Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION;
         }
-        Initiative::create($data);
+        $initiative = Initiative::create(Arr::except($data, ['directorates']));
+        $initiative->directorates()->sync($data['directorates']);
         return redirect()->route('admin.implementation-initiatives.index')->with('success_create', 'Implementation Initiative created successfully!');
     }
 
     public function show(Initiative $implementationInitiative)
     {
         if (request()->ajax()) {
-            $implementationInitiative->load(['partner', 'initiativeStatus', 'objective', 'directorate', 'theme', 'supportRequests.partner', 'supportRequests.requestStatus']);
+            $implementationInitiative->load(['objective', 'directorates', 'theme']);
             $creator = \App\Models\User::find($implementationInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
 
@@ -59,10 +82,7 @@ class ImplementationInitiativeController extends Controller
                 'initiative' => $implementationInitiative,
                 'objectiveName' => $implementationInitiative->objective->name ?? 'N/A',
                 'themeName' => $implementationInitiative->theme->name ?? 'N/A',
-                'directorateName' => $implementationInitiative->directorate->name ?? 'N/A',
-                'partnerName' => $implementationInitiative->partner->name ?? 'N/A',
-                'initiativeStatusName' => $implementationInitiative->initiativeStatus->name ?? 'N/A',
-                'supportRequests' => $implementationInitiative->supportRequests,
+                'directorateName' => $implementationInitiative->directorates->pluck('name')->join(', ') ?: 'N/A',
                 'getCreatedBy' => $getCreatedBy,
                 'created_at' => $implementationInitiative->created_at->format('Y-m-d H:i:s'),
             ]);
@@ -73,12 +93,11 @@ class ImplementationInitiativeController extends Controller
     public function edit(Initiative $implementationInitiative)
     {
         if (request()->ajax()) {
-            $implementationInitiative->load(['partner', 'initiativeStatus', 'objective']);
+            $implementationInitiative->load(['objective', 'directorates']);
             return response()->json([
                 'success' => 1,
                 'initiative' => $implementationInitiative,
-                'start_date' => $implementationInitiative->start_date ? $implementationInitiative->start_date->format('Y-m-d') : '',
-                'end_date' => $implementationInitiative->end_date ? $implementationInitiative->end_date->format('Y-m-d') : '',
+                'directorates' => $implementationInitiative->directorates->pluck('id')->toArray(),
             ]);
         }
         return redirect()->route('admin.implementation-initiatives.index');
@@ -86,7 +105,9 @@ class ImplementationInitiativeController extends Controller
 
     public function update(UpdateImplementationInitiativeRequest $request, Initiative $implementationInitiative)
     {
-        $implementationInitiative->update($request->validated());
+        $data = $request->validated();
+        $implementationInitiative->update(Arr::except($data, ['directorates']));
+        $implementationInitiative->directorates()->sync($data['directorates']);
         if (request()->ajax()) {
             return response()->json(['success' => true]);
         }

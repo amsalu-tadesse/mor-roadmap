@@ -10,6 +10,7 @@ use App\Models\ImplementationStatus;
 use App\Models\Initiative;
 use App\Models\Objective;
 use App\Models\Theme;
+use Illuminate\Support\Arr;
 
 class DraftInitiativeController extends Controller
 {
@@ -43,14 +44,15 @@ class DraftInitiativeController extends Controller
             }
         }
 
-        Initiative::create($data);
+        $initiative = Initiative::create(Arr::except($data, ['directorates']));
+        $initiative->directorates()->sync($data['directorates']);
         return redirect()->route('admin.draft-initiatives.index')->with('success_create', 'Draft Initiative created successfully!');
     }
 
     public function show(Initiative $draftInitiative)
     {
         if (request()->ajax()) {
-            $draftInitiative->load(['objective', 'directorate', 'implementationStatus', 'theme']);
+            $draftInitiative->load(['objective', 'directorates', 'implementationStatus', 'theme']);
             $creator = \App\Models\User::find($draftInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
 
@@ -59,7 +61,7 @@ class DraftInitiativeController extends Controller
                 'initiative' => $draftInitiative,
                 'objectiveName' => $draftInitiative->objective->name ?? 'N/A',
                 'themeName' => $draftInitiative->theme->name ?? 'N/A',
-                'directorateName' => $draftInitiative->directorate->name ?? 'N/A',
+                'directorateName' => $draftInitiative->directorates->pluck('name')->join(', ') ?: 'N/A',
                 'implementationStatusName' => $draftInitiative->implementationStatus->name ?? 'N/A',
                 'getCreatedBy' => $getCreatedBy,
                 'created_at' => $draftInitiative->created_at->format('Y-m-d H:i:s'),
@@ -71,9 +73,11 @@ class DraftInitiativeController extends Controller
     public function edit(Initiative $draftInitiative)
     {
         if (request()->ajax()) {
+            $draftInitiative->load('directorates');
             return response()->json([
                 'success' => 1,
                 'initiative' => $draftInitiative,
+                'directorates' => $draftInitiative->directorates->pluck('id')->toArray(),
             ]);
         }
         $objectives = Objective::all();
@@ -86,7 +90,9 @@ class DraftInitiativeController extends Controller
 
     public function update(UpdateDraftInitiativeRequest $request, Initiative $draftInitiative)
     {
-        $draftInitiative->update($request->validated());
+        $data = $request->validated();
+        $draftInitiative->update(Arr::except($data, ['directorates']));
+        $draftInitiative->directorates()->sync($data['directorates']);
         if (request()->ajax()) {
             return response()->json(['success' => true]);
         }

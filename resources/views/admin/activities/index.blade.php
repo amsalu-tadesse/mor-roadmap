@@ -1,5 +1,5 @@
 <x-layout>
-    <x-breadcrump title='Support Requests List' parent='Support Requests' child='List' index="support-requests" />
+    <x-breadcrump title='Activity Requests List' parent='Activity Requests' child='List' index="activities" />
 
     <div class='card'>
         <div class='card-header'>
@@ -27,8 +27,8 @@
                 <div class='col-md-6 text-right'>
                     <div class="form-group">
                         @can('support-request: create')
-                            <a href="{{ route('admin.support-requests.create') }}">
-                                <button type='button' class='btn btn-primary'>Add New Support Request</button>
+                            <a href="{{ route('admin.activities.create') }}">
+                                <button type='button' class='btn btn-primary'>Add New Activity Request</button>
                             </a>
                         @endcan
                     </div>
@@ -41,14 +41,14 @@
     </div>
 
 
-    <x-partials.support_request_modal :partners="$partners" :requestStatuses="$requestStatuses" :priorities="$priorities" :initiatives="$initiatives" />
-    <x-show-modals.support_request_show_modal />
+    <x-partials.activity_modal :partners="$partners" :requestStatuses="$requestStatuses" :priorities="$priorities" :initiatives="$initiatives" :activityStatuses="$activityStatuses" :directorates="$directorates" />
+    <x-show-modals.activity_show_modal />
 
     @push('scripts')
         {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
         <script>
             function delete_row(element, row_id) {
-                var url = "{{ route('admin.support-requests.destroy', ':id') }}";
+                var url = "{{ route('admin.activities.destroy', ':id') }}";
                 url = url.replace(':id', row_id);
 
                 const swalWithBootstrapButtons = Swal.mixin({
@@ -70,8 +70,8 @@
                             type: 'DELETE', url: url, dataType: 'json',
                             success: function(data) {
                                 if (data.success) {
-                                    window.LaravelDataTables['support-requests-table'].ajax.reload();
-                                    swalWithBootstrapButtons.fire('Deleted!', 'Support request has been deleted.', 'success');
+                                    window.LaravelDataTables['activities-table'].ajax.reload();
+                                    swalWithBootstrapButtons.fire('Deleted!', 'Activity request has been deleted.', 'success');
                                 }
                             }
                         });
@@ -80,15 +80,15 @@
             }
 
             if (@json(session('success_create'))) {
-                toastr.success('You have successfully added a new Support Request');
+                toastr.success('You have successfully added a new Activity Request');
             }
 
             $(document).ready(function() {
                 // Initialize modal selects
-                $('#support_request_modal .select2').select2({
+                $('#activity_modal .select2').select2({
                     theme: 'bootstrap4',
                     width: '100%',
-                    dropdownParent: $('#support_request_modal')
+                    dropdownParent: $('#activity_modal')
                 });
 
                 // Initialize filter selects
@@ -99,33 +99,42 @@
 
                 // Filter change events
                 $('#partner_filter, #status_filter').on('change', function() {
-                    window.LaravelDataTables['support-requests-table'].ajax.reload();
+                    window.LaravelDataTables['activities-table'].ajax.reload();
                 });
 
-                $('#support-requests-table').on('click', '#update_row', function() {
+                $('#activities-table').on('click', '#update_row', function() {
                     var row_id = $(this).data('row_id');
-                    var url = "{{ route('admin.support-requests.edit', ':id') }}";
+                    var url = "{{ route('admin.activities.edit', ':id') }}";
                     url = url.replace(':id', row_id);
-                    $('#support_request_update_form :input').val('');
+                    $('#activity_update_form :input').val('');
                     $.ajax({
                         url: url, type: 'GET', dataType: 'json',
                         success: function(response) {
                             if (response.success == 1) {
-                                $('#support_request_id').val(response.supportRequest.id);
-                                $('#sr_initiative_id').val(response.supportRequest.initiative_id).trigger('change');
-                                $('#sr_partner_id').val(response.supportRequest.partner_id).trigger('change');
-                                $('#sr_request_status_id').val(response.supportRequest.request_status_id).trigger('change');
-                                $('#sr_priority').val(response.supportRequest.priority).trigger('change');
-                                $('#sr_activities').val(response.supportRequest.activities);
-                                $('#support_request_modal').modal('show');
+                                $('#activity_id').val(response.activity.id);
+                                $('#sr_initiative_id').val(response.activity.initiative_id).trigger('change');
+                                $('#sr_partner_id').val(response.activity.partner_id).trigger('change');
+                                $('#sr_interested_partners').val(response.interested_partners).trigger('change');
+                                $('#sr_directorates').val(response.directorates).trigger('change');
+                                $('#sr_request_status_id').val(response.activity.request_status_id).trigger('change');
+                                $('#sr_priority').val(response.activity.priority).trigger('change');
+                                $('#sr_activities').val(response.activity.activities);
+                                $('#sr_start_date').val(response.activity.start_date ? response.activity.start_date.substring(0, 10) : '');
+                                $('#sr_end_date').val(response.activity.end_date ? response.activity.end_date.substring(0, 10) : '');
+                                $('#sr_budget').val(response.activity.budget);
+                                $('#sr_completion').val(response.activity.completion);
+                                $('#sr_activity_status_id').val(response.activity.activity_status_id).trigger('change');
+                                $('#sr_request_type').val(response.activity.request_type).trigger('change');
+                                $('#sr_expenditure').val(response.activity.expenditure);
+                                $('#activity_modal').modal('show');
                             }
                         }
                     });
                 });
 
-                $('#support-requests-table').on('click', '#show_row', function() {
+                $('#activities-table').on('click', '#show_row', function() {
                     var row_id = $(this).data('row_id');
-                    var url = "{{ route('admin.support-requests.show', ':id') }}";
+                    var url = "{{ route('admin.activities.show', ':id') }}";
                     url = url.replace(':id', row_id);
                     $.ajax({
                         url: url, type: 'GET', dataType: 'json',
@@ -134,7 +143,14 @@
                                 $('#show_modal #partner').html(response.partnerName);
                                 $('#show_modal #request_status').html(response.requestStatusName);
                                 $('#show_modal #priority_show').html(response.priorityLabel);
-                                $('#show_modal #activities_show').html(response.supportRequest.activities);
+                                $('#show_modal #activities_show').html(response.activity.activities);
+                                $('#show_modal #start_date_show').html(response.start_date);
+                                $('#show_modal #end_date_show').html(response.end_date);
+                                $('#show_modal #budget_show').html(response.activity.budget);
+                                $('#show_modal #completion_show').html(response.activity.completion);
+                                $('#show_modal #activity_status_show').html(response.activityStatusName);
+                                $('#show_modal #request_type_show').html(response.activity.request_type);
+                                $('#show_modal #expenditure_show').html(response.activity.expenditure);
                                 $('#show_modal #created_by').html(response.getCreatedBy);
                                 $('#show_modal #created_at').html(response.created_at);
                                 $('#show_modal').modal('show');
@@ -144,19 +160,19 @@
                 });
             });
 
-            $('#support_request_form').on('submit', function(e) {
+            $('#activity_form').on('submit', function(e) {
                 e.preventDefault();
                 var form_data = $(this).serialize();
-                var row_id = $('#support_request_id', $(this)).val();
-                var url = "{{ route('admin.support-requests.update', ':id') }}";
+                var row_id = $('#activity_id', $(this)).val();
+                var url = "{{ route('admin.activities.update', ':id') }}";
                 url = url.replace(':id', row_id);
                 $.ajax({
                     url: url, type: 'PATCH', data: form_data, dataType: 'json',
                     success: function(data) {
                         if (data.success) {
-                            $('#support_request_modal').modal('toggle');
-                            window.LaravelDataTables['support-requests-table'].ajax.reload();
-                            toastr.success('You have successfully updated the Support Request.');
+                            $('#activity_modal').modal('toggle');
+                            window.LaravelDataTables['activities-table'].ajax.reload();
+                            toastr.success('You have successfully updated the Activity Request.');
                         }
                     }
                 });

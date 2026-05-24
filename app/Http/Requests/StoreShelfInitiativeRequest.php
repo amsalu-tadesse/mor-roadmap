@@ -15,19 +15,10 @@ class StoreShelfInitiativeRequest extends FormRequest
             'name' => 'required|string|max:255',
             'objective_id' => 'required|exists:objectives,id',
             'theme_id' => 'required|exists:themes,id',
-            'directorate_id' => 'required|exists:directorates,id',
+            'directorates' => 'required|array|min:1',
+            'directorates.*' => 'exists:directorates,id',
             'implementation_status_id' => 'nullable|exists:implementation_statuses,id',
             'note' => 'nullable|string',
-
-            // Implementation fields (in case they are filled during creation)
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'budget' => 'nullable|string|max:255',
-            'expenditure' => 'nullable|string',
-            'partner_id' => 'nullable|exists:partners,id',
-            'completion' => 'nullable|numeric|min:0|max:100',
-            'initiative_status_id' => 'nullable|exists:initiative_statuses,id',
-            'request' => 'nullable|in:New,Current',
         ];
     }
 }

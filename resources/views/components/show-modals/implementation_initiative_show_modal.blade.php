@@ -1,5 +1,7 @@
+@props(['initiativeActivitiesShowTable'])
+
 <div class="modal fade" id="show_modal">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Implementation Details</h4>
@@ -16,7 +18,7 @@
                             <td id="name_show"></td>
                         </tr>
                         <tr>
-                            <th>Directorate</th>
+                            <th>Directorates</th>
                             <td id="directorate_show"></td>
                         </tr>
                         <tr>
@@ -29,67 +31,9 @@
                         </tr>
                     </table>
 
-                    <h5 class="text-info border-bottom pb-2 mb-3">Implementation Details</h5>
-                    <table class="table table-bordered">
-                        <tr>
-                            <th style="width: 30%">Start Date</th>
-                            <td id="start_date_show"></td>
-                        </tr>
-                        <tr>
-                            <th>End Date</th>
-                            <td id="end_date_show"></td>
-                        </tr>
-                        <tr>
-                            <th>Budget</th>
-                            <td id="budget_show"></td>
-                        </tr>
-                        <tr>
-                            <th>Expenditure</th>
-                            <td id="expenditure_show"></td>
-                        </tr>
-                        <tr>
-                            <th>Partner</th>
-                            <td id="partner_show"></td>
-                        </tr>
-                        <tr>
-                            <th>Completion</th>
-                            <td id="completion_show"></td>
-                        </tr>
-                        <tr>
-                            <th>Initiative Status</th>
-                            <td id="initiative_status_show"></td>
-                        </tr>
-                        <tr>
-                            <th>Request Type</th>
-                            <td id="request_show"></td>
-                        </tr>
-                        <tr>
-                            <th>Created By</th>
-                            <td id="created_by"></td>
-                        </tr>
-                        <tr>
-                            <th>Created At</th>
-                            <td id="created_at"></td>
-                        </tr>
-                    </table>
-
-                    <h5 class="text-info border-bottom pb-2 mb-3 mt-4">Support Requests</h5>
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered table-striped" id="support_requests_show_table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Partner</th>
-                                    <th>Activities</th>
-                                    <th>Status</th>
-                                    <th>Priority</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- To be populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <h5 class="text-info border-bottom pb-2 mb-3 mt-4">Activities</h5>
+                    <input type="hidden" id="show_initiative_id" value="">
+                    <x-partials.initiative_activities_datatable :dataTable="$initiativeActivitiesShowTable" />
                 </div>
             </div>
             <div class="modal-footer justify-content-end">

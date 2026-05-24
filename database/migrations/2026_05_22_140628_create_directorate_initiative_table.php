@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('activity_statuses', function (Blueprint $table) {
+        Schema::create('directorate_initiative', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('created_by')->nullable()->constrained('users');
-            $table->foreignId('updated_by')->nullable()->constrained('users');
-            $table->softDeletes();
+            $table->foreignId('initiative_id')->constrained('initiatives')->onDelete('cascade');
+            $table->foreignId('directorate_id')->constrained('directorates')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('activity_statuses');
+        Schema::dropIfExists('directorate_initiative');
     }
 };

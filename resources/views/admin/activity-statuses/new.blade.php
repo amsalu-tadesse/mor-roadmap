@@ -1,12 +1,12 @@
 <x-layout>
-    <x-breadcrump title='Add New Initiative Status' parent='Initiative Statuses' child='Add New' index="initiative-statuses" />
+    <x-breadcrump title='Add New Activity Status' parent='Activity Statuses' child='Add New' index="activity-statuses" />
 
     <div class="card card-info">
         <div class="card-header">
             <h3 class="card-title">Add Status Form</h3>
         </div>
 
-        <form action="{{ route('admin.initiative-statuses.store') }}" method="post">
+        <form action="{{ route('admin.activity-statuses.store') }}" method="post">
             @csrf
             <div class="card-body">
                 <div class="row">

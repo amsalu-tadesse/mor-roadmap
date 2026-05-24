@@ -151,6 +151,7 @@
                     var url = "{{ route('admin.draft-initiatives.edit', ':id') }}";
                     url = url.replace(':id', row_id);
                     $('#draft_initiative_update_form :input').not(':submit, :button, :hidden').val('');
+                    $('#directorates').val([]).trigger('change');
                     $.ajax({
                         url: url, type: 'GET', dataType: 'json',
                         success: function (response) {
@@ -158,7 +159,7 @@
                                 var initiative = response.initiative;
                                 $('#initiative_id').val(initiative.id);
                                 $('#name').val(initiative.name);
-                                $('#directorate_id').val(initiative.directorate_id).trigger('change');
+                                $('#directorates').val(response.directorates).trigger('change');
                                 $('#implementation_status_id').val(initiative.implementation_status_id).trigger('change');
                                 $('#note').val(initiative.note);
 
