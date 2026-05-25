@@ -187,10 +187,11 @@
                                     let priorityLabel = sr.priority == 'H' ? 'High' : (sr.priority == 'M' ? 'Medium' : 'Low');
                                     let row = `<tr>
                                         <td>${index + 1}</td>
-                                        <td>${sr.partner ? sr.partner.name : 'N/A'}</td>
                                         <td>${sr.activities}</td>
+                                          <td>${sr.partner ? sr.partner.name : 'N/A'}</td>
+                                           <td><span class="badge badge-${priorityClass}">${priorityLabel}</span></td>
                                         <td>${sr.request_status ? sr.request_status.name : 'N/A'}</td>
-                                        <td><span class="badge badge-${priorityClass}">${priorityLabel}</span></td>
+
                                         <td>
                                             <button type="button" class="btn btn-sm edit-sr" data-id="${sr.id}" data-initiative_id="${sr.initiative_id}" data-partner_id="${sr.partner_id}" data-activities="${sr.activities}" data-status_id="${sr.request_status_id}" data-priority="${sr.priority}">
                                                 <i class="far fa-edit text-info"></i>

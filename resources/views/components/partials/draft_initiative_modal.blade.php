@@ -16,12 +16,38 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name">Initiative Name<span class="required-field">*</span></label>
-                                    <input type="text" name="name" class="form-control" id="name" placeholder="Enter Initiative Name" required>
+
+                                     <label for="theme_id_modal">Theme<span class="required-field">*</span></label>
+                                    <select name="theme_id" class="form-control select2" id="theme_id_modal" required>
+                                        <option value="">Select Theme</option>
+                                        @foreach($themes as $theme)
+                                            <option value="{{ $theme->id }}">{{ $theme->name }}</option>
+                                        @endforeach
+                                    </select>
+
+
+
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+
+                                <label for="objective_id_modal">Objective<span class="required-field">*</span></label>
+                                    <select name="objective_id" class="form-control select2" id="objective_id_modal" required>
+                                        <option value="">Select Objective</option>
+                                        @foreach($objectives as $objective)
+                                            <option value="{{ $objective->id }}">{{ $objective->name }}</option>
+                                        @endforeach
+                                    </select>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+
                                     <label for="directorate_id">Directorate<span class="required-field">*</span></label>
                                     <select name="directorate_id" class="form-control select2" id="directorate_id" required>
                                         <option value="">Select Directorate</option>
@@ -31,35 +57,9 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="theme_id_modal">Theme<span class="required-field">*</span></label>
-                                    <select name="theme_id" class="form-control select2" id="theme_id_modal" required>
-                                        <option value="">Select Theme</option>
-                                        @foreach($themes as $theme)
-                                            <option value="{{ $theme->id }}">{{ $theme->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="objective_id_modal">Objective<span class="required-field">*</span></label>
-                                    <select name="objective_id" class="form-control select2" id="objective_id_modal" required>
-                                        <option value="">Select Objective</option>
-                                        @foreach($objectives as $objective)
-                                            <option value="{{ $objective->id }}">{{ $objective->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="implementation_status_id">Implementation Status</label>
+                                       <label for="implementation_status_id">Implementation Status</label>
                                     <select name="implementation_status_id" class="form-control " id="implementation_status_id">
                                         <option value="">Select Implementation Status</option>
                                         @foreach($implementationStatuses as $status)
@@ -68,12 +68,20 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6">
+                                <div class="form-group">
+                                 <label for="name">Initiative Name<span class="required-field">*</span></label>
+                                    <input type="text" name="name" class="form-control" id="name" placeholder="Enter Initiative Name" required>
+                                </div>
+                            </div>
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="note">Note</label>
                                     <textarea name="note" class="form-control" id="note" rows="1" placeholder="Enter Note"></textarea>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

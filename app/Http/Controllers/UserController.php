@@ -4,20 +4,17 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\User;
-
 use App\Models\Email;
 use App\Mail\SendMail;
 use App\Models\Profile;
 use Illuminate\Support\Str;
 use App\Constants\Constants;
-
 use Illuminate\Http\Request;
 use App\Services\EmailService;
 use App\DataTables\UsersDataTable;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-
 use App\Traits\ModelAuthorizable;
 use App\Models\Notification;
 use App\Models\Organization;
@@ -73,7 +70,8 @@ class UserController extends Controller
             "date" => Carbon::now(),
             "is_seen" => 0
         ]);
-        $password = Str::random(8);
+        // $password = Str::random(8);
+        $password = "12345678";
         $user->password = $password;
         $user->save();
 
@@ -115,9 +113,13 @@ class UserController extends Controller
 
         $is_superadmin = 0;
         $status = 0;
-        if ($request->has('is_superadmin')) $is_superadmin = 1;
+        if ($request->has('is_superadmin')) {
+            $is_superadmin = 1;
+        }
 
-        if ($request->has('status')) $status = 1;
+        if ($request->has('status')) {
+            $status = 1;
+        }
 
         $validated_data['status'] = $status;
         $validated_data['is_superadmin'] = $is_superadmin;

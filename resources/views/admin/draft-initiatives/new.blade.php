@@ -10,31 +10,8 @@
             @csrf
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="name">Initiative Name<span class="required-field">*</span></label>
-                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Enter Initiative Name" value="{{ old('name') }}">
-                            @error('name')
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="directorate_id">Directorate<span class="required-field">*</span></label>
-                            <select name="directorate_id" class="form-control select2 @error('directorate_id') is-invalid @enderror" id="directorate_id">
-                                <option value="">Select Directorate</option>
-                                @foreach($directorates as $directorate)
-                                    <option value="{{ $directorate->id }}" {{ old('directorate_id') == $directorate->id ? 'selected' : '' }}>
-                                        {{ $directorate->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('directorate_id')
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+
+
                 </div>
                 <div class="row">
                     <div class="col-md-6">
@@ -73,6 +50,25 @@
                     </div>
                 </div>
                 <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="directorate_id">Directorate<span class="required-field">*</span></label>
+                            <select name="directorate_id" class="form-control select2 @error('directorate_id') is-invalid @enderror" id="directorate_id">
+                                <option value="">Select Directorate</option>
+                                @foreach($directorates as $directorate)
+                                    <option value="{{ $directorate->id }}" {{ old('directorate_id') == $directorate->id ? 'selected' : '' }}>
+                                        {{ $directorate->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('directorate_id')
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="implementation_status_id">Implementation Status</label>
@@ -89,7 +85,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <div class="form-group">
                             <label for="note">Note</label>
                             <textarea name="note" class="form-control @error('note') is-invalid @enderror" id="note" rows="1" placeholder="Enter Note">{{ old('note') }}</textarea>
@@ -97,7 +93,19 @@
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
                         </div>
+                    </div> --}}
+
+                     <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">Initiative Name<span class="required-field">*</span></label>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Enter Initiative Name" value="{{ old('name') }}">
+                            @error('name')
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
+
+
                 </div>
             </div>
             <div class="card-footer text-right">

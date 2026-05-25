@@ -57,7 +57,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="implementation_status_id">Implementation Status</label>
                                     <select name="implementation_status_id" class="form-control " id="implementation_status_id">
@@ -68,12 +68,12 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="note">Note</label>
                                     <textarea name="note" class="form-control" id="note" rows="1"></textarea>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <hr>
@@ -87,10 +87,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Requesting Partner</th>
-                                    <th>Activities</th>
-                                    <th>Status</th>
+                                    <th>Activity</th>
+                                    <th>Implementing Partner</th>
                                     <th>Priority</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
