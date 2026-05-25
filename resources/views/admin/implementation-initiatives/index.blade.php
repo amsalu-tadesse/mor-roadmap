@@ -50,17 +50,21 @@
         </div>
     </div>
 
-    @php
-        $partners = \App\Models\Partner::all();
-        $initiativeStatuses = \App\Models\InitiativeStatus::all();
-    @endphp
-
-    <x-partials.implementation_initiative_modal :partners="$partners" :initiativeStatuses="$initiativeStatuses" :objectives="$objectives" :directorates="$directorates" :implementationStatuses="$implementationStatuses" :themes="$themes" />
-    <x-show-modals.implementation_initiative_show_modal />
+    <x-partials.implementation_initiative_modal :objectives="$objectives" :directorates="$directorates" :implementationStatuses="$implementationStatuses" :themes="$themes" :initiativeActivitiesEditTable="$initiativeActivitiesEditTable" />
+    <x-partials.activity_modal :partners="$partners" :requestStatuses="$requestStatuses" :priorities="$priorities" :initiatives="$initiatives" :activityStatuses="$activityStatuses" :directorates="$directorates" />
+    <x-show-modals.implementation_initiative_show_modal :initiativeActivitiesShowTable="$initiativeActivitiesShowTable" />
 
     @push('scripts')
         {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+        {!! $initiativeActivitiesEditTable->html()->scripts() !!}
+        {!! $initiativeActivitiesShowTable->html()->scripts() !!}
         <script>
+            function reloadInitiativeActivitiesTable(tableId) {
+                if (window.LaravelDataTables && window.LaravelDataTables[tableId]) {
+                    window.LaravelDataTables[tableId].ajax.reload(null, false);
+                }
+            }
+
             function delete_row(element, row_id) {
                 var url = "{{ route('admin.implementation-initiatives.destroy', ':id') }}";
                 url = url.replace(':id', row_id);
@@ -104,12 +108,6 @@
                     width: '100%'
                 });
 
-                $('.datepicker').datepicker({
-                    format: 'yyyy-mm-dd',
-                    autoclose: true,
-                    todayHighlight: true
-                });
-
                 // Initialize modal selects
                 // $('#update_modal .select2').select2({
                 //     theme: 'bootstrap4',
@@ -117,23 +115,47 @@
                 //      dropdownParent: $('#update_modal')
                 // });
 
-                 // Fix Bootstrap modal + Select2 focus issue
-    // $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+                $('#activity_modal .select2').select2({
+                    theme: 'bootstrap4',
+                    width: '100%',
+                    dropdownParent: $('#activity_modal')
+                });
 
-    // Initialize Select2 when modal opens
-  $('#update_modal').on('shown.bs.modal', function () {
+                $('#activity_modal').on('hidden.bs.modal', function() {
+                    if ($('#update_modal').hasClass('show')) {
+                        $('body').addClass('modal-open');
+                    }
+                });
 
-   // Initialize modal selects
-     $('#update_modal .select2').select2({
-         theme: 'bootstrap4',
-         width: '100%',
-          dropdownParent: $('#update_modal')
-     });
-;
+                $('#update_modal').on('shown.bs.modal', function () {
+                    $(this).find('.select2').select2({
+                        theme: 'bootstrap4',
+                        width: '100%',
+                        dropdownParent: $('#update_modal')
+                    });
+                });
 
-});
+                $(document).on('click', '#add_activity', function() {
+                    var currentInitiativeId = $('#initiative_id').val();
+                    $('#activity_form')[0].reset();
+                    $('#sr_partner_id').val('').trigger('change');
+                    $('#sr_interested_partners').val([]).trigger('change');
+                    $('#sr_directorates').val([]).trigger('change');
+                    $('#sr_request_status_id').val('').trigger('change');
+                    $('#sr_activity_status_id').val('').trigger('change');
+                    $('#sr_request_type').val('').trigger('change');
+                    $('#sr_priority').val('').trigger('change');
+                    $('#support_modal_title').text('Add Activity');
+                    $('#activity_form').attr('action', "{{ route('admin.activities.store') }}");
+                    $('#support_method').val('POST');
 
+                    setTimeout(function() {
+                        $('#sr_initiative_id').val(currentInitiativeId).trigger('change');
+                        $('#sr_initiative_id').prop('disabled', true);
+                    }, 50);
 
+                    $('#activity_modal').modal('show');
+                });
 
                 $(document).on('change', '#filter_directorate, #filter_objective', function() {
                     window.LaravelDataTables['implementation-initiatives-table'].ajax.reload();
@@ -178,6 +200,7 @@
                     var url = "{{ route('admin.implementation-initiatives.edit', ':id') }}";
                     url = url.replace(':id', row_id);
                     $('#implementation_initiative_update_form :input').not(':submit, :button, :hidden').val('');
+                    $('#directorates').val([]).trigger('change');
                     $.ajax({
                         url: url, type: 'GET', dataType: 'json',
                         success: function(response) {
@@ -185,16 +208,8 @@
                                 var initiative = response.initiative;
                                 $('#initiative_id').val(initiative.id);
                                 $('#name').val(initiative.name);
-                                $('#directorate_id').val(initiative.directorate_id).trigger('change');
+                                $('#directorates').val(response.directorates).trigger('change');
                                 $('#implementation_status_id').val(initiative.implementation_status_id).trigger('change');
-                                $('#start_date').val(response.start_date);
-                                $('#end_date').val(response.end_date);
-                                $('#budget').val(initiative.budget);
-                                $('#expenditure').val(initiative.expenditure);
-                                $('#partner_id').val(initiative.partner_id).trigger('change');
-                                $('#completion').val(initiative.completion);
-                                $('#initiative_status_id').val(initiative.initiative_status_id).trigger('change');
-                                $('#request').val(initiative.request).trigger('change');
                                 $('#note').val(initiative.note);
 
                                 var themeId = initiative.theme_id || (initiative.objective ? initiative.objective.theme_id : null);
@@ -205,6 +220,8 @@
                                     $('#theme_id_modal').val('').trigger('change');
                                     $('#objective_id_modal').val(initiative.objective_id).trigger('change');
                                 }
+
+                                reloadInitiativeActivitiesTable('initiative-activities-edit-table');
 
                                 $('#update_modal').modal('show');
                             }
@@ -224,38 +241,103 @@
                                 $('#show_modal #directorate_show').html(response.directorateName);
                                 $('#show_modal #theme_show').html(response.themeName);
                                 $('#show_modal #objective_show').html(response.objectiveName);
-                                $('#show_modal #start_date_show').html(response.initiative.start_date ? response.initiative.start_date.substring(0, 10) : '');
-                                $('#show_modal #end_date_show').html(response.initiative.end_date ? response.initiative.end_date.substring(0, 10) : '');
-                                $('#show_modal #budget_show').html(response.initiative.budget);
-                                $('#show_modal #expenditure_show').html(response.initiative.expenditure);
-                                $('#show_modal #partner_show').html(response.partnerName);
-                                $('#show_modal #completion_show').html(response.initiative.completion ? response.initiative.completion + '%' : '');
-                                $('#show_modal #initiative_status_show').html(response.initiativeStatusName);
-                                $('#show_modal #request_show').html(response.initiative.request);
-                                $('#show_modal #created_by').html(response.getCreatedBy);
-                                $('#show_modal #created_at').html(response.created_at);
 
-                                // Populate Support Requests
-                                $('#support_requests_show_table tbody').empty();
-                                if (response.supportRequests && response.supportRequests.length > 0) {
-                                    response.supportRequests.forEach(function(sr, index) {
-                                        let priorityClass = sr.priority == 'H' ? 'danger' : (sr.priority == 'M' ? 'warning' : 'info');
-                                        let priorityLabel = sr.priority == 'H' ? 'High' : (sr.priority == 'M' ? 'Medium' : 'Low');
-                                        let row = `<tr>
-                                            <td>${index + 1}</td>
-                                            <td>${sr.partner ? sr.partner.name : 'N/A'}</td>
-                                            <td>${sr.activities}</td>
-                                            <td>${sr.request_status ? sr.request_status.name : 'N/A'}</td>
-                                            <td><span class="badge badge-${priorityClass}">${priorityLabel}</span></td>
-                                        </tr>`;
-                                        $('#support_requests_show_table tbody').append(row);
-                                    });
-                                } else {
-                                    $('#support_requests_show_table tbody').append('<tr><td colspan="5" class="text-center">No support requests found</td></tr>');
-                                }
+                                $('#show_initiative_id').val(row_id);
+                                reloadInitiativeActivitiesTable('initiative-activities-show-table');
 
                                 $('#show_modal').modal('show');
                             }
+                        }
+                    });
+                });
+
+                $(document).on('click', '.edit-sr', function() {
+                    let id = $(this).data('id');
+                    let initiative_id = $(this).data('initiative_id');
+                    var url = "/admin/activities/" + id + "/edit";
+
+                    $('#support_modal_title').text('Edit Activity');
+                    $('#activity_form').attr('action', '/admin/activities/' + id);
+                    $('#support_method').val('PATCH');
+
+                    $.ajax({
+                        url: url, type: 'GET', dataType: 'json',
+                        success: function(response) {
+                            if (response.success == 1) {
+                                $('#sr_initiative_id').val(initiative_id).trigger('change').attr('disabled', true);
+                                $('#sr_partner_id').val(response.activity.partner_id).trigger('change');
+                                $('#sr_interested_partners').val(response.interested_partners).trigger('change');
+                                $('#sr_directorates').val(response.directorates).trigger('change');
+                                $('#sr_activities').val(response.activity.activities);
+                                $('#sr_request_status_id').val(response.activity.request_status_id ? response.activity.request_status_id.toString() : '').trigger('change.select2');
+                                $('#sr_priority').val(response.activity.priority).trigger('change.select2');
+                                $('#sr_start_date').val(response.activity.start_date ? response.activity.start_date.substring(0, 10) : '');
+                                $('#sr_end_date').val(response.activity.end_date ? response.activity.end_date.substring(0, 10) : '');
+                                $('#sr_budget').val(response.activity.budget);
+                                $('#sr_completion').val(response.activity.completion);
+                                $('#sr_activity_status_id').val(response.activity.activity_status_id ? response.activity.activity_status_id.toString() : '').trigger('change.select2');
+                                $('#sr_request_type').val(response.activity.request_type).trigger('change.select2');
+                                $('#sr_expenditure').val(response.activity.expenditure);
+                                $('#activity_modal').modal('show');
+                            }
+                        }
+                    });
+                });
+
+                $(document).on('submit', '#activity_form', function(e) {
+                    e.preventDefault();
+                    var form = $(this);
+                    var url = form.attr('action');
+                    var method = $('#support_method').val();
+                    $('#sr_initiative_id').prop('disabled', false);
+                    var data = form.serialize();
+                    $('#sr_initiative_id').prop('disabled', true);
+
+                    $.ajax({
+                        url: url,
+                        type: method,
+                        data: data,
+                        success: function(response) {
+                            if (response.success) {
+                                $('#activity_modal').modal('hide');
+                                toastr.success('Activity saved successfully');
+                                reloadInitiativeActivitiesTable('initiative-activities-edit-table');
+                            }
+                        }
+                    });
+                });
+
+                $(document).on('click', '.delete-sr', function() {
+                    let id = $(this).data('id');
+                    let url = "/admin/activities/" + id;
+
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: { confirmButton: 'btn btn-success mx-1', cancelButton: 'btn btn-danger' },
+                        buttonsStyling: false
+                    });
+
+                    swalWithBootstrapButtons.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'No, cancel!',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: url,
+                                type: 'DELETE',
+                                data: { _token: "{{ csrf_token() }}" },
+                                dataType: 'json',
+                                success: function(data) {
+                                    if (data.success) {
+                                        swalWithBootstrapButtons.fire('Deleted!', 'Activity has been deleted.', 'success');
+                                        reloadInitiativeActivitiesTable('initiative-activities-edit-table');
+                                    }
+                                }
+                            });
                         }
                     });
                 });

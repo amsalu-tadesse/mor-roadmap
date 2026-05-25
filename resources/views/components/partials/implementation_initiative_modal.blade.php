@@ -1,6 +1,6 @@
-@props(['partners', 'initiativeStatuses', 'objectives', 'directorates', 'implementationStatuses', 'themes'])
+@props(['objectives', 'directorates', 'implementationStatuses', 'themes', 'initiativeActivitiesEditTable'])
 
-<div class="modal fade" id="update_modal" >
+<div class="modal fade" id="update_modal" data-backdrop="static">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,9 +23,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="directorate_id">Directorate<span class="required-field text-danger">*</span></label>
-                                    <select name="directorate_id" class="form-control select2" id="directorate_id" required>
-                                        <option value="">Select Directorate</option>
+                                    <label for="directorates">Directorates<span class="required-field text-danger">*</span></label>
+                                    <select name="directorates[]" class="form-control select2" id="directorates" multiple="multiple" data-placeholder="Select Directorates" required>
                                         @foreach($directorates as $directorate)
                                             <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
                                         @endforeach
@@ -61,94 +60,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="implementation_status_id">Implementation Status</label>
-                                    <select name="implementation_status_id" class="form-control " id="implementation_status_id">
+                                    <select name="implementation_status_id" class="form-control select2" id="implementation_status_id">
                                         <option value="">Select Implementation Status</option>
                                         @foreach($implementationStatuses as $status)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>
-                            </div>
-                        </div>
-                        <h5 class="text-info border-bottom pb-2 mb-3 mt-4">Implementation Details</h5>
-                        <div class="row">
-
-
-                           <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="partner_id">Partner</label>
-                                    <select name="partner_id" class="form-control " id="partner_id">
-                                        <option value="">Select Partner</option>
-                                        @foreach($partners as $partner)
-                                            <option value="{{ $partner->id }}">{{ $partner->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="start_date">Start Date</label>
-                                    <input type="text" name="start_date" class="form-control datepicker" id="start_date" autocomplete="off">
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="end_date">End Date</label>
-                                    <input type="text" name="end_date" class="form-control datepicker" id="end_date" autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="completion">Completion (%)</label>
-                                    <input type="number" step="0.01" min="0" max="100" name="completion" class="form-control" id="completion" placeholder="0 - 100">
-                                </div>
-                            </div>
-
-                        </div>
-
-
-
-                        <div class="row">
-
-
-                           <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="budget">Budget</label>
-                                    <input type="text" name="budget" class="form-control" id="budget" placeholder="e.g. 10,000">
-                                </div>
-                            </div>
-
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="initiative_status_id">Initiative Status</label>
-                                    <select name="initiative_status_id" class="form-control" id="initiative_status_id">
-                                        <option value="">Select Status</option>
-                                        @foreach($initiativeStatuses as $status)
-                                            <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="request">Request</label>
-                                    <select name="request" class="form-control " id="request">
-                                        <option value="">Select Request Type</option>
-                                        <option value="New">New</option>
-                                        <option value="Current">Current</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="expenditure">Expenditure Details</label>
-                                    <textarea name="expenditure" class="form-control" id="expenditure" rows="4" placeholder="Enter Expenditure Details"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -160,6 +77,15 @@
                                 </div>
                             </div>
                         </div>
+
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5>Activities</h5>
+                            <button type="button" class="btn btn-sm btn-primary" id="add_activity">
+                                <i class="fas fa-plus"></i> Add Activity
+                            </button>
+                        </div>
+                        <x-partials.initiative_activities_datatable :dataTable="$initiativeActivitiesEditTable" />
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -189,7 +115,6 @@
 
 
         $('#theme_id_modal').on('change', function () {
-            console.log('********Theme changed, fetching objectives...'); // Debugging line
             var themeId = $(this).val();
             var targetObjectiveId = $(this).data('selected-objective');
             if (themeId) {
@@ -200,7 +125,6 @@
                     dataType: "json",
                     success: function (data) {
 
-                        console.log('*********Received objectives:', data); // Debugging line
                         $('#objective_id_modal').empty();
                         $('#objective_id_modal').append('<option value="">Select Objective</option>');
                         $.each(data, function (key, value) {
@@ -213,16 +137,9 @@
                     }
                 });
             } else {
-                console.log('No theme selected, clearing objectives'); // Debugging line
                 $('#objective_id_modal').empty();
                 $('#objective_id_modal').append('<option value="">Select Objective</option>');
             }
         });
-        console.log('***********Implementation Initiative Modal script loaded'); // Debugging line
-
-
-
-
-
     });
 </script>

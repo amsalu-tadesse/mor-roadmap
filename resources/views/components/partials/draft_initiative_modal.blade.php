@@ -16,8 +16,25 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-
-                                     <label for="theme_id_modal">Theme<span class="required-field">*</span></label>
+                                    <label for="name">Initiative Name<span class="required-field">*</span></label>
+                                    <input type="text" name="name" class="form-control" id="name" placeholder="Enter Initiative Name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="directorates">Directorates<span class="required-field">*</span></label>
+                                    <select name="directorates[]" class="form-control select2" id="directorates" multiple="multiple" data-placeholder="Select Directorates" required>
+                                        @foreach($directorates as $directorate)
+                                            <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="theme_id_modal">Theme<span class="required-field">*</span></label>
                                     <select name="theme_id" class="form-control select2" id="theme_id_modal" required>
                                         <option value="">Select Theme</option>
                                         @foreach($themes as $theme)

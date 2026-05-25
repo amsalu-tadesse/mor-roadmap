@@ -1,6 +1,6 @@
 <x-layout>
     <!-- Content Header (Page header) -->
-    <x-breadcrump title='Initiative Statuses List' parent='Initiative Statuses' child='List' index="initiative-statuses" />
+    <x-breadcrump title='Activity Statuses List' parent='Activity Statuses' child='List' index="activity-statuses" />
     <!-- /.content-header -->
 
     <!-- /.content-Main -->
@@ -9,8 +9,8 @@
             <div class='col'>
                 <div style='display: flex; justify-content:flex-end'>
                     <div>
-                        @can('initiative-status: create')
-                            <a href="{{ route('admin.initiative-statuses.create') }}">
+                        @can('activity-status: create')
+                            <a href="{{ route('admin.activity-statuses.create') }}">
                                 <button type='button' class='btn btn-primary'>Add New Status</button>
                             </a>
                         @endcan
@@ -27,8 +27,8 @@
     </div>
     <!-- /.card -->
     <!-- /#updateModal -->
-    <x-partials.initiative_status_modal />
-    <x-show-modals.initiative_status_show_modal />
+    <x-partials.activity_status_modal />
+    <x-show-modals.activity_status_show_modal />
     <!-- /#updateModal -->
     <!-- /.content -->
     <!-- Custom Js contents -->
@@ -37,7 +37,7 @@
         <script>
             //delete row
             function delete_row(element, row_id) {
-                var url = "{{ route('admin.initiative-statuses.destroy', ':id') }}";
+                var url = "{{ route('admin.activity-statuses.destroy', ':id') }}";
                 url = url.replace(':id', row_id);
 
                 const swalWithBootstrapButtons = Swal.mixin({
@@ -64,7 +64,7 @@
                             dataType: 'json',
                             success: function(data) {
                                 if (data.success) {
-                                    window.LaravelDataTables['initiative-statuses-table'].ajax.reload();
+                                    window.LaravelDataTables['activity-statuses-table'].ajax.reload();
                                     swalWithBootstrapButtons.fire(
                                         'Deleted!',
                                         'Status has been deleted.',
@@ -81,26 +81,26 @@
             }
 
             if (@json(session('success_create'))) {
-                toastr.success('You have successfully added a new Initiative Status')
+                toastr.success('You have successfully added a new Activity Status')
             }
 
             $(document).ready(function() {
                 // Update record popup
-                $('#initiative-statuses-table').on('click', '#update_row', function() {
+                $('#activity-statuses-table').on('click', '#update_row', function() {
                     var row_id = $(this).data('row_id');
-                    var url = "{{ route('admin.initiative-statuses.edit', ':id') }}";
+                    var url = "{{ route('admin.activity-statuses.edit', ':id') }}";
                     url = url.replace(':id', row_id);
 
-                    $('#initiative_status_update_form :input').val('');
+                    $('#activity_status_update_form :input').val('');
                     // AJAX request
                     $.ajax({
                         url: url,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            var status = response.initiativeStatus
+                            var status = response.activityStatus
                             if (response.success == 1) {
-                                $('#initiative_status_id').val(status.id);
+                                $('#activity_status_id').val(status.id);
                                 $('#name').val(status.name);
                                 $('#update_modal').modal('show');
                             } else {
@@ -111,9 +111,9 @@
                 });
 
                 //show
-                $('#initiative-statuses-table').on('click', '#show_row', function() {
+                $('#activity-statuses-table').on('click', '#show_row', function() {
                     var row_id = $(this).data('row_id');
-                    var url = "{{ route('admin.initiative-statuses.show', ':id') }}";
+                    var url = "{{ route('admin.activity-statuses.show', ':id') }}";
                     url = url.replace(':id', row_id);
 
                     // AJAX request
@@ -122,7 +122,7 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            var status = response.initiativeStatus
+                            var status = response.activityStatus
                             if (response.success == 1) {
                                 $('#show_modal #name').html(status.name);
                                 $('#show_modal #created_by').html(response.getCreatedBy);
@@ -136,12 +136,12 @@
                 });
             });
 
-            $('#initiative_status_update_form').on('submit', function(e) {
+            $('#activity_status_update_form').on('submit', function(e) {
                 e.preventDefault();
                 form_data = $(this).serialize();
-                row_id = $('#initiative_status_id', $(this)).val()
+                row_id = $('#activity_status_id', $(this)).val()
 
-                var url = "{{ route('admin.initiative-statuses.update', ':id') }}";
+                var url = "{{ route('admin.activity-statuses.update', ':id') }}";
                 url = url.replace(':id', row_id);
 
                 // AJAX request
@@ -153,7 +153,7 @@
                     success: function(data) {
                         if (data.success) {
                             $('#update_modal').modal('toggle');
-                            window.LaravelDataTables['initiative-statuses-table'].ajax.reload();
+                            window.LaravelDataTables['activity-statuses-table'].ajax.reload();
                             toastr.success('You have successfully updated the Status.')
                         }
                     },

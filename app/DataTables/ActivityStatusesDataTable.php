@@ -3,7 +3,7 @@
 namespace App\DataTables;
 
 use App\Constants\Constants;
-use App\Models\InitiativeStatus;
+use App\Models\ActivityStatus;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -11,7 +11,7 @@ use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
-class InitiativeStatusesDataTable extends DataTable
+class ActivityStatusesDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -30,9 +30,9 @@ class InitiativeStatusesDataTable extends DataTable
                 return view('components.action-buttons', [
                     'row_id' => $status->id,
                     'show' => true,
-                    'permission_delete' => 'initiative-status: delete',
-                    'permission_edit' => 'initiative-status: edit',
-                    'permission_view' => 'initiative-status: view',
+                    'permission_delete' => 'activity-status: delete',
+                    'permission_edit' => 'activity-status: edit',
+                    'permission_view' => 'activity-status: view',
                 ]);
             })
             ->rawColumns(['no', 'action']);
@@ -41,10 +41,10 @@ class InitiativeStatusesDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\InitiativeStatus $model
+     * @param \App\Models\ActivityStatus $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(InitiativeStatus $model): QueryBuilder
+    public function query(ActivityStatus $model): QueryBuilder
     {
         return $model->newQuery();
     }
@@ -57,7 +57,7 @@ class InitiativeStatusesDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('initiative-statuses-table')
+            ->setTableId('activity-statuses-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0, 'desc')
@@ -138,6 +138,6 @@ class InitiativeStatusesDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'InitiativeStatuses_' . date('YmdHis');
+        return 'ActivityStatuses_' . date('YmdHis');
     }
 }

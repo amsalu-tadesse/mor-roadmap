@@ -1,5 +1,7 @@
+@props(['initiativeActivitiesShowTable'])
+
 <div class="modal fade" id="show_modal">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Shelf Initiative Detail</h4>
@@ -15,7 +17,7 @@
                             <td id="name_show"></td>
                         </tr>
                         <tr>
-                            <th>Directorate</th>
+                            <th>Directorates</th>
                             <td id="directorate_show"></td>
                         </tr>
                         <tr>
@@ -32,23 +34,9 @@
                         </tr>
                     </table>
 
-                    <h5 class="mt-4">Support Requests</h5>
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered table-striped" id="support_requests_show_table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Partner</th>
-                                    <th>Activities</th>
-                                    <th>Status</th>
-                                    <th>Priority</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- To be populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <h5 class="mt-4">Activities</h5>
+                    <input type="hidden" id="show_initiative_id" value="">
+                    <x-partials.initiative_activities_datatable :dataTable="$initiativeActivitiesShowTable" />
                 </div>
             </div>
             <div class="modal-footer justify-content-end">

@@ -3,14 +3,14 @@
 namespace App\DataTables;
 
 use App\Constants\Constants;
-use App\Models\SupportRequest;
+use App\Models\Activity;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
-class SupportRequestsDataTable extends DataTable
+class ActivitiesDataTable extends DataTable
 {
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
@@ -29,23 +29,45 @@ class SupportRequestsDataTable extends DataTable
                 ];
                 return $badges[$row->priority] ?? $row->priority;
             })
-            ->addColumn('activities_short', fn($row) => \Str::limit($row->activities, 60))
+            ->addColumn('activities_description', function ($row) {
+                $html = '<div>' . e(\Str::limit($row->activities, 60)) . '</div>';
+
+                if ($row->interestedPartners->isNotEmpty()) {
+                    $html .= '<div class="mt-1">' . $row->interestedPartners
+                        ->map(fn ($p) => '<span class="badge badge-info mr-1">' . e($p->name) . '</span>')
+                        ->join('') . '</div>';
+                }
+
+                if ($row->directorates->isNotEmpty()) {
+                    $html .= '<div class="mt-1">' . $row->directorates
+                        ->map(fn ($d) => '<span class="badge badge-secondary mr-1">' . e($d->name) . '</span>')
+                        ->join('') . '</div>';
+                }
+
+                return $html;
+            })
+            ->addColumn('start_date_formatted', fn($row) => $row->start_date ? \Carbon\Carbon::parse($row->start_date)->format('Y-m-d') : 'N/A')
+            ->addColumn('end_date_formatted', fn($row) => $row->end_date ? \Carbon\Carbon::parse($row->end_date)->format('Y-m-d') : 'N/A')
+            ->addColumn('budget_col', fn($row) => $row->budget ?? 'N/A')
+            ->addColumn('completion_col', fn($row) => $row->completion ? $row->completion . '%' : 'N/A')
+            ->addColumn('activity_status_name', fn($row) => $row->activityStatus->name ?? 'N/A')
+            ->addColumn('request_type_col', fn($row) => $row->request_type ?? 'N/A')
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
                     'show' => true,
-                    'permission_delete' => 'support-request: delete',
-                    'permission_edit' => 'support-request: edit',
-                    'permission_view' => 'support-request: view',
+                    'permission_delete' => 'activity: delete',
+                    'permission_edit' => 'activity: edit',
+                    'permission_view' => 'activity: view',
                 ]);
             })
-            ->rawColumns(['no', 'priority_badge', 'action']);
+            ->rawColumns(['no', 'priority_badge', 'activities_description', 'action']);
     }
 
-    public function query(SupportRequest $model): QueryBuilder
+    public function query(Activity $model): QueryBuilder
     {
         return $model->newQuery()
-            ->with(['partner', 'requestStatus'])
+            ->with(['partner', 'requestStatus', 'activityStatus', 'interestedPartners', 'directorates'])
             ->when($this->request()->get('partner_id'), function ($query, $partner_id) {
                 $query->where('partner_id', $partner_id);
             })
@@ -57,10 +79,10 @@ class SupportRequestsDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('support-requests-table')
+            ->setTableId('activities-table')
             ->columns($this->getColumns())
             ->ajax([
-                'url' => route('admin.support-requests.index'),
+                'url' => route('admin.activities.index'),
                 'data' => 'function(d) {
                     d.partner_id = $("#partner_filter").val();
                     d.request_status_id = $("#status_filter").val();
@@ -92,9 +114,15 @@ class SupportRequestsDataTable extends DataTable
         return [
             Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
-            Column::make('partner_name')->title('Partner')->orderable(false),
-            Column::make('activities_short')->title('Activities')->orderable(false),
-            Column::make('request_status_name')->title('Status')->orderable(false),
+            Column::make('partner_name')->title('Partner')->orderable(false)->visible(false),
+            Column::make('activities_description')->title('Description')->orderable(false),
+            Column::make('start_date_formatted')->title('Start Date')->orderable(false),
+            Column::make('end_date_formatted')->title('End Date')->orderable(false),
+            Column::make('budget_col')->title('Budget')->orderable(false)->visible(false),
+            Column::make('completion_col')->title('Completion')->orderable(false),
+            Column::make('activity_status_name')->title('Activity Status')->orderable(false),
+            Column::make('request_type_col')->title('Request Type')->orderable(false),
+            Column::make('request_status_name')->title('Request Status')->orderable(false)->visible(false),
             Column::make('priority_badge')->title('Priority')->addClass('text-center')->orderable(false),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
         ];
@@ -102,6 +130,6 @@ class SupportRequestsDataTable extends DataTable
 
     protected function filename(): string
     {
-        return 'SupportRequests_' . date('YmdHis');
+        return 'Activities_' . date('YmdHis');
     }
 }

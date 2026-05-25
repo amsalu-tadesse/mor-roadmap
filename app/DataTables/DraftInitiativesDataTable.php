@@ -21,7 +21,7 @@ class DraftInitiativesDataTable extends DataTable
             })
             ->addColumn('theme_name', fn ($row) => $row->theme->name ?? 'N/A')
             ->addColumn('objective_name', fn ($row) => $row->objective->name ?? 'N/A')
-            ->addColumn('directorate_name', fn ($row) => $row->directorate->name ?? 'N/A')
+            ->addColumn('directorate_name', fn ($row) => $row->directorates->pluck('name')->join(', ') ?: 'N/A')
             ->addColumn('implementation_status_name', fn ($row) => $row->implementationStatus->name ?? 'N/A')
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
@@ -37,13 +37,15 @@ class DraftInitiativesDataTable extends DataTable
 
     public function query(Initiative $model): QueryBuilder
     {
-        $query = $model->newQuery()->with(['objective', 'directorate', 'implementationStatus', 'theme'])
+        $query = $model->newQuery()->with(['objective', 'directorates', 'implementationStatus', 'theme'])
             ->whereHas('implementationStatus', function ($query) {
                 $query->where('id', Constants::IMPLEMENTATION_STATUS_DRAFTING);
             });
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
-            $query->where('directorate_id', $this->request()->get('directorate_id'));
+            $query->whereHas('directorates', function ($q) {
+                $q->where('directorates.id', $this->request()->get('directorate_id'));
+            });
         }
 
         if ($this->request()->has('theme_id') && $this->request()->get('theme_id') != '') {
@@ -90,7 +92,7 @@ class DraftInitiativesDataTable extends DataTable
             Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('name')->title('Initiative Name'),
-            Column::make('directorate_name')->title('Directorate')->orderable(false),
+            Column::make('directorate_name')->title('Directorates')->orderable(false),
             Column::make('theme_name')->title('Theme')->orderable(false),
             Column::make('objective_name')->title('Objective')->orderable(false),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),

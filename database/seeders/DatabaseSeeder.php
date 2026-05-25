@@ -108,11 +108,11 @@ class DatabaseSeeder extends Seeder
             'directorate',
             'theme',
             'objective',
-            'initiative-status',
+            'activity-status',
             'implementation-status',
             'partner',
             'request-status',
-            'support-request',
+            'activity',
             'draft-initiative',
             'implementation-initiative',
             'shelf-initiative',
@@ -187,42 +187,42 @@ class DatabaseSeeder extends Seeder
                 'created_by' => 1,
                 'updated_by' => 1,
             ],
-           /* [
-                'first_name' => 'Federal Level',
-                'middle_name' => 'Data Manager',
-                'last_name' => '',
-                'mobile' => '090964323',
-                'password_changed' => 1,
-                'status' => 1,
-                'is_superadmin' => 0,
-                'created_by' => 1,
-                'updated_by' => 1,
-                'email' => 'fdatamanager@gmail.com',
-            ],
-            [
-                'first_name' => 'Region Level',
-                'middle_name' => 'Data Manager',
-                'last_name' => '',
-                'mobile' => '090974343',
-                'password_changed' => 1,
-                'status' => 1,
-                'is_superadmin' => 0,
-                'created_by' => 1,
-                'updated_by' => 1,
-                'email' => 'rdatamanager@gmail.com',
-            ],
-            [
-                'first_name' => 'Supperrvisor',
-                'middle_name' => '',
-                'last_name' => '',
-                'mobile' => '090977343',
-                'password_changed' => 1,
-                'status' => 1,
-                'is_superadmin' => 0,
-                'created_by' => 1,
-                'updated_by' => 1,
-                'email' => 'suppervisor@gmail.com',
-            ],*/
+            /* [
+                 'first_name' => 'Federal Level',
+                 'middle_name' => 'Data Manager',
+                 'last_name' => '',
+                 'mobile' => '090964323',
+                 'password_changed' => 1,
+                 'status' => 1,
+                 'is_superadmin' => 0,
+                 'created_by' => 1,
+                 'updated_by' => 1,
+                 'email' => 'fdatamanager@gmail.com',
+             ],
+             [
+                 'first_name' => 'Region Level',
+                 'middle_name' => 'Data Manager',
+                 'last_name' => '',
+                 'mobile' => '090974343',
+                 'password_changed' => 1,
+                 'status' => 1,
+                 'is_superadmin' => 0,
+                 'created_by' => 1,
+                 'updated_by' => 1,
+                 'email' => 'rdatamanager@gmail.com',
+             ],
+             [
+                 'first_name' => 'Supperrvisor',
+                 'middle_name' => '',
+                 'last_name' => '',
+                 'mobile' => '090977343',
+                 'password_changed' => 1,
+                 'status' => 1,
+                 'is_superadmin' => 0,
+                 'created_by' => 1,
+                 'updated_by' => 1,
+                 'email' => 'suppervisor@gmail.com',
+             ],*/
 
 
         ];
@@ -392,8 +392,7 @@ class DatabaseSeeder extends Seeder
                 'title' => 'Organization Types List help',
                 'url' => null,
                 'body' =>
-                'This page shows the list of Organization types in the system. According the logged in user privileges buttons for create new organization type, edit and delete could be visible. By default the page shows only ten latest organization types. You can change the number of organiation types per page by clicking on records per page box on the left top side. You can search organization types by their name .Additionally,you can download the list being visible by the formats provided on the top of the table. (CSV,Excel,PDF,Print) ',
-                'body' => 'This page shows the list of Organization types in the system. According the logged in user privileges buttons for create new organization type, edit and delete could be visible. By default the page shows only ten latest organization types. You can change the number of organiation types per page by clicking on records per page box on the left top side. You can search organization types by their name .Additionally,you can download the list being visible by the formats provided on the top of the table. (CSV,Excel,PDF,Print) ',
+                    'This page shows the list of Organization types in the system. According the logged in user privileges buttons for create new organization type, edit and delete could be visible. By default the page shows only ten latest organization types. You can change the number of organiation types per page by clicking on records per page box on the left top side. You can search organization types by their name .Additionally,you can download the list being visible by the formats provided on the top of the table. (CSV,Excel,PDF,Print) ',
                 'route' => "admin.organization-types.index",
                 'active' => '1',
                 'created_by' => 1,
@@ -511,7 +510,7 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Subscriptions List help',
                 'url' => null,
-                'body' =>  "This page presents a comprehensive list of subscription within the system. The visibility of   button for deleting subscription depends on the privileges of the logged-in user." . PHP_EOL .
+                'body' => "This page presents a comprehensive list of subscription within the system. The visibility of   button for deleting subscription depends on the privileges of the logged-in user." . PHP_EOL .
                     "By default, the page shows the ten latest  subscriptions. However, you can change the number of  subscriptions displayed per page by clicking on the 'records per page' box located on the top left side of the page." . PHP_EOL .
                     "You also have the ability to search for  subscriptions by their email, allowing you to quickly find specific  subscriptions of interest." . PHP_EOL .
                     "Additionally, you can download the visible list of  subscriptions in various formats provided at the top of the table. The available formats include CSV, Excel, PDF, and Print.",
@@ -659,7 +658,7 @@ class DatabaseSeeder extends Seeder
                 "name" => "Sustainable Industrial Capacity development",
             ],
             [
-                 "name" => "Theme2: Sustainable Industrial Capacity development",
+                "name" => "Theme2: Sustainable Industrial Capacity development",
             ],
             [
                 "name" => "Theme: the Sustainable Industrial Capacity development",
@@ -670,7 +669,7 @@ class DatabaseSeeder extends Seeder
                 "name" => "Human resource management",
             ],
             [
-                 "name" => "e-Data division",
+                "name" => "e-Data division",
             ],
             [
                 "name" => "Property administration",
@@ -681,46 +680,46 @@ class DatabaseSeeder extends Seeder
                 "name" => "Attraction, retaining, and enhancing the efficiency of human resource",
             ],
             [
-                 "name" => "Improving IT capital and utilization",
+                "name" => "Improving IT capital and utilization",
             ],
             [
                 "name" => "Objective3: Improving IT capital and utilization",
             ],
         ];
 
-        /* foreach ($themes as $theme) {
-             $th = \App\Models\Theme::factory()->create(
-                 [
-                     "name" => $theme["name"],
-                 ]
-             );
+        foreach ($themes as $theme) {
+            $th = \App\Models\Theme::factory()->create(
+                [
+                    "name" => $theme["name"],
+                ]
+            );
 
-             foreach ($objecitves as $objecitve) {
-                 \App\Models\Objective::factory()->create(
-                     [
-                         "name" => $objecitve["name"],
-                         "theme_id" => $th->id,
-                     ]
-                 );
-             }
+            foreach ($objecitves as $objecitve) {
+                \App\Models\Objective::factory()->create(
+                    [
+                        "name" => $objecitve["name"],
+                        "theme_id" => $th->id,
+                    ]
+                );
+            }
 
-         }
-         foreach ($directorates as $directorate) {
-             \App\Models\Directorate::factory()->create(
-                 [
-                     "name" => $directorate["name"],
-                 ]
-             );
-         }
+        }
+        foreach ($directorates as $directorate) {
+            \App\Models\Directorate::factory()->create(
+                [
+                    "name" => $directorate["name"],
+                ]
+            );
+        }
 
-         foreach ($organizations as $organization) {
-             \App\Models\Organization::factory()->create(
-                 [
-                     "name" => $organization["name"],
-                     "description" => $organization["description"]
-                 ]
-             );
-         }*/
+        foreach ($organizations as $organization) {
+            \App\Models\Organization::factory()->create(
+                [
+                    "name" => $organization["name"],
+                    "description" => $organization["description"]
+                ]
+            );
+        }
 
 
         $statuses = ['Drafting stage', 'Shelfing stage', 'Implementation stage'];

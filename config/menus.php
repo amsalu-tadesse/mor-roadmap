@@ -55,7 +55,7 @@ return [
     'menu_2'                 =>  [
         'name'                 => 'Initiative setup',
         'menu_icon'           => 'fa-list-alt',
-        'permissions'           => ['directorate: list', 'theme: list', 'objective: list', 'initiative-status: list', 'implementation-status: list', 'partner: list', 'request-status: list', 'support-request: list'],
+        'permissions'           => ['directorate: list', 'theme: list', 'objective: list', 'activity-status: list', 'implementation-status: list', 'partner: list', 'request-status: list', 'activity: list'],
 
         'menu_item'            =>
         [
@@ -75,9 +75,9 @@ return [
                 'permission' => 'objective: list'
             ],
             [
-                'title'      =>  'Initiative Statuses',
-                'url'        =>  'admin.initiative-statuses.index',
-                'permission' => 'initiative-status: list'
+                'title'      =>  'Activity Statuses',
+                'url'        =>  'admin.activity-statuses.index',
+                'permission' => 'activity-status: list'
             ],
             [
                 'title'      =>  'Implementation Statuses',
@@ -95,9 +95,9 @@ return [
                 'permission' => 'request-status: list'
             ],
             [
-                'title'      =>  'Support Requests',
-                'url'        =>  'admin.support-requests.index',
-                'permission' => 'support-request: list'
+                'title'      =>  'Activities',
+                'url'        =>  'admin.activities.index',
+                'permission' => 'activity: list'
             ]
         ]
     ],

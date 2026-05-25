@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="initiative_status_update_form">
+            <form id="activity_status_update_form">
                 @csrf
                 <div class="modal-body">
                     <div class="card-body row">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="hidden" name="initiative_status_id" id="initiative_status_id">
+                    <input type="hidden" name="activity_status_id" id="activity_status_id">
                     <button type="submit" class="btn btn-info">Save changes</button>
                 </div>
             </form>

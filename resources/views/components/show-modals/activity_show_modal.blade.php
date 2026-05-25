@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Support Request Detail</h4>
+                <h4 class="modal-title">Activity Request Detail</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -25,6 +25,34 @@
                         <tr>
                             <th>Activities</th>
                             <td id="activities_show"></td>
+                        </tr>
+                        <tr>
+                            <th>Start Date</th>
+                            <td id="start_date_show"></td>
+                        </tr>
+                        <tr>
+                            <th>End Date</th>
+                            <td id="end_date_show"></td>
+                        </tr>
+                        <tr>
+                            <th>Budget</th>
+                            <td id="budget_show"></td>
+                        </tr>
+                        <tr>
+                            <th>Completion (%)</th>
+                            <td id="completion_show"></td>
+                        </tr>
+                        <tr>
+                            <th>Activity Status</th>
+                            <td id="activity_status_show"></td>
+                        </tr>
+                        <tr>
+                            <th>Request Type</th>
+                            <td id="request_type_show"></td>
+                        </tr>
+                        <tr>
+                            <th>Expenditure</th>
+                            <td id="expenditure_show"></td>
                         </tr>
                         <tr>
                             <th>Created By</th>

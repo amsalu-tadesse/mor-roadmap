@@ -21,12 +21,12 @@ class ShelfInitiativesDataTable extends DataTable
             })
             ->addColumn('theme_name', fn ($row) => $row->objective->theme->name ?? 'N/A')
             ->addColumn('objective_name', fn ($row) => $row->objective->name ?? 'N/A')
-            ->addColumn('directorate_name', fn ($row) => $row->directorate->name ?? 'N/A')
+            ->addColumn('directorate_name', fn ($row) => $row->directorates->pluck('name')->join(', ') ?: 'N/A')
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
                     'show' => true,
-                    'permission_delete' => 'none',
+                    'permission_delete' => 'shelf-initiative: delete',
                     'permission_edit' => 'shelf-initiative: edit',
                     'permission_view' => 'shelf-initiative: view',
                 ]);
@@ -36,13 +36,15 @@ class ShelfInitiativesDataTable extends DataTable
 
     public function query(Initiative $model): QueryBuilder
     {
-        $query = $model->newQuery()->with(['objective.theme', 'directorate']) // Load theme through objective
+        $query = $model->newQuery()->with(['objective.theme', 'directorates'])
             ->whereHas('implementationStatus', function ($query) {
                 $query->where('id', Constants::IMPLEMENTATION_STATUS_SHELFING);
             });
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
-            $query->where('directorate_id', $this->request()->get('directorate_id'));
+            $query->whereHas('directorates', function ($q) {
+                $q->where('directorates.id', $this->request()->get('directorate_id'));
+            });
         }
         
         if ($this->request()->has('theme_id') && $this->request()->get('theme_id') != '') {
@@ -91,7 +93,7 @@ class ShelfInitiativesDataTable extends DataTable
             Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('name')->title('Initiative Name'),
-            Column::make('directorate_name')->title('Directorate')->orderable(false),
+            Column::make('directorate_name')->title('Directorates')->orderable(false),
             Column::make('theme_name')->title('Theme')->orderable(false),
             Column::make('objective_name')->title('Objective')->orderable(false),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
