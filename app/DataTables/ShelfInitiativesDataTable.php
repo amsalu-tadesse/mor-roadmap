@@ -19,9 +19,9 @@ class ShelfInitiativesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
-            ->addColumn('theme_name', fn ($row) => $row->objective->theme->name ?? 'N/A')
-            ->addColumn('objective_name', fn ($row) => $row->objective->name ?? 'N/A')
-            ->addColumn('directorate_name', fn ($row) => $row->directorates->pluck('name')->join(', ') ?: 'N/A')
+            ->addColumn('theme_name', fn($row) => $row->objective->theme->name ?? 'N/A')
+            ->addColumn('objective_name', fn($row) => $row->objective->name ?? 'N/A')
+            ->addColumn('directorate_name', fn($row) => $row->directorates->pluck('name')->join(', ') ?: 'N/A')
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
@@ -46,9 +46,9 @@ class ShelfInitiativesDataTable extends DataTable
                 $q->where('directorates.id', $this->request()->get('directorate_id'));
             });
         }
-        
+
         if ($this->request()->has('theme_id') && $this->request()->get('theme_id') != '') {
-            $query->whereHas('objective', function($q) {
+            $query->whereHas('objective', function ($q) {
                 $q->where('theme_id', $this->request()->get('theme_id'));
             });
         }
@@ -92,7 +92,7 @@ class ShelfInitiativesDataTable extends DataTable
         return [
             Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
-            Column::make('name')->title('Initiative Name'),
+            Column::make('name')->title('Initiative'),
             Column::make('directorate_name')->title('Directorates')->orderable(false),
             Column::make('theme_name')->title('Theme')->orderable(false),
             Column::make('objective_name')->title('Objective')->orderable(false),
