@@ -87,12 +87,6 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                 <label for="name">Initiative Name<span class="required-field">*</span></label>
-                                    <input type="text" name="name" class="form-control" id="name" placeholder="Enter Initiative Name" required>
-                                </div>
-                            </div>
                             {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="note">Note</label>
