@@ -76,6 +76,23 @@
                 </div>
                 <div class="row">
 
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="directorate_id">Directorate<span class="required-field">*</span></label>
+                            <select name="directorate_id" class="form-control select2 @error('directorate_id') is-invalid @enderror" id="directorate_id">
+                                <option value="">Select Directorate</option>
+                                @foreach($directorates as $directorate)
+                                    <option value="{{ $directorate->id }}" {{ old('directorate_id') == $directorate->id ? 'selected' : '' }}>
+                                        {{ $directorate->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('directorate_id')
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
 
                     <div class="col-md-6">
                         <div class="form-group">

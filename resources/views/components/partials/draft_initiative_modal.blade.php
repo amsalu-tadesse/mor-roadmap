@@ -17,13 +17,15 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="name">Initiative Name<span class="required-field">*</span></label>
-                                    <input type="text" name="name" class="form-control" id="name" placeholder="Enter Initiative Name" required>
+                                    <input type="text" name="name" class="form-control" id="name"
+                                        placeholder="Enter Initiative Name" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="directorates">Directorates<span class="required-field">*</span></label>
-                                    <select name="directorates[]" class="form-control select2" id="directorates" multiple="multiple" data-placeholder="Select Directorates" required>
+                                    <select name="directorates[]" class="form-control select2" id="directorates"
+                                        multiple="multiple" data-placeholder="Select Directorates" required>
                                         @foreach($directorates as $directorate)
                                             <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
                                         @endforeach
@@ -49,8 +51,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
 
-                                <label for="objective_id_modal">Objective<span class="required-field">*</span></label>
-                                    <select name="objective_id" class="form-control select2" id="objective_id_modal" required>
+                                    <label for="objective_id_modal">Objective<span
+                                            class="required-field">*</span></label>
+                                    <select name="objective_id" class="form-control select2" id="objective_id_modal"
+                                        required>
                                         <option value="">Select Objective</option>
                                         @foreach($objectives as $objective)
                                             <option value="{{ $objective->id }}">{{ $objective->name }}</option>
@@ -64,8 +68,22 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                       <label for="implementation_status_id">Implementation Status</label>
-                                    <select name="implementation_status_id" class="form-control " id="implementation_status_id">
+
+                                    <label for="directorate_id">Directorate<span class="required-field">*</span></label>
+                                    <select name="directorate_id" class="form-control select2" id="directorate_id"
+                                        required>
+                                        <option value="">Select Directorate</option>
+                                        @foreach($directorates as $directorate)
+                                            <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="implementation_status_id">Implementation Status</label>
+                                    <select name="implementation_status_id" class="form-control "
+                                        id="implementation_status_id">
                                         <option value="">Select Implementation Status</option>
                                         @foreach($implementationStatuses as $status)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
@@ -78,7 +96,8 @@
                             {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="note">Note</label>
-                                    <textarea name="note" class="form-control" id="note" rows="1" placeholder="Enter Note"></textarea>
+                                    <textarea name="note" class="form-control" id="note" rows="1"
+                                        placeholder="Enter Note"></textarea>
                                 </div>
                             </div> --}}
                         </div>
@@ -126,6 +145,8 @@
 </script>
 
 <style>
-    .required-field { color: red; margin-left: 4px; }
+    .required-field {
+        color: red;
+        margin-left: 4px;
+    }
 </style>
-
