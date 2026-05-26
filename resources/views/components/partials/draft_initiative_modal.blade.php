@@ -66,19 +66,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
 
-                                    <label for="directorate_id">Directorate<span class="required-field">*</span></label>
-                                    <select name="directorate_id" class="form-control select2" id="directorate_id"
-                                        required>
-                                        <option value="">Select Directorate</option>
-                                        @foreach($directorates as $directorate)
-                                            <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="implementation_status_id">Implementation Status</label>
