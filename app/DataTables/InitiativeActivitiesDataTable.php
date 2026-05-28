@@ -142,16 +142,20 @@ class InitiativeActivitiesDataTable extends DataTable
 
     protected function getColumns(): array
     {
+        $isImplementation = request()->routeIs('admin.implementation-initiatives.*') || Str::contains(request()->headers->get('referer'), 'implementation-initiatives');
+
         $columns = [
             Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('activities_description')->title('Description')->orderable(false),
-            Column::make('partner_name')->title(
-                (request()->routeIs('admin.implementation-initiatives.*') || Str::contains(request()->headers->get('referer'), 'implementation-initiatives'))
-                    ? 'Implementing Partner' 
-                    : 'Partner'
-            )->orderable(false)->visible(false),
-            Column::make('interested_partners_col')->title('Interested Partners')->orderable(false)->visible(false),
+            Column::make('partner_name')
+                ->title($isImplementation ? 'Implementing Partner' : 'Partner')
+                ->orderable(false)
+                ->visible($isImplementation),
+            Column::make('interested_partners_col')
+                ->title('Interested Partners')
+                ->orderable(false)
+                ->visible(!$isImplementation),
             Column::make('directorates_col')->title('Directorates')->orderable(false)->visible(false),
             Column::make('start_date_formatted')->title('Start Date')->orderable(false),
             Column::make('end_date_formatted')->title('End Date')->orderable(false),
