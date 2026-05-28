@@ -43,29 +43,15 @@
                             @endif
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="sr_interested_partners">Interested Partners</label>
-                                    <select name="interested_partners[]" class="form-control select2" id="sr_interested_partners" multiple="multiple" data-placeholder="Select Interested Partners">
-                                        @foreach($partners as $partner)
-                                            <option value="{{ $partner->id }}">{{ $partner->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="sr_directorates">Directorates</label>
-                                    <select name="directorates[]" class="form-control select2" id="sr_directorates" multiple="multiple" data-placeholder="Select Directorates">
-                                        @foreach($directorates as $directorate)
-                                            <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
+
+
                             <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="sr_activities">Activity<span class="required-field">*</span></label>
+                                    <textarea name="activities" class="form-control" id="sr_activities" rows="4" placeholder="Enter Description" required></textarea>
+                                </div>
+                            </div>
+                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="sr_priority">Priority<span class="required-field">*</span></label>
                                     <select name="priority" class="form-control select2" id="sr_priority" required>
@@ -76,7 +62,30 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="sr_directorates">Directorates</label>
+                                    <select name="directorates[]" class="form-control select2" id="sr_directorates" multiple="multiple" data-placeholder="Select Directorates">
+                                        @foreach($directorates as $directorate)
+                                            <option value="{{ $directorate->id }}">{{ $directorate->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="sr_interested_partners">Interested Partners</label>
+                                    <select name="interested_partners[]" class="form-control select2" id="sr_interested_partners" multiple="multiple" data-placeholder="Select Interested Partners">
+                                        @foreach($partners as $partner)
+                                            <option value="{{ $partner->id }}">{{ $partner->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
+
                         @if(!request()->routeIs('admin.shelf-initiatives.*'))
                         <div class="row">
                             <div class="col-md-6">
@@ -148,14 +157,7 @@
                         @else
                             {{-- Expenditure Details commented out on Shelving Stage --}}
                         @endif
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="sr_activities">Description<span class="required-field">*</span></label>
-                                    <textarea name="activities" class="form-control" id="sr_activities" rows="4" placeholder="Enter Description" required></textarea>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
