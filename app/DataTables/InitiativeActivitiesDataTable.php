@@ -50,21 +50,7 @@ class InitiativeActivitiesDataTable extends DataTable
                 return $badges[$row->priority] ?? $row->priority;
             })
             ->addColumn('activities_description', function ($row) {
-                $html = '<div>' . e($row->activities) . '</div>';
-
-                if ($row->interestedPartners->isNotEmpty()) {
-                    $html .= '<div class="mt-1">' . $row->interestedPartners
-                        ->map(fn($p) => '<span class="badge badge-info mr-1">' . e($p->name) . '</span>')
-                        ->join('') . '</div>';
-                }
-
-                if ($row->directorates->isNotEmpty()) {
-                    $html .= '<div class="mt-1">' . $row->directorates
-                        ->map(fn($d) => '<span class="badge badge-secondary mr-1">' . e($d->name) . '</span>')
-                        ->join('') . '</div>';
-                }
-
-                return $html;
+                return '<div>' . e($row->activities) . '</div>';
             })
             ->addColumn('start_date_formatted', fn($row) => $row->start_date ? $row->start_date->format('Y-m-d') : 'N/A')
             ->addColumn('end_date_formatted', fn($row) => $row->end_date ? $row->end_date->format('Y-m-d') : 'N/A')
@@ -160,9 +146,9 @@ class InitiativeActivitiesDataTable extends DataTable
         $columns = [
             Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
+            Column::make('activities_description')->title('Description')->orderable(false),
             Column::make('partner_name')->title('Partner')->orderable(false)->visible(false),
-            Column::make('activities_description')->title('Description')->orderable(false)->visible(false),
-            Column::make('interested_partners_col')->title('Interested Partners')->orderable(false),
+            Column::make('interested_partners_col')->title('Interested Partners')->orderable(false)->visible(false),
             Column::make('directorates_col')->title('Directorates')->orderable(false)->visible(false),
             Column::make('start_date_formatted')->title('Start Date')->orderable(false),
             Column::make('end_date_formatted')->title('End Date')->orderable(false),
