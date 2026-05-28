@@ -4,7 +4,7 @@
     <div class='card'>
         <div class='card-header'>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <select id="partner_filter" class="form-control select2">
                             <option value="">All Partners</option>
@@ -14,17 +14,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <select id="status_filter" class="form-control select2">
-                            <option value="">All Statuses</option>
-                            @foreach($requestStatuses as $status)
-                                <option value="{{ $status->id }}">{{ $status->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class='col-md-6 text-right'>
+                <div class='col-md-8 text-right'>
                     <div class="form-group">
                         @can('support-request: create')
                             <a href="{{ route('admin.activities.create') }}">
@@ -41,7 +31,7 @@
     </div>
 
 
-    <x-partials.activity_modal :partners="$partners" :requestStatuses="$requestStatuses" :priorities="$priorities" :initiatives="$initiatives" :activityStatuses="$activityStatuses" :directorates="$directorates" />
+    <x-partials.activity_modal :partners="$partners" :priorities="$priorities" :initiatives="$initiatives" :activityStatuses="$activityStatuses" :directorates="$directorates" />
     <x-show-modals.activity_show_modal />
 
     @push('scripts')
@@ -92,13 +82,13 @@
                 });
 
                 // Initialize filter selects
-                $('#partner_filter, #status_filter').select2({
+                $('#partner_filter').select2({
                     theme: 'bootstrap4',
                     width: '100%'
                 });
 
                 // Filter change events
-                $('#partner_filter, #status_filter').on('change', function() {
+                $('#partner_filter').on('change', function() {
                     window.LaravelDataTables['activities-table'].ajax.reload();
                 });
 
@@ -116,7 +106,6 @@
                                 $('#sr_partner_id').val(response.activity.partner_id).trigger('change');
                                 $('#sr_interested_partners').val(response.interested_partners).trigger('change');
                                 $('#sr_directorates').val(response.directorates).trigger('change');
-                                $('#sr_request_status_id').val(response.activity.request_status_id).trigger('change');
                                 $('#sr_priority').val(response.activity.priority).trigger('change');
                                 $('#sr_activities').val(response.activity.activities);
                                 $('#sr_start_date').val(response.activity.start_date ? response.activity.start_date.substring(0, 10) : '');
@@ -141,7 +130,6 @@
                         success: function(response) {
                             if (response.success == 1) {
                                 $('#show_modal #partner').html(response.partnerName);
-                                $('#show_modal #request_status').html(response.requestStatusName);
                                 $('#show_modal #priority_show').html(response.priorityLabel);
                                 $('#show_modal #activities_show').html(response.activity.activities);
                                 $('#show_modal #start_date_show').html(response.start_date);

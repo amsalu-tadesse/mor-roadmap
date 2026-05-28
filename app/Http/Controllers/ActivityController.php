@@ -10,7 +10,6 @@ use App\Models\Activity;
 use App\Models\ActivityStatus;
 use App\Models\Initiative;
 use App\Models\Partner;
-use App\Models\RequestStatus;
 use Illuminate\Support\Arr;
 
 class ActivityController extends Controller
@@ -23,7 +22,6 @@ class ActivityController extends Controller
     public function index(ActivitiesDataTable $dataTable)
     {
         $partners = Partner::all();
-        $requestStatuses = RequestStatus::all();
         $priorities = Activity::PRIORITIES;
         $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
             $q->whereIn('name', ['Implementation', 'Shelf']);
@@ -31,19 +29,18 @@ class ActivityController extends Controller
         $activityStatuses = ActivityStatus::all();
         $directorates = \App\Models\Directorate::all();
 
-        return $dataTable->render('admin.activities.index', compact('partners', 'requestStatuses', 'priorities', 'initiatives', 'activityStatuses', 'directorates'));
+        return $dataTable->render('admin.activities.index', compact('partners', 'priorities', 'initiatives', 'activityStatuses', 'directorates'));
     }
 
     public function create()
     {
         $partners = Partner::all();
-        $requestStatuses = RequestStatus::all();
         $priorities = Activity::PRIORITIES;
         $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
             $q->whereIn('name', ['Implementation', 'Shelf']);
         })->get();
         $activityStatuses = ActivityStatus::all();
-        return view('admin.activities.new', compact('partners', 'requestStatuses', 'priorities', 'initiatives', 'activityStatuses'));
+        return view('admin.activities.new', compact('partners', 'priorities', 'initiatives', 'activityStatuses'));
     }
 
     public function store(StoreActivityRequest $request)
@@ -100,13 +97,12 @@ class ActivityController extends Controller
             ]);
         }
         $partners = Partner::all();
-        $requestStatuses = RequestStatus::all();
         $priorities = Activity::PRIORITIES;
         $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
             $q->whereIn('name', ['Implementation', 'Shelf']);
         })->get();
         $activityStatuses = ActivityStatus::all();
-        return view('admin.activities.edit', compact('activity', 'partners', 'requestStatuses', 'priorities', 'initiatives', 'activityStatuses'));
+        return view('admin.activities.edit', compact('activity', 'partners', 'priorities', 'initiatives', 'activityStatuses'));
     }
 
     public function update(UpdateActivityRequest $request, Activity $activity)

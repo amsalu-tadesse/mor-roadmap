@@ -11,12 +11,8 @@
                 <div class="card-body">
                     <table class="table table-bordered">
                         <tr>
-                            <th style="width: 30%">Partner</th>
+                            <th style="width: 30%">{{ request()->routeIs('admin.implementation-initiatives.*') ? 'Implementing Partner' : 'Partner' }}</th>
                             <td id="partner"></td>
-                        </tr>
-                        <tr>
-                            <th>Request Status</th>
-                            <td id="request_status"></td>
                         </tr>
                         <tr>
                             <th>Priority</th>

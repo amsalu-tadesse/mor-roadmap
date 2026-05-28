@@ -55,7 +55,7 @@ return [
     'menu_2'                 =>  [
         'name'                 => 'Initiative setup',
         'menu_icon'           => 'fa-list-alt',
-        'permissions'           => ['directorate: list', 'theme: list', 'objective: list', 'activity-status: list', 'implementation-status: list', 'partner: list', 'request-status: list', 'activity: list'],
+        'permissions'           => ['directorate: list', 'theme: list', 'objective: list', 'activity-status: list', 'implementation-status: list', 'partner: list', 'activity: list'],
 
         'menu_item'            =>
         [
@@ -88,11 +88,6 @@ return [
                 'title'      =>  'Partners',
                 'url'        =>  'admin.partners.index',
                 'permission' => 'partner: list'
-            ],
-            [
-                'title'      =>  'Request Statuses',
-                'url'        =>  'admin.request-statuses.index',
-                'permission' => 'request-status: list'
             ],
             [
                 'title'      =>  'Activities',

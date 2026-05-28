@@ -9,6 +9,7 @@ use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Support\Str;
 
 class InitiativeActivitiesDataTable extends DataTable
 {
@@ -39,7 +40,6 @@ class InitiativeActivitiesDataTable extends DataTable
                 return ++$index_column;
             })
             ->addColumn('partner_name', fn($row) => $row->partner->name ?? 'N/A')
-            ->addColumn('request_status_name', fn($row) => $row->requestStatus->name ?? 'N/A')
             ->addColumn('priority_badge', function ($row) {
                 $badges = [
                     'L' => '<span class="badge badge-success">Low</span>',
@@ -57,7 +57,6 @@ class InitiativeActivitiesDataTable extends DataTable
             ->addColumn('budget_col', fn($row) => $row->budget ?? 'N/A')
             ->addColumn('completion_col', fn($row) => $row->completion !== null && $row->completion !== '' ? $row->completion . '%' : 'N/A')
             ->addColumn('activity_status_name', fn($row) => $row->activityStatus->name ?? 'N/A')
-            ->addColumn('request_status_name', fn($row) => $row->requestStatus->name ?? 'N/A')
             ->addColumn('request_type_col', fn($row) => $row->request_type ?? 'N/A')
             ->addColumn('interested_partners_col', function ($row) {
                 if ($row->interestedPartners->isNotEmpty()) {
@@ -94,7 +93,7 @@ class InitiativeActivitiesDataTable extends DataTable
     public function query(Activity $model): QueryBuilder
     {
         $query = $model->newQuery()
-            ->with(['partner', 'requestStatus', 'activityStatus', 'interestedPartners', 'directorates']);
+            ->with(['partner', 'activityStatus', 'interestedPartners', 'directorates']);
 
         $initiativeId = $this->request()->get('initiative_id');
 
@@ -147,7 +146,11 @@ class InitiativeActivitiesDataTable extends DataTable
             Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('activities_description')->title('Description')->orderable(false),
-            Column::make('partner_name')->title('Partner')->orderable(false)->visible(false),
+            Column::make('partner_name')->title(
+                (request()->routeIs('admin.implementation-initiatives.*') || Str::contains(request()->headers->get('referer'), 'implementation-initiatives'))
+                    ? 'Implementing Partner' 
+                    : 'Partner'
+            )->orderable(false)->visible(false),
             Column::make('interested_partners_col')->title('Interested Partners')->orderable(false)->visible(false),
             Column::make('directorates_col')->title('Directorates')->orderable(false)->visible(false),
             Column::make('start_date_formatted')->title('Start Date')->orderable(false),
@@ -156,7 +159,6 @@ class InitiativeActivitiesDataTable extends DataTable
             Column::make('completion_col')->title('Completion')->orderable(false),
             Column::make('activity_status_name')->title('Activity Status')->orderable(false),
             Column::make('request_type_col')->title('Request Type')->orderable(false),
-            Column::make('request_status_name')->title('Request Status')->orderable(false)->visible(false),
             Column::make('priority_badge')->title('Priority')->addClass('text-center')->orderable(false),
         ];
 

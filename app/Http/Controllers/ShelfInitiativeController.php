@@ -12,7 +12,6 @@ use App\Models\Initiative;
 use App\Models\ActivityStatus;
 use App\Models\Objective;
 use App\Models\Partner;
-use App\Models\RequestStatus;
 use App\Models\Activity;
 use App\Models\Theme;
 use Illuminate\Support\Arr;
@@ -26,7 +25,6 @@ class ShelfInitiativeController extends Controller
         $directorates = Directorate::all();
         $implementationStatuses = ImplementationStatus::all();
         $partners = Partner::all();
-        $requestStatuses = RequestStatus::all();
         $priorities = Activity::PRIORITIES;
         $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
             $q->where('id', Constants::IMPLEMENTATION_STATUS_SHELFING);
@@ -43,7 +41,7 @@ class ShelfInitiativeController extends Controller
 
         return $dataTable->render('admin.shelf-initiatives.index', compact(
             'objectives', 'themes', 'directorates', 'implementationStatuses',
-            'partners', 'requestStatuses', 'priorities', 'initiatives', 'activityStatuses',
+            'partners', 'priorities', 'initiatives', 'activityStatuses',
             'initiativeActivitiesEditTable', 'initiativeActivitiesShowTable'
         ));
     }

@@ -20,7 +20,6 @@ class ActivitiesDataTable extends DataTable
                 return ++$index_column;
             })
             ->addColumn('partner_name', fn($row) => $row->partner->name ?? 'N/A')
-            ->addColumn('request_status_name', fn($row) => $row->requestStatus->name ?? 'N/A')
             ->addColumn('priority_badge', function ($row) {
                 $badges = [
                     'L' => '<span class="badge badge-success">Low</span>',
@@ -67,12 +66,9 @@ class ActivitiesDataTable extends DataTable
     public function query(Activity $model): QueryBuilder
     {
         return $model->newQuery()
-            ->with(['partner', 'requestStatus', 'activityStatus', 'interestedPartners', 'directorates'])
+            ->with(['partner', 'activityStatus', 'interestedPartners', 'directorates'])
             ->when($this->request()->get('partner_id'), function ($query, $partner_id) {
                 $query->where('partner_id', $partner_id);
-            })
-            ->when($this->request()->get('request_status_id'), function ($query, $status_id) {
-                $query->where('request_status_id', $status_id);
             });
     }
 
@@ -85,7 +81,6 @@ class ActivitiesDataTable extends DataTable
                 'url' => route('admin.activities.index'),
                 'data' => 'function(d) {
                     d.partner_id = $("#partner_filter").val();
-                    d.request_status_id = $("#status_filter").val();
                 }',
             ])
             ->orderBy(0, 'desc')
@@ -122,7 +117,6 @@ class ActivitiesDataTable extends DataTable
             Column::make('completion_col')->title('Completion')->orderable(false),
             Column::make('activity_status_name')->title('Activity Status')->orderable(false),
             Column::make('request_type_col')->title('Request Type')->orderable(false),
-            Column::make('request_status_name')->title('Request Status')->orderable(false)->visible(false),
             Column::make('priority_badge')->title('Priority')->addClass('text-center')->orderable(false),
             Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
         ];

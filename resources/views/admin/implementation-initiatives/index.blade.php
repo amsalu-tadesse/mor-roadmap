@@ -51,7 +51,7 @@
     </div>
 
     <x-partials.implementation_initiative_modal :objectives="$objectives" :directorates="$directorates" :implementationStatuses="$implementationStatuses" :themes="$themes" :initiativeActivitiesEditTable="$initiativeActivitiesEditTable" />
-    <x-partials.activity_modal :partners="$partners" :requestStatuses="$requestStatuses" :priorities="$priorities" :initiatives="$initiatives" :activityStatuses="$activityStatuses" :directorates="$directorates" />
+    <x-partials.activity_modal :partners="$partners" :priorities="$priorities" :initiatives="$initiatives" :activityStatuses="$activityStatuses" :directorates="$directorates" />
     <x-show-modals.implementation_initiative_show_modal :initiativeActivitiesShowTable="$initiativeActivitiesShowTable" />
 
     @push('scripts')
@@ -59,6 +59,9 @@
         {!! $initiativeActivitiesEditTable->html()->scripts() !!}
         {!! $initiativeActivitiesShowTable->html()->scripts() !!}
         <script>
+            // Disable Bootstrap focus enforcement to prevent nested modal focus stealing (Select2)
+            $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+
             function reloadInitiativeActivitiesTable(tableId) {
                 if (window.LaravelDataTables && window.LaravelDataTables[tableId]) {
                     window.LaravelDataTables[tableId].ajax.reload(null, false);
@@ -115,44 +118,106 @@
                 //      dropdownParent: $('#update_modal')
                 // });
 
-                $('#activity_modal .select2').select2({
-                    theme: 'bootstrap4',
-                    width: '100%',
-                    dropdownParent: $('#activity_modal')
+                $('#activity_modal').on('shown.bs.modal', function () {
+                    // First ensure the initiative element is enabled so it can be initialized cleanly
+                    $('#sr_initiative_id').prop('disabled', false);
+
+                    // Initialize Select2
+                    $(this).find('.select2').select2({
+                        theme: 'bootstrap4',
+                        width: '100%'
+                    });
+
+                    // Retrieve stored mode and act accordingly
+                    var mode = $(this).data('mode');
+                    if (mode === 'add') {
+                        var initiativeId = $(this).data('initiative-id');
+                        $('#sr_initiative_id').val(initiativeId).trigger('change');
+                        $('#sr_initiative_id').prop('disabled', true);
+
+                        // Clear all other select2 elements
+                        $('#sr_partner_id').val('').trigger('change');
+                        $('#sr_interested_partners').val([]).trigger('change');
+                        $('#sr_directorates').val([]).trigger('change');
+                        $('#sr_activity_status_id').val('').trigger('change');
+                        $('#sr_request_type').val('').trigger('change');
+                        $('#sr_priority').val('').trigger('change');
+                    } else if (mode === 'edit') {
+                        var data = $(this).data('activity-data');
+                        if (data) {
+                            $('#sr_initiative_id').val(data.initiative_id).trigger('change');
+                            $('#sr_initiative_id').prop('disabled', true);
+
+                            $('#sr_partner_id').val(data.partner_id).trigger('change');
+                            $('#sr_interested_partners').val(data.interested_partners).trigger('change');
+                            $('#sr_directorates').val(data.directorates).trigger('change');
+                            $('#sr_activities').val(data.activities);
+                            $('#sr_priority').val(data.priority ? data.priority.toString() : '').trigger('change.select2');
+                            $('#sr_start_date').val(data.start_date);
+                            $('#sr_end_date').val(data.end_date);
+                            $('#sr_budget').val(data.budget);
+                            $('#sr_completion').val(data.completion);
+                            $('#sr_activity_status_id').val(data.activity_status_id ? data.activity_status_id.toString() : '').trigger('change.select2');
+                            $('#sr_request_type').val(data.request_type ? data.request_type.toString() : '').trigger('change.select2');
+                            $('#sr_expenditure').val(data.expenditure);
+                        }
+                    }
+                });
+
+                // Stacked modals scroll and backdrop fix
+                $(document).on('hidden.bs.modal', '.modal', function () {
+                    if ($('.modal.show').length > 0) {
+                        $('body').addClass('modal-open');
+                    } else {
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                    }
                 });
 
                 $('#activity_modal').on('hidden.bs.modal', function() {
-                    if ($('#update_modal').hasClass('show')) {
-                        $('body').addClass('modal-open');
+                    var modal = $(this);
+                    try {
+                        modal.find('.select2').select2('destroy');
+                    } catch (e) {
+                        console.warn('Select2 destroy ignored:', e);
                     }
+                    modal.css('display', 'none');
+
+                    setTimeout(function () {
+                        if ($('#update_modal').hasClass('show')) {
+                            $('body').addClass('modal-open');
+                            $('#update_modal').focus(); // Explicitly restore focus to parent modal
+                            
+                            // Clean up any remaining stacked backdrops safely
+                            var backdrops = $('.modal-backdrop');
+                            if (backdrops.length > 1) {
+                                backdrops.slice(1).remove();
+                            }
+                        } else {
+                            if ($('.modal.show').length === 0) {
+                                $('.modal-backdrop').remove();
+                                $('body').removeClass('modal-open');
+                            }
+                        }
+                    }, 150);
                 });
 
                 $('#update_modal').on('shown.bs.modal', function () {
                     $(this).find('.select2').select2({
                         theme: 'bootstrap4',
-                        width: '100%',
-                        dropdownParent: $('#update_modal')
+                        width: '100%'
                     });
                 });
 
                 $(document).on('click', '#add_activity', function() {
-                    var currentInitiativeId = $('#initiative_id').val();
                     $('#activity_form')[0].reset();
-                    $('#sr_partner_id').val('').trigger('change');
-                    $('#sr_interested_partners').val([]).trigger('change');
-                    $('#sr_directorates').val([]).trigger('change');
-                    $('#sr_request_status_id').val('').trigger('change');
-                    $('#sr_activity_status_id').val('').trigger('change');
-                    $('#sr_request_type').val('').trigger('change');
-                    $('#sr_priority').val('').trigger('change');
                     $('#support_modal_title').text('Add Activity');
                     $('#activity_form').attr('action', "{{ route('admin.activities.store') }}");
                     $('#support_method').val('POST');
 
-                    setTimeout(function() {
-                        $('#sr_initiative_id').val(currentInitiativeId).trigger('change');
-                        $('#sr_initiative_id').prop('disabled', true);
-                    }, 50);
+                    // Store state on modal
+                    $('#activity_modal').data('mode', 'add');
+                    $('#activity_modal').data('initiative-id', $('#initiative_id').val());
 
                     $('#activity_modal').modal('show');
                 });
@@ -264,20 +329,23 @@
                         url: url, type: 'GET', dataType: 'json',
                         success: function(response) {
                             if (response.success == 1) {
-                                $('#sr_initiative_id').val(initiative_id).trigger('change').attr('disabled', true);
-                                $('#sr_partner_id').val(response.activity.partner_id).trigger('change');
-                                $('#sr_interested_partners').val(response.interested_partners).trigger('change');
-                                $('#sr_directorates').val(response.directorates).trigger('change');
-                                $('#sr_activities').val(response.activity.activities);
-                                $('#sr_request_status_id').val(response.activity.request_status_id ? response.activity.request_status_id.toString() : '').trigger('change.select2');
-                                $('#sr_priority').val(response.activity.priority).trigger('change.select2');
-                                $('#sr_start_date').val(response.activity.start_date ? response.activity.start_date.substring(0, 10) : '');
-                                $('#sr_end_date').val(response.activity.end_date ? response.activity.end_date.substring(0, 10) : '');
-                                $('#sr_budget').val(response.activity.budget);
-                                $('#sr_completion').val(response.activity.completion);
-                                $('#sr_activity_status_id').val(response.activity.activity_status_id ? response.activity.activity_status_id.toString() : '').trigger('change.select2');
-                                $('#sr_request_type').val(response.activity.request_type).trigger('change.select2');
-                                $('#sr_expenditure').val(response.activity.expenditure);
+                                // Store state on modal
+                                $('#activity_modal').data('mode', 'edit');
+                                $('#activity_modal').data('activity-data', {
+                                    initiative_id: initiative_id,
+                                    partner_id: response.activity.partner_id,
+                                    interested_partners: response.interested_partners,
+                                    directorates: response.directorates,
+                                    activities: response.activity.activities,
+                                    priority: response.activity.priority,
+                                    start_date: response.activity.start_date ? response.activity.start_date.substring(0, 10) : '',
+                                    end_date: response.activity.end_date ? response.activity.end_date.substring(0, 10) : '',
+                                    budget: response.activity.budget,
+                                    completion: response.activity.completion,
+                                    activity_status_id: response.activity.activity_status_id,
+                                    request_type: response.activity.request_type,
+                                    expenditure: response.activity.expenditure
+                                });
                                 $('#activity_modal').modal('show');
                             }
                         }

@@ -19,7 +19,6 @@ class Activity extends Model
         'initiative_id',
         'partner_id',
         'activities',
-        'request_status_id',
         'priority',
         'start_date',
         'end_date',
@@ -51,11 +50,6 @@ class Activity extends Model
     public function partner()
     {
         return $this->belongsTo(Partner::class);
-    }
-
-    public function requestStatus()
-    {
-        return $this->belongsTo(RequestStatus::class);
     }
 
     public function initiative()

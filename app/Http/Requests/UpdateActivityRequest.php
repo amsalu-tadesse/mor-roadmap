@@ -17,7 +17,6 @@ class UpdateActivityRequest extends FormRequest
             'initiative_id' => 'nullable|exists:initiatives,id',
             'partner_id' => 'nullable|exists:partners,id',
             'activities' => 'required|string',
-            'request_status_id' => 'nullable|exists:request_statuses,id',
             'priority' => 'required|in:L,M,H',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',

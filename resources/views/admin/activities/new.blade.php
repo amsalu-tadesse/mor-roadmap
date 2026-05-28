@@ -89,26 +89,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="request_status_id">Request Status<span class="required-field">*</span></label>
-                            <select name="request_status_id"
-                                class="form-control select2 @error('request_status_id') is-invalid @enderror"
-                                id="request_status_id">
-
-                                <option value="">Select Status</option>
-                                @foreach($requestStatuses as $status)
-                                    <option value="{{ $status->id }}" {{ old('request_status_id') == $status->id ? 'selected' : '' }}>
-                                        {{ $status->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('request_status_id')
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="priority">Priority<span class="required-field">*</span></label>
                             <select name="priority" class="form-control select2 @error('priority') is-invalid @enderror"

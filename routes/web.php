@@ -54,7 +54,6 @@ use App\Http\Controllers\ObjectiveController;
 use App\Http\Controllers\ActivityStatusController;
 use App\Http\Controllers\ImplementationStatusController;
 use App\Http\Controllers\PartnerController;
-use App\Http\Controllers\RequestStatusController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DraftInitiativeController;
 use App\Http\Controllers\ImplementationInitiativeController;
@@ -128,7 +127,6 @@ Route::middleware(['web', 'auth'])->group(function () {
             Route::resource('activity-statuses', ActivityStatusController::class);
             Route::resource('implementation-statuses', ImplementationStatusController::class);
             Route::resource('partners', PartnerController::class);
-            Route::resource('request-statuses', RequestStatusController::class);
             Route::get('activities/initiative-datatable', [ActivityController::class, 'initiativeDataTable'])->name('activities.initiative-datatable');
             Route::resource('activities', ActivityController::class);
             Route::resource('draft-initiatives', DraftInitiativeController::class);
