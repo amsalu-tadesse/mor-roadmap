@@ -10,15 +10,7 @@
             @csrf
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="name">Initiative Name<span class="required-field">*</span></label>
-                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Enter Initiative Name" value="{{ old('name') }}">
-                            @error('name')
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="directorates">Directorates<span class="required-field">*</span></label>
@@ -37,9 +29,8 @@
                             @enderror
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
+
+                      <div class="col-md-6">
                         <div class="form-group">
                             <label for="theme_id">Theme<span class="required-field">*</span></label>
                             <select name="theme_id" class="form-control select2 @error('theme_id') is-invalid @enderror" id="theme_id">
@@ -55,6 +46,11 @@
                             @enderror
                         </div>
                     </div>
+
+
+                </div>
+                <div class="row">
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="objective_id">Objective<span class="required-field">*</span></label>
@@ -73,8 +69,6 @@
                             @enderror
                         </div>
                     </div>
-                </div>
-                <div class="row">
 
 
                     <div class="col-md-6">
@@ -93,6 +87,27 @@
                             @enderror
                         </div>
                     </div>
+
+
+                </div>
+                <div class="row">
+
+
+
+
+                     <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">Initiative Name<span class="required-field">*</span></label>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Enter Initiative Name" value="{{ old('name') }}">
+                            @error('name')
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+
+
+
                     {{-- <div class="col-md-6">
                         <div class="form-group">
                             <label for="note">Note</label>
