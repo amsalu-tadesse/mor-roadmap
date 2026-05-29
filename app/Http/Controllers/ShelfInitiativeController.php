@@ -121,4 +121,17 @@ class ShelfInitiativeController extends Controller
         }
         return redirect()->route('admin.shelf-initiatives.index')->with('success_update', 'Shelf Initiative updated successfully!');
     }
+
+    public function approve(Initiative $shelfInitiative)
+    {
+        $shelfInitiative->update([
+            'implementation_status_id' => Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION
+        ]);
+
+        if (request()->ajax()) {
+            return response()->json(['success' => true]);
+        }
+
+        return redirect()->route('admin.shelf-initiatives.index')->with('success_update', 'Initiative approved and moved to implementation stage successfully!');
+    }
 }

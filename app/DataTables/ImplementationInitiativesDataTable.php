@@ -59,6 +59,16 @@ class ImplementationInitiativesDataTable extends DataTable
             $query->where('objective_id', $this->request()->get('objective_id'));
         }
 
+        if ($this->request()->has('partner_id') && $this->request()->get('partner_id') != '') {
+            $partnerId = $this->request()->get('partner_id');
+            $query->whereHas('activities', function ($q) use ($partnerId) {
+                $q->where('partner_id', $partnerId)
+                  ->orWhereHas('interestedPartners', function ($qp) use ($partnerId) {
+                      $qp->where('partners.id', $partnerId);
+                  });
+            });
+        }
+
         return $query;
     }
 
@@ -67,7 +77,7 @@ class ImplementationInitiativesDataTable extends DataTable
         return $this->builder()
             ->setTableId('implementation-initiatives-table')
             ->columns($this->getColumns())
-            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.theme_id = $("#filter_theme").val(); data.objective_id = $("#filter_objective").val();')
+            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.theme_id = $("#filter_theme").val(); data.objective_id = $("#filter_objective").val(); data.partner_id = $("#filter_partner").val();')
             ->orderBy(0, 'desc')
             ->selectStyleSingle()
             ->dom(

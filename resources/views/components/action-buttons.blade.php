@@ -34,6 +34,11 @@
         <!-- Handle the case when $crime is not set -->
     @endisset
 @else
+    @isset($approve)
+        @can($permission_edit)
+            <a class="btn btn-sm btn-success text-white approve-btn mx-1" data-row_id="{{ $row_id }}" role="button">Approve</a>
+        @endcan
+    @endisset
     @can($permission_view)
         @isset($crime)
             <a class='btn btn-sm' href="{{ route($route_detail, [$row_id]) }}" role="button" id="show_row">
@@ -55,6 +60,8 @@
                 <i class='text-info far fa-edit'></i></a>
         @endcan
     @endisset
+
+
 
     @isset($delete)
     @else

@@ -34,6 +34,16 @@
                         </select>
                     </div>
                 </div>
+                <div class='col-md-3'>
+                    <div class="form-group">
+                        <select id="filter_partner" class="form-control select2">
+                            <option value="">All Partners</option>
+                            @foreach($partners as $partner)
+                                <option value="{{ $partner->id }}">{{ $partner->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
         <div class='card-body'>
@@ -185,7 +195,7 @@
                 $('#activity_modal').modal('show');
             });
 
-            $(document).on('change', '#filter_directorate, #filter_objective', function () {
+            $(document).on('change', '#filter_directorate, #filter_objective, #filter_partner', function () {
                 window.LaravelDataTables['shelf-initiatives-table'].ajax.reload();
             });
 
@@ -387,6 +397,49 @@
                                     swalWithBootstrapButtons.fire('Deleted!', 'Activity has been deleted.', 'success');
                                     reloadInitiativeActivitiesTable('initiative-activities-edit-table');
                                 }
+                            }
+                        });
+                    }
+                });
+            });
+
+            $(document).on('click', '.approve-btn', function () {
+                var row_id = $(this).data('row_id');
+                var url = "{{ route('admin.shelf-initiatives.approve', ':id') }}";
+                url = url.replace(':id', row_id);
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: { confirmButton: 'btn btn-success mx-1', cancelButton: 'btn btn-danger' },
+                    buttonsStyling: false
+                });
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Are you sure you want to approve this initiative?',
+                    text: "This will move the initiative to the implementation stage.",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, approve it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: url,
+                            data: {
+                                _token: "{{ csrf_token() }}"
+                            },
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.success) {
+                                    window.LaravelDataTables['shelf-initiatives-table'].ajax.reload();
+                                    swalWithBootstrapButtons.fire('Approved!', 'Initiative has been moved to the implementation stage.', 'success');
+                                } else {
+                                    toastr.error('Failed to approve initiative.');
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                toastr.error('An error occurred while approving the initiative.');
                             }
                         });
                     }

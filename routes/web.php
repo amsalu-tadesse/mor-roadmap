@@ -129,8 +129,10 @@ Route::middleware(['web', 'auth'])->group(function () {
             Route::resource('partners', PartnerController::class);
             Route::get('activities/initiative-datatable', [ActivityController::class, 'initiativeDataTable'])->name('activities.initiative-datatable');
             Route::resource('activities', ActivityController::class);
+            Route::get('draft-initiatives/search', [DraftInitiativeController::class, 'search'])->name('draft-initiatives.search');
             Route::resource('draft-initiatives', DraftInitiativeController::class);
             Route::resource('implementation-initiatives', ImplementationInitiativeController::class);
+            Route::post('shelf-initiatives/{shelf_initiative}/approve', [ShelfInitiativeController::class, 'approve'])->name('shelf-initiatives.approve');
             Route::resource('shelf-initiatives', ShelfInitiativeController::class);
             Route::resource('contact-us', ContactUsController::class);
             Route::post('contact-message', [ContactUsController::class, 'storeReply'])->name('contact-message.storeReply');

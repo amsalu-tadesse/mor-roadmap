@@ -124,6 +124,23 @@
                 <a href="javascript:history.back()" class="btn btn-secondary float-right mx-3">Back</a>
             </div>
         </form>
+
+        <div class="card-footer" id="similar-initiatives-container" style="display: none; border-top: 1px solid rgba(0,0,0,.125);">
+            <h5 class="text-info mb-3"><i class="fas fa-list mr-1"></i> Similar Existing Initiatives</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="similar-initiatives-table">
+                    <thead>
+                        <tr>
+                            <th>Initiative Name</th>
+                            <th>Implementation Status</th>
+                            <th>Objective</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     @push('scripts')
@@ -155,6 +172,69 @@
                         $('#objective_id').append('<option value="">Select Objective</option>');
                     }
                 });
+
+                var searchTimeout = null;
+                function fetchSimilarInitiatives() {
+                    var name = $('#name').val().trim();
+                    var themeId = $('#theme_id').val();
+                    var directorateIds = $('#directorates').val();
+
+                    if (name.length < 2) {
+                        $('#similar-initiatives-container').hide();
+                        $('#similar-initiatives-table tbody').empty();
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "{{ route('admin.draft-initiatives.search') }}",
+                        type: "GET",
+                        data: {
+                            name: name,
+                            theme_id: themeId,
+                            directorates: directorateIds
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            var tbody = $('#similar-initiatives-table tbody');
+                            tbody.empty();
+
+                            if (data.length > 0) {
+                                $.each(data, function (index, initiative) {
+                                    var initiativeName = initiative.name || 'N/A';
+                                    var statusName = (initiative.implementation_status ? initiative.implementation_status.name : '') || 'N/A';
+                                    var objectiveName = (initiative.objective ? initiative.objective.name : '') || 'N/A';
+
+                                    tbody.append(
+                                        '<tr>' +
+                                        '<td>' + initiativeName + '</td>' +
+                                        '<td>' + statusName + '</td>' +
+                                        '<td>' + objectiveName + '</td>' +
+                                        '</tr>'
+                                    );
+                                });
+                                $('#similar-initiatives-container').show();
+                            } else {
+                                $('#similar-initiatives-container').hide();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error searching initiatives:", error);
+                        }
+                    });
+                }
+
+                function debouncedSearch() {
+                    if (searchTimeout) {
+                        clearTimeout(searchTimeout);
+                    }
+                    searchTimeout = setTimeout(function () {
+                        fetchSimilarInitiatives();
+                    }, 300);
+                }
+
+                $('#name').on('input keyup', debouncedSearch);
+                $('#theme_id').on('change', debouncedSearch);
+                $('#directorates').on('change', debouncedSearch);
             });
         </script>
     @endpush

@@ -36,6 +36,16 @@
                         </select>
                     </div>
                 </div>
+                <div class='col-md-3'>
+                    <div class="form-group mb-0">
+                        <select id="filter_partner" class="form-control select2">
+                            <option value="">All Partners</option>
+                            @foreach($partners as $partner)
+                                <option value="{{ $partner->id }}">{{ $partner->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 {{-- <div class='col-md-3 text-right'>
                     @can('implementation-initiative: create')
                         <a href="{{ route('admin.implementation-initiatives.create') }}" class="btn btn-primary">
@@ -222,7 +232,7 @@
                     $('#activity_modal').modal('show');
                 });
 
-                $(document).on('change', '#filter_directorate, #filter_objective', function() {
+                $(document).on('change', '#filter_directorate, #filter_objective, #filter_partner', function() {
                     window.LaravelDataTables['implementation-initiatives-table'].ajax.reload();
                 });
 

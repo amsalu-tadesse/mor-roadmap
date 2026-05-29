@@ -26,6 +26,7 @@ class ShelfInitiativesDataTable extends DataTable
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
                     'show' => true,
+                    'approve' => true,
                     'permission_delete' => 'shelf-initiative: delete',
                     'permission_edit' => 'shelf-initiative: edit',
                     'permission_view' => 'shelf-initiative: view',
@@ -57,6 +58,16 @@ class ShelfInitiativesDataTable extends DataTable
             $query->where('objective_id', $this->request()->get('objective_id'));
         }
 
+        if ($this->request()->has('partner_id') && $this->request()->get('partner_id') != '') {
+            $partnerId = $this->request()->get('partner_id');
+            $query->whereHas('activities', function ($q) use ($partnerId) {
+                $q->where('partner_id', $partnerId)
+                  ->orWhereHas('interestedPartners', function ($qp) use ($partnerId) {
+                      $qp->where('partners.id', $partnerId);
+                  });
+            });
+        }
+
         return $query;
     }
 
@@ -65,7 +76,7 @@ class ShelfInitiativesDataTable extends DataTable
         return $this->builder()
             ->setTableId('shelf-initiatives-table')
             ->columns($this->getColumns())
-            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.theme_id = $("#filter_theme").val(); data.objective_id = $("#filter_objective").val();')
+            ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.theme_id = $("#filter_theme").val(); data.objective_id = $("#filter_objective").val(); data.partner_id = $("#filter_partner").val();')
             ->orderBy(0, 'desc')
             ->selectStyleSingle()
             ->dom(

@@ -11,6 +11,7 @@ use App\Models\Initiative;
 use App\Models\Objective;
 use App\Models\Theme;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 
 class DraftInitiativeController extends Controller
 {
@@ -38,7 +39,7 @@ class DraftInitiativeController extends Controller
 
         // Default to "Drafting stage" if no implementation status is selected
         if (empty($data['implementation_status_id'])) {
-            $draftingStatus = \App\Models\ImplementationStatus::where('name', 'Drafting stage')->first();
+            $draftingStatus = ImplementationStatus::where('name', 'Drafting stage')->first();
             if ($draftingStatus) {
                 $data['implementation_status_id'] = $draftingStatus->id;
             }
@@ -106,5 +107,39 @@ class DraftInitiativeController extends Controller
             return response()->json(['success' => true]);
         }
         return redirect()->route('admin.draft-initiatives.index')->with('success_delete', 'Draft Initiative deleted successfully!');
+    }
+
+    public function search(Request $request)
+    {
+        $name = $request->input('name');
+        $themeId = $request->input('theme_id');
+        $directorateIds = $request->input('directorates');
+
+        if (empty($name)) {
+            return response()->json([]);
+        }
+
+        if (is_string($directorateIds)) {
+            $directorateIds = explode(',', $directorateIds);
+        }
+        $directorateIds = array_filter((array) $directorateIds);
+
+        $query = Initiative::with(['implementationStatus', 'objective']);
+
+        $query->where('name', 'like', '%' . $name . '%');
+
+        if (!empty($themeId)) {
+            $query->where('theme_id', $themeId);
+        }
+
+        if (!empty($directorateIds)) {
+            $query->whereHas('directorates', function ($q) use ($directorateIds) {
+                $q->whereIn('directorates.id', $directorateIds);
+            });
+        }
+
+        $initiatives = $query->get();
+
+        return response()->json($initiatives);
     }
 }
