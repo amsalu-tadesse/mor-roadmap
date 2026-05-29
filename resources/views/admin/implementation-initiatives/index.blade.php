@@ -155,12 +155,13 @@
                     } else if (mode === 'edit') {
                         var data = $(this).data('activity-data');
                         if (data) {
+                            $('#sr_directorates').data('selected-vals', data.directorates);
+
                             $('#sr_initiative_id').val(data.initiative_id).trigger('change');
                             $('#sr_initiative_id').prop('disabled', true);
 
                             $('#sr_partner_id').val(data.partner_id).trigger('change');
                             $('#sr_interested_partners').val(data.interested_partners).trigger('change');
-                            $('#sr_directorates').val(data.directorates).trigger('change');
                             $('#sr_activities').val(data.activities);
                             $('#sr_priority').val(data.priority ? data.priority.toString() : '').trigger('change.select2');
                             $('#sr_start_date').val(data.start_date);
@@ -173,6 +174,31 @@
                         }
                     }
                 });
+
+                $(document).on('change', '#sr_initiative_id', function() {
+                    var initiativeId = $(this).val();
+                    if (initiativeId) {
+                        $.ajax({
+                            url: "{{ route('admin.get-directorates-by-initiative') }}",
+                            type: "GET",
+                            data: { initiative_id: initiativeId },
+                            dataType: "json",
+                            success: function(data) {
+                                var select = $('#sr_directorates');
+                                var selectedVals = select.data('selected-vals') || select.val() || [];
+                                select.empty();
+                                $.each(data, function(key, value) {
+                                    select.append('<option value="' + value.id + '">' + value.name + '</option>');
+                                });
+                                select.val(selectedVals).trigger('change.select2');
+                                select.removeData('selected-vals');
+                            }
+                        });
+                    } else {
+                        $('#sr_directorates').empty().trigger('change.select2');
+                    }
+                });
+
 
                 // Stacked modals scroll and backdrop fix
                 $(document).on('hidden.bs.modal', '.modal', function () {

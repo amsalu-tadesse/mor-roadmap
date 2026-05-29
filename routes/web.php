@@ -124,6 +124,7 @@ Route::middleware(['web', 'auth'])->group(function () {
             Route::resource('themes', ThemeController::class);
             Route::resource('objectives', ObjectiveController::class);
             Route::get('get-objectives-by-theme', [ObjectiveController::class, 'getObjectivesByTheme'])->name('get-objectives-by-theme');
+            Route::get('get-directorates-by-initiative', [ActivityController::class, 'getDirectoratesByInitiative'])->name('get-directorates-by-initiative');
             Route::resource('activity-statuses', ActivityStatusController::class);
             Route::resource('implementation-statuses', ImplementationStatusController::class);
             Route::resource('partners', PartnerController::class);

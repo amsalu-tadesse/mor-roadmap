@@ -62,12 +62,11 @@ class ImplementationInitiativesDataTable extends DataTable
         if ($this->request()->has('partner_id') && $this->request()->get('partner_id') != '') {
             $partnerId = $this->request()->get('partner_id');
             $query->whereHas('activities', function ($q) use ($partnerId) {
-                $q->where('partner_id', $partnerId)
-                  ->orWhereHas('interestedPartners', function ($qp) use ($partnerId) {
-                      $qp->where('partners.id', $partnerId);
-                  });
+                $q->where('partner_id', $partnerId);
             });
         }
+
+
 
         return $query;
     }

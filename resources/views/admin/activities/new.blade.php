@@ -224,6 +224,42 @@
                 theme: 'bootstrap4',
                 width: '100%'
             });
+
+            function loadDirectorates(initiativeId, selectedVals) {
+                if (initiativeId) {
+                    $.ajax({
+                        url: "{{ route('admin.get-directorates-by-initiative') }}",
+                        type: "GET",
+                        data: { initiative_id: initiativeId },
+                        dataType: "json",
+                        success: function(data) {
+                            var select = $('#directorates');
+                            select.empty();
+                            $.each(data, function(key, value) {
+                                select.append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                            if (selectedVals) {
+                                select.val(selectedVals).trigger('change.select2');
+                            } else {
+                                select.trigger('change.select2');
+                            }
+                        }
+                    });
+                } else {
+                    $('#directorates').empty().trigger('change.select2');
+                }
+            }
+
+            $(document).on('change', '#initiative_id', function() {
+                loadDirectorates($(this).val(), null);
+            });
+
+            // If there's an already selected initiative on page load (e.g. old input)
+            var initialInitiativeId = $('#initiative_id').val();
+            if (initialInitiativeId) {
+                var oldDirectorates = @json(old('directorates') ?? []);
+                loadDirectorates(initialInitiativeId, oldDirectorates);
+            }
         });
     </script>
 @endpush

@@ -136,4 +136,17 @@ class ActivityController extends Controller
         }
         return redirect()->route('admin.activities.index')->with('success_delete', 'Activity deleted successfully!');
     }
+
+    public function getDirectoratesByInitiative(\Illuminate\Http\Request $request)
+    {
+        $initiativeId = $request->get('initiative_id');
+        if (!$initiativeId) {
+            return response()->json([]);
+        }
+        $initiative = Initiative::with('directorates')->find($initiativeId);
+        if (!$initiative) {
+            return response()->json([]);
+        }
+        return response()->json($initiative->directorates);
+    }
 }
