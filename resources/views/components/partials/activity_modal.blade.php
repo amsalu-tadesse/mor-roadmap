@@ -31,7 +31,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label
-                                            for="sr_partner_id">{{ request()->routeIs('admin.implementation-initiatives.*') ? 'Implementing Partner' : 'Partner' }}</label>
+                                            for="sr_partner_id">Implementing Partner</label>
                                         <select name="partner_id" class="form-control select2" id="sr_partner_id">
                                             <option value="">Select Partner</option>
                                             @foreach($partners as $partner)

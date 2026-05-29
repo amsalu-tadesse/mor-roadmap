@@ -12,7 +12,7 @@
                     <table class="table table-bordered">
                         <tr>
                             <th style="width: 30%">
-                                {{ request()->routeIs('admin.implementation-initiatives.*') ? 'Implementing Partner' : 'Partner' }}
+                                Implementing Partner
                             </th>
                             <td id="partner"></td>
                         </tr>

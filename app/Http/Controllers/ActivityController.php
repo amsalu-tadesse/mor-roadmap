@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Constants;
 use App\DataTables\ActivitiesDataTable;
 use App\DataTables\InitiativeActivitiesDataTable;
 use App\Http\Requests\StoreActivityRequest;
 use App\Http\Requests\UpdateActivityRequest;
 use App\Models\Activity;
 use App\Models\ActivityStatus;
+use App\Models\Directorate;
 use App\Models\Initiative;
 use App\Models\Partner;
 use Illuminate\Support\Arr;
@@ -23,11 +25,12 @@ class ActivityController extends Controller
     {
         $partners = Partner::all();
         $priorities = Activity::PRIORITIES;
-        $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
-            $q->whereIn('name', ['Implementation', 'Shelf']);
-        })->get();
+        $initiatives = Initiative::whereIn('implementation_status_id', [
+            Constants::IMPLEMENTATION_STATUS_SHELFING,
+            Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION
+        ])->get();
         $activityStatuses = ActivityStatus::all();
-        $directorates = \App\Models\Directorate::all();
+        $directorates = Directorate::all();
 
         return $dataTable->render('admin.activities.index', compact('partners', 'priorities', 'initiatives', 'activityStatuses', 'directorates'));
     }
@@ -36,9 +39,10 @@ class ActivityController extends Controller
     {
         $partners = Partner::all();
         $priorities = Activity::PRIORITIES;
-        $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
-            $q->whereIn('name', ['Implementation', 'Shelf']);
-        })->get();
+        $initiatives = Initiative::whereIn('implementation_status_id', [
+            Constants::IMPLEMENTATION_STATUS_SHELFING,
+            Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION
+        ])->get();
         $activityStatuses = ActivityStatus::all();
         return view('admin.activities.new', compact('partners', 'priorities', 'initiatives', 'activityStatuses'));
     }
@@ -62,7 +66,7 @@ class ActivityController extends Controller
     public function show(Activity $activity)
     {
         if (request()->ajax()) {
-            $activity->load(['partner', 'requestStatus', 'activityStatus', 'interestedPartners', 'directorates']);
+            $activity->load(['partner', 'activityStatus', 'interestedPartners', 'directorates']);
             $creator = \App\Models\User::find($activity->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
             $priorityLabels = Activity::PRIORITIES;
@@ -71,7 +75,6 @@ class ActivityController extends Controller
                 'success' => 1,
                 'activity' => $activity,
                 'partnerName' => $activity->partner->name ?? 'N/A',
-                'requestStatusName' => $activity->requestStatus->name ?? 'N/A',
                 'priorityLabel' => $priorityLabels[$activity->priority] ?? $activity->priority,
                 'getCreatedBy' => $getCreatedBy,
                 'created_at' => $activity->created_at->format('Y-m-d H:i:s'),
@@ -98,9 +101,10 @@ class ActivityController extends Controller
         }
         $partners = Partner::all();
         $priorities = Activity::PRIORITIES;
-        $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
-            $q->whereIn('name', ['Implementation', 'Shelf']);
-        })->get();
+        $initiatives = Initiative::whereIn('implementation_status_id', [
+            Constants::IMPLEMENTATION_STATUS_SHELFING,
+            Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION
+        ])->get();
         $activityStatuses = ActivityStatus::all();
         return view('admin.activities.edit', compact('activity', 'partners', 'priorities', 'initiatives', 'activityStatuses'));
     }

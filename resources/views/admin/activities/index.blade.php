@@ -7,7 +7,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <select id="partner_filter" class="form-control select2">
-                            <option value="">All Partners</option>
+                            <option value="">All Implementing Partners</option>
                             @foreach($partners as $partner)
                                 <option value="{{ $partner->id }}">{{ $partner->name }}</option>
                             @endforeach
@@ -92,6 +92,30 @@
                     window.LaravelDataTables['activities-table'].ajax.reload();
                 });
 
+                $(document).on('change', '#sr_initiative_id', function() {
+                    var initiativeId = $(this).val();
+                    if (initiativeId) {
+                        $.ajax({
+                            url: "{{ route('admin.get-directorates-by-initiative') }}",
+                            type: "GET",
+                            data: { initiative_id: initiativeId },
+                            dataType: "json",
+                            success: function(data) {
+                                var select = $('#sr_directorates');
+                                var selectedVals = select.data('selected-vals') || select.val() || [];
+                                select.empty();
+                                $.each(data, function(key, value) {
+                                    select.append('<option value="' + value.id + '">' + value.name + '</option>');
+                                });
+                                select.val(selectedVals).trigger('change.select2');
+                                select.removeData('selected-vals');
+                            }
+                        });
+                    } else {
+                        $('#sr_directorates').empty().trigger('change.select2');
+                    }
+                });
+
                 $('#activities-table').on('click', '#update_row', function() {
                     var row_id = $(this).data('row_id');
                     var url = "{{ route('admin.activities.edit', ':id') }}";
@@ -102,10 +126,11 @@
                         success: function(response) {
                             if (response.success == 1) {
                                 $('#activity_id').val(response.activity.id);
+                                $('#sr_directorates').data('selected-vals', response.directorates);
                                 $('#sr_initiative_id').val(response.activity.initiative_id).trigger('change');
+                                $('#sr_initiative_id').prop('disabled', true);
                                 $('#sr_partner_id').val(response.activity.partner_id).trigger('change');
                                 $('#sr_interested_partners').val(response.interested_partners).trigger('change');
-                                $('#sr_directorates').val(response.directorates).trigger('change');
                                 $('#sr_priority').val(response.activity.priority).trigger('change');
                                 $('#sr_activities').val(response.activity.activities);
                                 $('#sr_start_date').val(response.activity.start_date ? response.activity.start_date.substring(0, 10) : '');
@@ -150,7 +175,9 @@
 
             $('#activity_form').on('submit', function(e) {
                 e.preventDefault();
+                $('#sr_initiative_id').prop('disabled', false);
                 var form_data = $(this).serialize();
+                $('#sr_initiative_id').prop('disabled', true);
                 var row_id = $('#activity_id', $(this)).val();
                 var url = "{{ route('admin.activities.update', ':id') }}";
                 url = url.replace(':id', row_id);

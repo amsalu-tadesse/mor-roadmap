@@ -29,21 +29,31 @@ class ActivitiesDataTable extends DataTable
                 return $badges[$row->priority] ?? $row->priority;
             })
             ->addColumn('activities_description', function ($row) {
-                $html = '<div>' . e(\Str::limit($row->activities, 60)) . '</div>';
-
+                return '<div>' . e($row->activities) . '</div>';
+            })
+            ->addColumn('interested_partners_col', function ($row) {
                 if ($row->interestedPartners->isNotEmpty()) {
-                    $html .= '<div class="mt-1">' . $row->interestedPartners
+                    return $row->interestedPartners
                         ->map(fn ($p) => '<span class="badge badge-info mr-1">' . e($p->name) . '</span>')
-                        ->join('') . '</div>';
+                        ->join('');
                 }
-
+                return 'N/A';
+            })
+            ->addColumn('directorates_col', function ($row) {
                 if ($row->directorates->isNotEmpty()) {
-                    $html .= '<div class="mt-1">' . $row->directorates
+                    return $row->directorates
                         ->map(fn ($d) => '<span class="badge badge-secondary mr-1">' . e($d->name) . '</span>')
-                        ->join('') . '</div>';
+                        ->join('');
                 }
-
-                return $html;
+                return 'N/A';
+            })
+            ->addColumn('initiative_directorates_col', function ($row) {
+                if ($row->initiative && $row->initiative->directorates->isNotEmpty()) {
+                    return $row->initiative->directorates
+                        ->map(fn ($d) => '<span class="badge badge-secondary mr-1">' . e($d->name) . '</span>')
+                        ->join('');
+                }
+                return 'N/A';
             })
             ->addColumn('start_date_formatted', fn($row) => $row->start_date ? \Carbon\Carbon::parse($row->start_date)->format('Y-m-d') : 'N/A')
             ->addColumn('end_date_formatted', fn($row) => $row->end_date ? \Carbon\Carbon::parse($row->end_date)->format('Y-m-d') : 'N/A')
@@ -60,13 +70,13 @@ class ActivitiesDataTable extends DataTable
                     'permission_view' => 'activity: view',
                 ]);
             })
-            ->rawColumns(['no', 'priority_badge', 'activities_description', 'action']);
+            ->rawColumns(['no', 'priority_badge', 'activities_description', 'interested_partners_col', 'directorates_col', 'initiative_directorates_col', 'action']);
     }
 
     public function query(Activity $model): QueryBuilder
     {
         return $model->newQuery()
-            ->with(['partner', 'activityStatus', 'interestedPartners', 'directorates'])
+            ->with(['partner', 'activityStatus', 'interestedPartners', 'directorates', 'initiative.directorates'])
             ->when($this->request()->get('partner_id'), function ($query, $partner_id) {
                 $query->where('partner_id', $partner_id);
             });
@@ -109,8 +119,11 @@ class ActivitiesDataTable extends DataTable
         return [
             Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
-            Column::make('partner_name')->title('Partner')->orderable(false)->visible(false),
+            Column::make('partner_name')->title('Implementing Partner')->orderable(false)->visible(false),
             Column::make('activities_description')->title('Description')->orderable(false),
+            Column::make('initiative_directorates_col')->title('ID')->orderable(false)->visible(false),
+            Column::make('interested_partners_col')->title('Interested Partners')->orderable(false)->visible(false),
+            Column::make('directorates_col')->title('Directorates')->orderable(false)->visible(false),
             Column::make('start_date_formatted')->title('Start Date')->orderable(false),
             Column::make('end_date_formatted')->title('End Date')->orderable(false),
             Column::make('budget_col')->title('Budget')->orderable(false)->visible(false),

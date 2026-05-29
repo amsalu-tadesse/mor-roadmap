@@ -25,6 +25,12 @@ class DirectoratesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
+            ->editColumn('director.first_name', function ($directorate) {
+                if ($directorate->director) {
+                    return $directorate->director->first_name . ' ' . $directorate->director->middle_name . ' ' . $directorate->director->last_name;
+                }
+                return 'N/A';
+            })
             ->addColumn('action', function ($directorate) {
                 return view('components.action-buttons', [
                     'row_id' => $directorate->id,
@@ -122,7 +128,7 @@ class DirectoratesDataTable extends DataTable
                 ->addClass('text-center')
                 ->orderable(false),
             Column::make('name')->title('Directorate Name'),
-            Column::make('director.first_name')->title('Director'),
+            Column::make('director.first_name')->title('Director')->defaultContent('N/A'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(true)
