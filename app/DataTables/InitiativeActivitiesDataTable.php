@@ -39,7 +39,12 @@ class InitiativeActivitiesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
-            ->addColumn('partner_name', fn($row) => $row->partner->name ?? 'N/A')
+            ->addColumn('partner_name', function ($row) {
+                if ($row->partner && $row->partner->name) {
+                    return '<span class="badge badge-success">' . e($row->partner->name) . '</span>';
+                }
+                return '<span class="badge badge-danger">N/A</span>';
+            })
             ->addColumn('priority_badge', function ($row) {
                 $badges = [
                     'L' => '<span class="badge badge-success">Low</span>',
@@ -75,7 +80,7 @@ class InitiativeActivitiesDataTable extends DataTable
                 return 'N/A';
             });
 
-        $rawColumns = ['no', 'priority_badge', 'activities_description', 'interested_partners_col', 'directorates_col'];
+        $rawColumns = ['no', 'priority_badge', 'activities_description', 'interested_partners_col', 'directorates_col', 'partner_name'];
 
         if ($this->showActions) {
             $table->addColumn('action', function ($row) {
@@ -148,10 +153,18 @@ class InitiativeActivitiesDataTable extends DataTable
             Column::make('id')->visible(false),
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('activities_description')->title('Description')->orderable(false),
-            Column::make('partner_name')
-                ->title($isImplementation ? 'Implementing Partner' : 'Partner')
+        ];
+
+        if ($isImplementation) {
+            $columns[] = Column::make('partner_name')
+                ->title('Implementing Partner')
                 ->orderable(false)
-                ->visible($isImplementation),
+                ->visible(true);
+        } else {
+            // Partner/Implementing Partner column is commented out/omitted for the Shelf Stage activity table
+        }
+
+        $columns = array_merge($columns, [
             Column::make('interested_partners_col')
                 ->title('Interested Partners')
                 ->orderable(false)
@@ -164,7 +177,7 @@ class InitiativeActivitiesDataTable extends DataTable
             Column::make('activity_status_name')->title('Activity Status')->orderable(false),
             Column::make('request_type_col')->title('Request Type')->orderable(false),
             Column::make('priority_badge')->title('Priority')->addClass('text-center')->orderable(false),
-        ];
+        ]);
 
         if ($this->showActions) {
             $columns[] = Column::computed('action')
