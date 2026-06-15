@@ -149,12 +149,14 @@ Route::middleware(['web', 'auth'])->group(function () {
             Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
             Route::post('/change-profile', [ProfileController::class, 'changeProfile'])->name('postProfile');
             Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+            Route::get('/visualize1', [DashboardController::class, 'visualize1'])->name('visualize1');
+            // Route::get('/visualize2', [DashboardController::class, 'dashboard'])->name('visualize2');
 
 
             Route::resource('archive-crimes', ArchiveCrimeController::class);
-            Route::get("/notifications",[NotificationController::class,"index"])->name("notifications.index");
-            Route::DELETE("/notifications/{id}",[NotificationController::class,"destroy"])->name("notification.destroy");
-            Route::post("/notification-update",[NotificationController::class,"update"])->name("update.notification");
+            Route::get("/notifications", [NotificationController::class,"index"])->name("notifications.index");
+            Route::DELETE("/notifications/{id}", [NotificationController::class,"destroy"])->name("notification.destroy");
+            Route::post("/notification-update", [NotificationController::class,"update"])->name("update.notification");
 
             #CRUD
             Route::resource('crud-generator', CrudGeneratorController::class);
@@ -164,4 +166,3 @@ Route::middleware(['web', 'auth'])->group(function () {
         });
     });
 });
-

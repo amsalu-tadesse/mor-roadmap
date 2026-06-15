@@ -4,6 +4,27 @@ use Illuminate\Support\Facades\Auth;
 
 return [
     'menu_1'                 =>  [
+        'name'                 => 'Visualization',
+        'menu_icon'           => 'fa-user',
+        'permissions'           => ['role: list', 'user: list'],
+
+        'menu_item'            =>
+        [
+            [
+                'title'        => 'Visualize 1',
+                'url'          => 'admin.visualize1',
+                'permission'   => 'role: list'
+
+            ],
+
+            [
+                'title'      =>  'Visualize 2',
+                'url'        =>  'admin.users.index',
+                'permission' => 'user: list'
+            ],
+        ]
+    ],
+    'menu_2'                 =>  [
         'name'                 => 'User Managments',
         'menu_icon'           => 'fa-user',
         'permissions'           => ['role: list', 'user: list'],
@@ -52,7 +73,7 @@ return [
         ]
     ],
 
-    'menu_2'                 =>  [
+    'menu_4'                 =>  [
         'name'                 => 'Initiative setup',
         'menu_icon'           => 'fa-list-alt',
         'permissions'           => ['directorate: list', 'theme: list', 'objective: list', 'activity-status: list', 'implementation-status: list', 'partner: list', 'activity: list'],

@@ -6901,7 +6901,7 @@ canvas#highlights {
     box-shadow: 0 5px 10px rgba(59, 118, 239, .3);
     border: 0 !important;
     color: #fff !important
-} 
+}
 
 .dataTables_paginate a:hover i {
     color: #fff !important
@@ -6927,7 +6927,7 @@ canvas#highlights {
     font-weight: 400;
     margin-top: 35px;
     padding-top: 0
-} 
+}
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.current,
 .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
@@ -6935,7 +6935,7 @@ canvas#highlights {
     border: 1px solid #fb771a;
     background-color: #fb771a !important;
     box-shadow: 0 5px 10px rgba(136, 79, 251, .04) !important
-} 
+}
 
 /* .dataTables_wrapper .dataTables_paginate .paginate_button {
     border: 0 !important

@@ -170,16 +170,6 @@
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
-    <!-- amchart -->
-    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-
-    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-
-    <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/geodata/data/countries2.js"></script>
 
 
     <!-- highchart -->
@@ -191,11 +181,6 @@
 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/themes/Responsive.js"></script>
-
-
-    <!-- <script src="https://cdn.amcharts.com/lib/5/map.js"></script> -->
-    <script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
@@ -240,7 +225,7 @@
              $('ul.nav-sidebar a').filter(function() {
                  return this.href == url;
              }).addClass('active');
- 
+
              // for sidebar menu and treeview
              $('ul.nav-treeview a').filter(function() {
                  return this.href == url;

@@ -48,7 +48,7 @@ def fix_excel_dates(value):
         return None
     return pd.to_datetime(value, errors='coerce')
 
-if COL_START in df.columns:
+if COL_START in df.columns
     df[COL_START] = df[COL_START].apply(fix_excel_dates)
 if COL_END in df.columns:
     df[COL_END] = df[COL_END].apply(fix_excel_dates)
