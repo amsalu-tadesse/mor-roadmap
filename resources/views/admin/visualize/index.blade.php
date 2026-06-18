@@ -60,10 +60,13 @@
     // ================================================================
     // 1. DYNAMIC COLOR WHEEL FACTORY FUNCTION
     // ================================================================
-    function generateDynamicColors(count, saturation, lightness) {
-        var colors = [];
-        for (var i = 0; i < count; i++) {
-            var hue = Math.round((360 / count) * i);
+    function generateDynamicColors(count, saturation, lightness, hue) {
+         var colors = [];
+         //colors.push('hsl(' + hue + ', ' + saturation + '%, ' + lightness + '%)');
+
+
+       for (var i = 0; i < count; i++) {
+             hue = Math.round((360 / count) * i);
             colors.push('hsl(' + hue + ', ' + saturation + '%, ' + lightness + '%)');
         }
         return colors;
@@ -79,7 +82,7 @@
         var dataValues = {!! json_encode($counts) !!};
         var option = {
             // Upgraded to use your non-repeating color spectrum instead of flat blue
-            color: generateDynamicColors(dataValues.length, 65, 45),
+            color: generateDynamicColors(dataValues.length, 65, 45, 225),
             title: {
                 text: 'Initiatives Per Dirctorate',
                 subtext: 'Total Count Breakdown per Managed Directorate'
@@ -105,7 +108,7 @@
         var myChart = echarts.init(domElement, null, { renderer: 'canvas', useDirtyRect: false });
         var dataValues = {!! json_encode($activityCounts) !!};
         var option = {
-            color: generateDynamicColors(dataValues.length, 60, 45),
+            color: generateDynamicColors(dataValues.length, 60, 45, 191),
             title: { text: 'Total Registered Activities per Partner', left: 'center', top: '1%' },
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             grid: { left: '3%', right: '4%', bottom: '8%', containLabel: true },
@@ -134,7 +137,7 @@
         var myChart = echarts.init(domElement, null, { renderer: 'canvas', useDirtyRect: false });
         var rawChartData = {!! json_encode($pieData) !!};
         var option = {
-            color: generateDynamicColors(rawChartData.length, 65, 50),
+            color: generateDynamicColors(rawChartData.length, 65, 50, 215),
             title: { text: 'Activities Breakdown by Status', left: 'center', top: '1%' },
             tooltip: { trigger: 'item', formatter: '{a} <br/>{b} : <strong>{c}</strong> ({d}%)' },
             legend: { bottom: '2%', left: 'center' },
@@ -160,7 +163,7 @@
         var myChart = echarts.init(domElement, null, { renderer: 'canvas', useDirtyRect: false });
         var dataValues = {!! json_encode($initiativeCounts) !!};
         var option = {
-            color: generateDynamicColors(dataValues.length, 65, 45),
+            color: generateDynamicColors(dataValues.length, 65, 45, 240),
             title: { text: 'Initiatives Distribution per Strategic Theme' },
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             grid: { left: '3%', right: '5%', bottom: '3%', containLabel: true },
@@ -185,7 +188,7 @@
     var observerOptions = {
         root: null,         // Tracks boundaries relative to the screen viewport window
         rootMargin: '0px',
-        threshold: 0.9     // Initializes and animates exactly when 15% of the chart card is visible
+        threshold: 0.5     // Initializes and animates exactly when 15% of the chart card is visible
     };
 
     var lazyChartObserver = new IntersectionObserver(function(entries, observer) {
