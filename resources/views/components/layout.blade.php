@@ -7,6 +7,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Reform initiatives </title>
     <!-- Csrf token -->
+
+    <style>
+
+
+.submenu-icon{
+    font-size:10px;
+    margin-right:8px;
+    transition:.2s;
+    color:#94a3b8;
+}
+
+
+.nav-link:hover .submenu-icon{
+    color:#2563eb;
+}
+
+.nav-link:hover p{
+    color:#2563eb;
+}
+
+ .nav-link.active{
+    background:rgba(37,99,235,0.08);
+    border-radius:10px;
+}
+
+ .nav-link.active p{
+    color:#2563eb !important;
+    font-weight:600;
+}
+
+ .nav-link.active .submenu-icon{
+    color:#2563eb !important;
+}
+
+
+    </style>
+
+
+
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <!-- Google Font: Source Sans Pro -->
@@ -244,7 +283,11 @@
             // for treeview
             $('ul.nav-treeview a').filter(function () {
                 return this.href == url;
-            }).parentsUntil(".nav-sidebar > .nav-treeview").addClass('menu-open').prev('a').addClass('active');
+            })
+            .parentsUntil(".nav-sidebar > .nav-treeview")
+            .addClass('menu-open')
+            // .prev('a')
+            // .addClass('active');
         });
 
 

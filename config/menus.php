@@ -11,17 +11,13 @@ return [
         'menu_item'            =>
         [
             [
-                'title'        => 'Visualize 1',
+                'title'        => 'Visualize',
                 'url'          => 'admin.visualize1',
                 'permission'   => 'role: list'
 
             ],
 
-            [
-                'title'      =>  'Visualize 2',
-                'url'        =>  'admin.users.index',
-                'permission' => 'user: list'
-            ],
+
         ]
     ],
     'menu_2'                 =>  [
