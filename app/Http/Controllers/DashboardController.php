@@ -33,7 +33,7 @@ class DashboardController extends Controller
         ));
     }
 
-    public function visualize1()
+    public function analytics()
     {
         // Fetch directorates sorted by most initiatives down to least
         $directorates = Directorate::withCount('initiatives')

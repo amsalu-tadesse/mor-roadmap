@@ -11,8 +11,8 @@ return [
         'menu_item'            =>
         [
             [
-                'title'        => 'Visualize',
-                'url'          => 'admin.visualize1',
+                'title'        => 'Analytics',
+                'url'          => 'admin.analytics',
                 'permission'   => 'role: list'
 
             ],
@@ -66,6 +66,13 @@ return [
                 'permission' => 'implementation-initiative: list'
             ],
 
+            [
+                'title'      =>  'Activities',
+                'url'        =>  'admin.activities.index',
+                'permission' => 'activity: list'
+            ]
+
+
         ]
     ],
 
@@ -106,11 +113,7 @@ return [
                 'url'        =>  'admin.partners.index',
                 'permission' => 'partner: list'
             ],
-            [
-                'title'      =>  'Activities',
-                'url'        =>  'admin.activities.index',
-                'permission' => 'activity: list'
-            ]
+
         ]
     ],
 

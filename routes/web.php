@@ -149,7 +149,7 @@ Route::middleware(['web', 'auth'])->group(function () {
             Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
             Route::post('/change-profile', [ProfileController::class, 'changeProfile'])->name('postProfile');
             Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-            Route::get('/visualize1', [DashboardController::class, 'visualize1'])->name('visualize1');
+            Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics');
             // Route::get('/visualize2', [DashboardController::class, 'dashboard'])->name('visualize2');
 
 
