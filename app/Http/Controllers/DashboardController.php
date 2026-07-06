@@ -5,12 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Directorate;
 use App\Models\Partner;
+use App\Models\Initiative;
+use App\Models\SiteAdmin;
 
 class DashboardController extends Controller
 {
     public function dashboard()
     {
-        return view('admin.index');
+        $directoratesCount = Directorate::count();
+        $initiativesCount = Initiative::count();
+        $partnersCount = Partner::count();
+
+        $draftCount = Initiative::where('implementation_status_id', \App\Constants\Constants::IMPLEMENTATION_STATUS_DRAFTING)->count();
+        $shelfingCount = Initiative::where('implementation_status_id', \App\Constants\Constants::IMPLEMENTATION_STATUS_SHELFING)->count();
+        $implementationCount = Initiative::where('implementation_status_id', \App\Constants\Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION)->count();
+
+        $siteAdmin = SiteAdmin::first();
+
+        return view('admin.index', compact(
+            'directoratesCount',
+            'initiativesCount',
+            'partnersCount',
+            'draftCount',
+            'shelfingCount',
+            'implementationCount',
+            'siteAdmin'
+        ));
     }
 
     public function visualize1()

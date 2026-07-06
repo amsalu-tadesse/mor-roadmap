@@ -26,7 +26,6 @@
 .nav-link:hover p{
     color:#2563eb;
 }
-
  .nav-link.active{
     background:rgba(37,99,235,0.08);
     border-radius:10px;
@@ -95,14 +94,35 @@
 
     <style>
         /* Apply to sidebar or cards for a fancy effect */
-        /* Apply to sidebar or cards for a fancy effect */
         /*.main-sidebar, .card {
-    background: rgba(255, 255, 255, 0.2) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-}*/
+            background: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }*/
+
+        /* Specific override for active sidebar menus to look gray/flat instead of AdminLTE solid blue */
+        body .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active,
+        body .nav-sidebar .nav-link.active {
+            background-color: rgba(37, 99, 235, 0.08) !important;
+            background: rgba(37, 99, 235, 0.08) !important;
+            color: #2563eb !important;
+            border-radius: 10px;
+            box-shadow: none !important;
+        }
+
+        body .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active p,
+        body .nav-sidebar .nav-link.active p {
+            color: #2563eb !important;
+            font-weight: 600;
+        }
+
+        body .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active .nav-icon,
+        body .nav-sidebar .nav-link.active .submenu-icon,
+        body .nav-sidebar .nav-link.active .nav-icon {
+            color: #2563eb !important;
+        }
     </style>
 
 

@@ -594,8 +594,8 @@ class DatabaseSeeder extends Seeder
         $siteAdmins = [
 
             [
-                'name' => 'User Mangment',
-                'aboutus' => "Ensuring on the Ethiopia’s User Mangment resources conservation through the active participation of the community and other stakeholders, by enforcing national and international laws and conventions, to provide sustainable ecological, economic, and social benefits for Ethiopians as well as the global community and pass  to the next generation as a heritage.",
+                'name' => 'Reform Initiatives',
+                'aboutus' => 'To implement and monitor reform initiatives roadmap to enhance the institutional efficiency and effectiveness of the Ministry of Revenues.',
                 'location' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7880.724309874413!2d38.75270387770995!3d9.030689800000008!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85f23d0aecdb%3A0x5368a36524cc3e5a!2sFDRE%20Ministry%20of%20Trade%20and%20Industry!5e0!3m2!1sen!2spl!4v1694002069266!5m2!1sen!2spl" width="600" height="450" style="border:0;"
                 allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade',
                 'address' => 'Woreda 09 basha wolde chilot, Arada Sub City, Addis Ababa,',
