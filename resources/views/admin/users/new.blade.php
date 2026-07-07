@@ -88,7 +88,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group" data-select2-id="070">
+                    <div class="form-group d-none" data-select2-id="070">
                         <label>Organization</label>
                         <div class="select2-blue" data-select2-id="070">
                             <select name="organization_id" class="organization_select2 select2-hidden-accessible" id="organization_id"   data-dropdown-css-class="select2-blue" style="width: 100%;" data-select2-id="070" tabindex="-1" aria-hidden="true">

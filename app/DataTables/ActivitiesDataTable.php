@@ -121,7 +121,7 @@ class ActivitiesDataTable extends DataTable
             Column::make('no')->title('No')->addClass('text-center')->orderable(false),
             Column::make('partner_name')->title('Implementing Partner')->orderable(false)->visible(false),
             Column::make('activities_description')->title('Description')->orderable(false),
-            Column::make('initiative_directorates_col')->title('ID')->orderable(false)->visible(false),
+            // Column::make('initiative_directorates_col')->title('ID')->orderable(false)->visible(false),
             Column::make('interested_partners_col')->title('Interested Partners')->orderable(false)->visible(false),
             Column::make('directorates_col')->title('Directorates')->orderable(false)->visible(false),
             Column::make('start_date_formatted')->title('Start Date')->orderable(false),

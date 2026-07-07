@@ -32,7 +32,7 @@ class UpdateUserRequest extends FormRequest
             'user_roles' =>[Rule::exists('roles', 'id')],
             'is_superadmin' =>'',
             'twofa_code' =>'',
-            'organization_id' =>'',
+            'organization_id' => 'nullable|exists:organizations,id',
             'status' => '',
         ];
     }
