@@ -8,7 +8,7 @@
 
     <style>
         body {
-            background: #EDEBED url("{{ asset('assets/img/login1.jpg') }}");
+            /* background: #EDEBED url("{{ asset('assets/img/login1.jpg') }}"); */
             opacity: 0.65;
             visibility: hidden;
             /* Hide the body element initially */
@@ -34,7 +34,7 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center" style="font-weight: bold; font-size:40px">
-           Reform initiatives
+           MoR Reform initiatives
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>

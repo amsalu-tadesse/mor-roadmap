@@ -95,7 +95,7 @@ class DraftInitiativesDataTable extends DataTable
             Column::make('directorate_name')->title('Directorates')->orderable(false),
             Column::make('theme_name')->title('Theme')->orderable(false),
             Column::make('objective_name')->title('Objective')->orderable(false),
-            Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
+            Column::computed('action')->title('Action')->addClass('text-center action-column')->exportable(false)->printable(false)->orderable(false),
         ];
     }
 

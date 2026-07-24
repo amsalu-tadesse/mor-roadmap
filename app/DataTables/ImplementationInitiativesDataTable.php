@@ -48,9 +48,9 @@ class ImplementationInitiativesDataTable extends DataTable
                 $q->where('directorates.id', $this->request()->get('directorate_id'));
             });
         }
-        
+
         if ($this->request()->has('theme_id') && $this->request()->get('theme_id') != '') {
-            $query->whereHas('objective', function($q) {
+            $query->whereHas('objective', function ($q) {
                 $q->where('theme_id', $this->request()->get('theme_id'));
             });
         }
@@ -107,7 +107,9 @@ class ImplementationInitiativesDataTable extends DataTable
             Column::make('directorate_name')->title('Directorates')->orderable(false),
             Column::make('theme_name')->title('Theme')->orderable(false),
             Column::make('objective_name')->title('Objective')->orderable(false),
-            Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
+            // Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
+            // Column::computed('action')->title('Action')->width('10%')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
+            Column::computed('action')->title('Action')->addClass('text-center action-column')->exportable(false)->printable(false)->orderable(false)
         ];
     }
 

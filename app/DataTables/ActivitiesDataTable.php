@@ -19,7 +19,7 @@ class ActivitiesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
-            ->addColumn('partner_name', fn($row) => $row->partner->name ?? 'N/A')
+            ->addColumn('partner_name', fn ($row) => $row->partner->name ?? 'N/A')
             ->addColumn('priority_badge', function ($row) {
                 $badges = [
                     'L' => '<span class="badge badge-success">Low</span>',
@@ -55,12 +55,13 @@ class ActivitiesDataTable extends DataTable
                 }
                 return 'N/A';
             })
-            ->addColumn('start_date_formatted', fn($row) => $row->start_date ? \Carbon\Carbon::parse($row->start_date)->format('Y-m-d') : 'N/A')
-            ->addColumn('end_date_formatted', fn($row) => $row->end_date ? \Carbon\Carbon::parse($row->end_date)->format('Y-m-d') : 'N/A')
-            ->addColumn('budget_col', fn($row) => $row->budget ?? 'N/A')
-            ->addColumn('completion_col', fn($row) => $row->completion ? $row->completion . '%' : 'N/A')
-            ->addColumn('activity_status_name', fn($row) => $row->activityStatus->name ?? 'N/A')
-            ->addColumn('request_type_col', fn($row) => $row->request_type ?? 'N/A')
+            ->addColumn('start_date_formatted', fn ($row) => $row->start_date ? \Carbon\Carbon::parse($row->start_date)->format('Y-m-d') : 'N/A')
+            ->addColumn('end_date_formatted', fn ($row) => $row->end_date ? \Carbon\Carbon::parse($row->end_date)->format('Y-m-d') : 'N/A')
+            ->addColumn('budget_col', fn ($row) => $row->budget ?? 'N/A')
+            ->addColumn('activity_status_name', fn ($row) => $row->activityStatus->name ?? 'N/A')
+            ->addColumn('request_type_col', fn ($row) => $row->request_type ?? 'N/A')
+                        ->addColumn('completion_col', fn ($row) => $row->completion ? $row->completion . '%' : 'N/A')
+
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
@@ -127,11 +128,12 @@ class ActivitiesDataTable extends DataTable
             Column::make('start_date_formatted')->title('Start Date')->orderable(false),
             Column::make('end_date_formatted')->title('End Date')->orderable(false),
             Column::make('budget_col')->title('Budget')->orderable(false)->visible(false),
-            Column::make('completion_col')->title('Completion')->orderable(false),
+
             Column::make('activity_status_name')->title('Activity Status')->orderable(false),
             Column::make('request_type_col')->title('Request Type')->orderable(false),
             Column::make('priority_badge')->title('Priority')->addClass('text-center')->orderable(false),
-            Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
+            Column::make('completion_col')->title('Completion')->orderable(false),
+            Column::computed('action')->title('Action')->addClass('text-center action-column')->exportable(false)->printable(false)->orderable(false),
         ];
     }
 

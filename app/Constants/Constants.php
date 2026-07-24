@@ -40,6 +40,19 @@ class Constants
         return $allPages;
 
     }
+    public static function getStatusColor($completion)
+    {
+
+        return
+        [
+            5 => "#FF0000",
+            25 => "#FFFF00",
+            40 => "#0000FF",
+            60 => "#00FF00"
+        ];
+    }
+
+
     /*public static function jobs() {
         return [
             "Student",
@@ -50,17 +63,7 @@ class Constants
             "Freelancer",
             "Other",
         ];
-    }
-
-    public static function jobsKr() {
-        return [
-            "학생",
-            "대학생",
-            "주부",
-            "직장인",
-            "자영업",
-            "프리랜서",
-            "기타",
-        ];
     }*/
+
+
 }

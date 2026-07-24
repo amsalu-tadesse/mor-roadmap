@@ -33,7 +33,7 @@
     <div class="login-box">
         <div class="card card-outline card-primary">
         <div class="card-header text-center" style="font-weight: bold; font-size:40px">
-          Reform initiatives
+          MoR Reform initiatives
             </div>
             <div class="card-body">
                 <p class="login-box-msg">You are only one step a way from your new password, recover your password now.</p>

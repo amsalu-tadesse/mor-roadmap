@@ -5,7 +5,7 @@
     <script src="{{ asset('js/inactivity.js') }}"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Reform initiatives </title>
+    <title>MoR Reform initiatives </title>
     <!-- Csrf token -->
 
     <style>
@@ -123,11 +123,20 @@
         body .nav-sidebar .nav-link.active .nav-icon {
             color: #2563eb !important;
         }
+
+
+
+.action-column {
+    white-space: nowrap;
+    width: 1%;
+}
+
+.action-column .btn,
+.action-column a {
+    display: inline-block;
+    margin-right: 2px;
+}
     </style>
-
-
-
-
 
     @stack('css')
 

@@ -19,22 +19,26 @@ trait CreatedUpdatedBy
                 $lastActivities = CustomActivity::all()->last();
 
                 //send message in telegram.
-                $enabled = Setting::where('code', 'allow_telegram_message')->value('value1');
+                /* $enabledObj = Setting::where('code', 'allow_telegram_message');
+                 $enabled = 0;
+                 if ($enabledObj) {
+                     // Implementation for sending telegram message
+                     $enabled = $enabledObj->value('value1');
+                 }
 
-                if ($enabled == 1) {
-                    try {
-                        $message = self::getMessage($model);
+                 if ($enabled == 1) {
+                     try {
+                         $message = self::getMessage($model);
 
-                        if($message != 'Unknown')
-                        {
-                            // Utility::sendTelegramMsg($message);
-                            dispatch(new \App\Jobs\SendTelegram($message));
-                        }
+                         if ($message != 'Unknown') {
+                             // Utility::sendTelegramMsg($message);
+                             dispatch(new \App\Jobs\SendTelegram($message));
+                         }
 
-                    } catch (Exception $ex) {
-                        //continue.
-                    }
-                }
+                     } catch (Exception $ex) {
+                         //continue.
+                     }
+                 }*/
 
             }
 
