@@ -33,7 +33,7 @@ class StoreUserRequest extends FormRequest
             'mobile' => [ new MobileNumber, Rule::unique('users', 'mobile')],
             'user_roles' =>[Rule::exists('roles', 'id')],
             'is_superadmin' =>'',
-            'organization_id' =>'',
+            'organization_id' => 'nullable|exists:organizations,id',
             'twofa_code' =>'',
             'status' => '',
         ];
