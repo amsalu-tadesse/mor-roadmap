@@ -60,7 +60,13 @@ class InitiativeActivitiesDataTable extends DataTable
             ->addColumn('start_date_formatted', fn($row) => $row->start_date ? $row->start_date->format('Y-m-d') : 'N/A')
             ->addColumn('end_date_formatted', fn($row) => $row->end_date ? $row->end_date->format('Y-m-d') : 'N/A')
             ->addColumn('budget_col', fn($row) => $row->budget ?? 'N/A')
-            ->addColumn('completion_col', fn($row) => $row->completion !== null && $row->completion !== '' ? $row->completion . '%' : 'N/A')
+            ->addColumn('completion_col', function ($row) {
+                if ($row->completion === null || $row->completion === '') {
+                    return 'N/A';
+                }
+                $color = Constants::getStatusColor($row->completion);
+                return '<div style="background-color: ' . $color . '; color: #000; font-weight: bold; text-align: center; padding: 10px 4px; margin: -12px -8px;">' . (int)$row->completion . '%</div>';
+            })
             ->addColumn('activity_status_name', fn($row) => $row->activityStatus->name ?? 'N/A')
             ->addColumn('request_type_col', fn($row) => $row->request_type ?? 'N/A')
             ->addColumn('interested_partners_col', function ($row) {
@@ -80,7 +86,7 @@ class InitiativeActivitiesDataTable extends DataTable
                 return 'N/A';
             });
 
-        $rawColumns = ['no', 'priority_badge', 'activities_description', 'interested_partners_col', 'directorates_col', 'partner_name'];
+        $rawColumns = ['no', 'priority_badge', 'activities_description', 'interested_partners_col', 'directorates_col', 'partner_name', 'completion_col'];
 
         if ($this->showActions) {
             $table->addColumn('action', function ($row) {

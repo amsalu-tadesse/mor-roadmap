@@ -135,7 +135,8 @@
                     // Initialize Select2
                     $(this).find('.select2').select2({
                         theme: 'bootstrap4',
-                        width: '100%'
+                        width: '100%',
+                        dropdownParent: $('#activity_modal')
                     });
 
                     // Retrieve stored mode and act accordingly
@@ -241,7 +242,8 @@
                 $('#update_modal').on('shown.bs.modal', function () {
                     $(this).find('.select2').select2({
                         theme: 'bootstrap4',
-                        width: '100%'
+                        width: '100%',
+                        dropdownParent: $('#update_modal')
                     });
                 });
 
@@ -342,6 +344,7 @@
                                 $('#show_modal #directorate_show').html(response.directorateName);
                                 $('#show_modal #theme_show').html(response.themeName);
                                 $('#show_modal #objective_show').html(response.objectiveName);
+                                $('#show_modal #note_show').html(response.initiative.note || '');
 
                                 $('#show_initiative_id').val(row_id);
                                 reloadInitiativeActivitiesTable('initiative-activities-show-table');

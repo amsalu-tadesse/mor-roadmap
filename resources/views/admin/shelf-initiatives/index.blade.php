@@ -58,6 +58,9 @@
         :activityStatuses="$activityStatuses" :directorates="$directorates" />
     <x-show-modals.shelf_initiative_show_modal :initiativeActivitiesShowTable="$initiativeActivitiesShowTable" />
 
+    <x-partials.propose_approval_modal />
+    <x-partials.accept_approval_modal />
+
     @push('scripts')
         {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
         {!! $initiativeActivitiesEditTable->html()->scripts() !!}
@@ -97,7 +100,8 @@
                     // Initialize Select2
                     $(this).find('.select2').select2({
                         theme: 'bootstrap4',
-                        width: '100%'
+                        width: '100%',
+                        dropdownParent: $('#activity_modal')
                     });
 
                     // Retrieve stored mode and act accordingly
@@ -203,7 +207,8 @@
             $('#update_modal').on('shown.bs.modal', function () {
                 $(this).find('.select2').select2({
                     theme: 'bootstrap4',
-                    width: '100%'
+                    width: '100%',
+                    dropdownParent: $('#update_modal')
                 });
             });
 
@@ -428,45 +433,127 @@
                 });
             });
 
-            $(document).on('click', '.approve-btn', function () {
-                var row_id = $(this).data('row_id');
-                var url = "{{ route('admin.shelf-initiatives.approve', ':id') }}";
-                url = url.replace(':id', row_id);
+            // File input name helper
+            $(document).on('change', '#propose_file', function () {
+                var fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').addClass("selected").html(fileName);
+            });
 
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: { confirmButton: 'btn btn-success mx-1', cancelButton: 'btn btn-danger' },
-                    buttonsStyling: false
+            // Yellow button (propose) handler
+            $(document).on('click', '.propose-approve-btn', function () {
+                var row_id = $(this).data('row_id');
+                var form = $('#propose_approval_form');
+                form[0].reset();
+                form.find('.custom-file-label').removeClass("selected").html('Choose file');
+                form.data('row_id', row_id);
+
+                // Fetch current details to prepopulate
+                var url = "{{ route('admin.shelf-initiatives.show-approval', ':id') }}";
+                url = url.replace(':id', row_id);
+                $.ajax({
+                    url: url, type: 'GET', dataType: 'json',
+                    success: function (response) {
+                        if (response.success == 1) {
+                            $('#propose_description').val(response.approval_description || '');
+                            if (response.approval_file_name) {
+                                form.find('.custom-file-label').addClass("selected").html(response.approval_file_name);
+                            }
+                        }
+                    }
                 });
 
-                swalWithBootstrapButtons.fire({
-                    title: 'Are you sure you want to approve this initiative?',
-                    text: "This will move the initiative to the implementation stage.",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, approve it!',
-                    cancelButtonText: 'No, cancel!',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: 'POST',
-                            url: url,
-                            data: {
-                                _token: "{{ csrf_token() }}"
-                            },
-                            dataType: 'json',
-                            success: function (data) {
-                                if (data.success) {
-                                    window.LaravelDataTables['shelf-initiatives-table'].ajax.reload();
-                                    swalWithBootstrapButtons.fire('Approved!', 'Initiative has been moved to the implementation stage.', 'success');
-                                } else {
-                                    toastr.error('Failed to approve initiative.');
-                                }
-                            },
-                            error: function (xhr, status, error) {
-                                toastr.error('An error occurred while approving the initiative.');
+                $('#propose_approval_modal').modal('show');
+            });
+
+            // Yellow button form submission
+            $(document).on('click', '.btn-submit-propose', function () {
+                var decision = $(this).data('decision');
+                $('#propose_decision').val(decision);
+
+                var form = $('#propose_approval_form');
+                if (!form[0].checkValidity()) {
+                    form[0].reportValidity();
+                    return;
+                }
+
+                var row_id = form.data('row_id');
+                var url = "{{ route('admin.shelf-initiatives.propose-approval', ':id') }}";
+                url = url.replace(':id', row_id);
+
+                var formData = new FormData(form[0]);
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.success) {
+                            $('#propose_approval_modal').modal('hide');
+                            window.LaravelDataTables['shelf-initiatives-table'].ajax.reload();
+                            toastr.success(response.message);
+                        } else {
+                            toastr.error('Failed to submit proposal.');
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.error('An error occurred during submission.');
+                    }
+                });
+            });
+
+            // Green button (accept/approve) handler
+            $(document).on('click', '.accept-approve-btn', function () {
+                var row_id = $(this).data('row_id');
+                var form = $('#accept_approval_form');
+                form.data('row_id', row_id);
+
+                var url = "{{ route('admin.shelf-initiatives.show-approval', ':id') }}";
+                url = url.replace(':id', row_id);
+
+                $.ajax({
+                    url: url, type: 'GET', dataType: 'json',
+                    success: function (response) {
+                        if (response.success == 1) {
+                            $('#accept_description_view').text(response.approval_description || 'No description provided.');
+                            if (response.approval_file_url) {
+                                $('#accept_file_link').attr('href', response.approval_file_url);
+                                $('#accept_file_container').show();
+                            } else {
+                                $('#accept_file_container').hide();
                             }
-                        });
+                            $('#accept_approval_modal').modal('show');
+                        }
+                    }
+                });
+            });
+
+            // Green button form submission
+            $(document).on('click', '.btn-submit-accept', function () {
+                var decision = $(this).data('decision');
+                $('#accept_decision').val(decision);
+
+                var form = $('#accept_approval_form');
+                var row_id = form.data('row_id');
+                var url = "{{ route('admin.shelf-initiatives.accept-approval', ':id') }}";
+                url = url.replace(':id', row_id);
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            $('#accept_approval_modal').modal('hide');
+                            window.LaravelDataTables['shelf-initiatives-table'].ajax.reload();
+                            toastr.success(response.message);
+                        } else {
+                            toastr.error('Failed to submit approval.');
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.error('An error occurred during submission.');
                     }
                 });
             });

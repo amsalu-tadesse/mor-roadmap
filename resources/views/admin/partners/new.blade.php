@@ -19,6 +19,15 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">Partner Email<span class="required-field">*</span></label>
+                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="Enter Partner Email" value="{{ old('email') }}">
+                            @error('email')
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
 

@@ -90,4 +90,29 @@ class PartnerController extends Controller
         }
         return redirect()->route('admin.partners.index')->with('success_delete', 'Partner deleted successfully!');
     }
+
+    public function sendUpdate(Partner $partner)
+    {
+        if (empty($partner->email)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Partner ' . $partner->name . ' has no email defined. Please update it first.'
+            ], 422);
+        }
+
+        $activities = $partner->activities()->with('initiative.objective.theme')->get();
+
+        // Generate PDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.partners.pdf', compact('partner', 'activities'));
+        $pdfData = $pdf->output();
+
+        // Send Email
+        \Illuminate\Support\Facades\Mail::to($partner->email)
+            ->send(new \App\Mail\PartnerUpdateMail($partner, $pdfData));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Updates successfully sent to ' . $partner->name . ' (' . $partner->email . ').'
+        ]);
+    }
 }

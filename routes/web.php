@@ -127,6 +127,7 @@ Route::middleware(['web', 'auth'])->group(function () {
             Route::get('get-directorates-by-initiative', [ActivityController::class, 'getDirectoratesByInitiative'])->name('get-directorates-by-initiative');
             Route::resource('activity-statuses', ActivityStatusController::class);
             Route::resource('implementation-statuses', ImplementationStatusController::class);
+            Route::post('partners/{partner}/send-update', [PartnerController::class, 'sendUpdate'])->name('partners.send-update');
             Route::resource('partners', PartnerController::class);
             Route::get('activities/initiative-datatable', [ActivityController::class, 'initiativeDataTable'])->name('activities.initiative-datatable');
             Route::resource('activities', ActivityController::class);
@@ -134,7 +135,12 @@ Route::middleware(['web', 'auth'])->group(function () {
             Route::resource('draft-initiatives', DraftInitiativeController::class);
             Route::resource('implementation-initiatives', ImplementationInitiativeController::class);
             Route::post('shelf-initiatives/{shelf_initiative}/approve', [ShelfInitiativeController::class, 'approve'])->name('shelf-initiatives.approve');
+            Route::get('shelf-initiatives/{shelf_initiative}/approval-details', [ShelfInitiativeController::class, 'showApproval'])->name('shelf-initiatives.show-approval');
+            Route::post('shelf-initiatives/{shelf_initiative}/propose-approval', [ShelfInitiativeController::class, 'proposeApproval'])->name('shelf-initiatives.propose-approval');
+            Route::post('shelf-initiatives/{shelf_initiative}/accept-approval', [ShelfInitiativeController::class, 'acceptApproval'])->name('shelf-initiatives.accept-approval');
             Route::resource('shelf-initiatives', ShelfInitiativeController::class);
+            Route::get('completed-initiatives', [\App\Http\Controllers\ArchiveInitiativeController::class, 'completed'])->name('completed-initiatives.index');
+            Route::get('suspended-initiatives', [\App\Http\Controllers\ArchiveInitiativeController::class, 'suspended'])->name('suspended-initiatives.index');
             Route::resource('contact-us', ContactUsController::class);
             Route::post('contact-message', [ContactUsController::class, 'storeReply'])->name('contact-message.storeReply');
             Route::post('update-address/{id}', [SiteAdminController::class, 'update'])->name('updateaddress');

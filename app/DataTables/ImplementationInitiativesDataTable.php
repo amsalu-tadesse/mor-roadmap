@@ -106,7 +106,7 @@ class ImplementationInitiativesDataTable extends DataTable
             Column::make('name')->title('Initiative Name'),
             Column::make('directorate_name')->title('Directorates')->orderable(false),
             Column::make('theme_name')->title('Theme')->orderable(false),
-            Column::make('objective_name')->title('Objective')->orderable(false),
+            Column::make('objective_name')->title('Objective')->orderable(false)->visible(false),
             // Column::computed('action')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
             // Column::computed('action')->title('Action')->width('10%')->exportable(false)->printable(true)->addClass('text-center')->orderable(false),
             Column::computed('action')->title('Action')->addClass('text-center action-column')->exportable(false)->printable(false)->orderable(false)

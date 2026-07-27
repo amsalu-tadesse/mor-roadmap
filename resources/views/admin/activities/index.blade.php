@@ -120,7 +120,7 @@
                     var row_id = $(this).data('row_id');
                     var url = "{{ route('admin.activities.edit', ':id') }}";
                     url = url.replace(':id', row_id);
-                    $('#activity_update_form :input').val('');
+                    $('#activity_form :input').val('');
                     $.ajax({
                         url: url, type: 'GET', dataType: 'json',
                         success: function(response) {

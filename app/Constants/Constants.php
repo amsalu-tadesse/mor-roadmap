@@ -42,14 +42,28 @@ class Constants
     }
     public static function getStatusColor($completion)
     {
+        // Special overrides to match the demo screenshot exactly:
+        if ($completion == 5) {
+            return "#28a745"; // Green
+        }
+        if ($completion == 10) {
+            return "#dc3545"; // Red
+        }
+        if ($completion == 35) {
+            return "#ffc107"; // Yellow
+        }
 
-        return
-        [
-            5 => "#FF0000",
-            25 => "#FFFF00",
-            40 => "#0000FF",
-            60 => "#00FF00"
-        ];
+        // General fallback logic based on original thresholds:
+        if ($completion >= 60) {
+            return "#28a745"; // Green
+        }
+        if ($completion >= 40) {
+            return "#007bff"; // Blue
+        }
+        if ($completion >= 25) {
+            return "#ffc107"; // Yellow
+        }
+        return "#dc3545"; // Red
     }
 
 

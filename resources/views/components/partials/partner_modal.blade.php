@@ -17,6 +17,12 @@
                                 <input type="text" name="name" class="form-control" id="name" placeholder="Enter Partner Name">
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Partner Email<span class="required-field">*</span></label>
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Enter Partner Email">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

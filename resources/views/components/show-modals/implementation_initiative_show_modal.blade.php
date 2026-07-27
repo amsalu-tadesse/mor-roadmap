@@ -29,6 +29,10 @@
                             <th>Objective</th>
                             <td id="objective_show"></td>
                         </tr>
+                        <tr>
+                            <th>Note</th>
+                            <td id="note_show"></td>
+                        </tr>
                     </table>
 
                     <h5 class="text-info border-bottom pb-2 mb-3 mt-4">Activities</h5>

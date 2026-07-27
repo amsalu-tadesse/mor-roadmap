@@ -108,7 +108,7 @@
 
 
 
-                    {{-- <div class="col-md-6">
+                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="note">Note</label>
                             <textarea name="note" class="form-control @error('note') is-invalid @enderror" id="note" rows="1" placeholder="Enter Note">{{ old('note') }}</textarea>
@@ -116,7 +116,7 @@
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
             </div>
             <div class="card-footer text-right">

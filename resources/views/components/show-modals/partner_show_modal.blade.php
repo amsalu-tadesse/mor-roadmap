@@ -17,6 +17,10 @@
                                     <td id="name"></td>
                                 </tr>
                                 <tr>
+                                    <th>Partner Email</th>
+                                    <td id="email_show"></td>
+                                </tr>
+                                <tr>
                                     <th>Created By</th>
                                     <td id="created_by"></td>
                                 </tr>

@@ -10,7 +10,7 @@ use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
-class DraftInitiativesDataTable extends DataTable
+class CompletedInitiativesDataTable extends DataTable
 {
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
@@ -19,17 +19,16 @@ class DraftInitiativesDataTable extends DataTable
             ->addColumn('no', function () use (&$index_column) {
                 return ++$index_column;
             })
-            ->addColumn('theme_name', fn ($row) => $row->theme->name ?? 'N/A')
+            ->addColumn('theme_name', fn ($row) => $row->objective->theme->name ?? 'N/A')
             ->addColumn('objective_name', fn ($row) => $row->objective->name ?? 'N/A')
             ->addColumn('directorate_name', fn ($row) => $row->directorates->pluck('name')->join(', ') ?: 'N/A')
-            ->addColumn('implementation_status_name', fn ($row) => $row->implementationStatus->name ?? 'N/A')
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
                     'show' => true,
-                    'permission_delete' => 'draft-initiative: delete',
-                    'permission_edit' => 'draft-initiative: edit',
-                    'permission_view' => 'draft-initiative: view',
+                    'permission_view' => 'implementation-initiative: view',
+                    'permission_edit' => 'completed-initiative: edit',
+                    'permission_delete' => 'completed-initiative: delete',
                 ]);
             })
             ->rawColumns(['no', 'action']);
@@ -37,9 +36,9 @@ class DraftInitiativesDataTable extends DataTable
 
     public function query(Initiative $model): QueryBuilder
     {
-        $query = $model->newQuery()->with(['objective', 'directorates', 'implementationStatus', 'theme'])
-            ->whereHas('implementationStatus', function ($query) {
-                $query->where('id', Constants::IMPLEMENTATION_STATUS_DRAFTING);
+        $query = $model->newQuery()->with(['objective.theme', 'directorates'])
+            ->whereHas('activities', function ($query) {
+                $query->where('activity_status_id', 1);
             });
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
@@ -49,7 +48,9 @@ class DraftInitiativesDataTable extends DataTable
         }
 
         if ($this->request()->has('theme_id') && $this->request()->get('theme_id') != '') {
-            $query->where('theme_id', $this->request()->get('theme_id'));
+            $query->whereHas('objective', function ($q) {
+                $q->where('theme_id', $this->request()->get('theme_id'));
+            });
         }
 
         if ($this->request()->has('objective_id') && $this->request()->get('objective_id') != '') {
@@ -62,7 +63,7 @@ class DraftInitiativesDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('draft-initiatives-table')
+            ->setTableId('completed-initiatives-table')
             ->columns($this->getColumns())
             ->minifiedAjax('', 'data.directorate_id = $("#filter_directorate").val(); data.theme_id = $("#filter_theme").val(); data.objective_id = $("#filter_objective").val();')
             ->orderBy(0, 'desc')
@@ -95,12 +96,12 @@ class DraftInitiativesDataTable extends DataTable
             Column::make('directorate_name')->title('Directorates')->orderable(false),
             Column::make('theme_name')->title('Theme')->orderable(false),
             Column::make('objective_name')->title('Objective')->orderable(false)->visible(false),
-            Column::computed('action')->title('Action')->addClass('text-center action-column')->exportable(false)->printable(false)->orderable(false),
+            Column::computed('action')->title('Action')->addClass('text-center action-column')->exportable(false)->printable(false)->orderable(false)
         ];
     }
 
     protected function filename(): string
     {
-        return 'DraftInitiatives_' . date('YmdHis');
+        return 'CompletedInitiatives_' . date('YmdHis');
     }
 }

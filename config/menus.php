@@ -118,6 +118,25 @@ return [
     ],
 
     'menu_5'                 =>  [
+        'name'                 => 'Archives',
+        'menu_icon'           => 'fa-archive',
+        'permissions'           => ['draft-initiative: list', 'implementation-initiative: list', 'shelf-initiative: list'],
+        'menu_item'            =>
+        [
+            [
+                'title'      =>  'Completed Initiatives',
+                'url'        =>  'admin.completed-initiatives.index',
+                'permission' => 'implementation-initiative: list'
+            ],
+            [
+                'title'      =>  'Suspended Initiatives',
+                'url'        =>  'admin.suspended-initiatives.index',
+                'permission' => 'implementation-initiative: list'
+            ],
+        ]
+    ],
+
+    'menu_6'                 =>  [
         'name'                 => 'Settings',
         'menu_icon'           => 'fas fa-cog',
         'permissions'           => [

@@ -27,12 +27,9 @@ class PartnersDataTable extends DataTable
                 return ++$index_column;
             })
             ->addColumn('action', function ($partner) {
-                return view('components.action-buttons', [
+                return view('admin.partners.action', [
                     'row_id' => $partner->id,
-                    'show' => true,
-                    'permission_delete' => 'partner: delete',
-                    'permission_edit' => 'partner: edit',
-                    'permission_view' => 'partner: view',
+                    'partner' => $partner,
                 ]);
             })
             ->rawColumns(['no', 'action']);
@@ -123,6 +120,7 @@ class PartnersDataTable extends DataTable
                 ->addClass('text-center')
                 ->orderable(false),
             Column::make('name')->title('Partner Name'),
+            Column::make('email')->title('Partner Email'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(true)

@@ -60,7 +60,13 @@ class ActivitiesDataTable extends DataTable
             ->addColumn('budget_col', fn ($row) => $row->budget ?? 'N/A')
             ->addColumn('activity_status_name', fn ($row) => $row->activityStatus->name ?? 'N/A')
             ->addColumn('request_type_col', fn ($row) => $row->request_type ?? 'N/A')
-                        ->addColumn('completion_col', fn ($row) => $row->completion ? $row->completion . '%' : 'N/A')
+            ->addColumn('completion_col', function ($row) {
+                if ($row->completion === null || $row->completion === '') {
+                    return 'N/A';
+                }
+                $color = Constants::getStatusColor($row->completion);
+                return '<div style="background-color: ' . $color . '; color: #000; font-weight: bold; text-align: center; padding: 10px 4px; margin: -12px -8px;">' . (int)$row->completion . '%</div>';
+            })
 
             ->addColumn('action', function ($row) {
                 return view('components.action-buttons', [
@@ -71,7 +77,7 @@ class ActivitiesDataTable extends DataTable
                     'permission_view' => 'activity: view',
                 ]);
             })
-            ->rawColumns(['no', 'priority_badge', 'activities_description', 'interested_partners_col', 'directorates_col', 'initiative_directorates_col', 'action']);
+            ->rawColumns(['no', 'priority_badge', 'activities_description', 'interested_partners_col', 'directorates_col', 'initiative_directorates_col', 'completion_col', 'action']);
     }
 
     public function query(Activity $model): QueryBuilder

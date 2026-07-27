@@ -81,7 +81,8 @@
                         success: function(response) {
                             if (response.success == 1) {
                                 $('#partner_id').val(response.partner.id);
-                                $('#name').val(response.partner.name);
+                                $('#partner_update_form #name').val(response.partner.name);
+                                $('#partner_update_form #email').val(response.partner.email);
                                 $('#update_modal').modal('show');
                             }
                         }
@@ -100,10 +101,52 @@
                         success: function(response) {
                             if (response.success == 1) {
                                 $('#show_modal #name').html(response.partner.name);
+                                $('#show_modal #email_show').html(response.partner.email || 'N/A');
                                 $('#show_modal #created_by').html(response.getCreatedBy);
                                 $('#show_modal #created_at').html(response.created_at);
                                 $('#show_modal').modal('show');
                             }
+                        }
+                    });
+                });
+
+                $('#partners-table').on('click', '.send-update-btn', function() {
+                    var button = $(this);
+                    var row_id = button.data('row_id');
+                    var url = "{{ route('admin.partners.send-update', ':id') }}";
+                    url = url.replace(':id', row_id);
+
+                    button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Sending...');
+                    toastr.info('Generating PDF report and sending email...');
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            setTimeout(function() {
+                                toastr.clear();
+                                button.prop('disabled', false).html('<i class="fas fa-envelope mr-1"></i> Send Update');
+                                if (response.success) {
+                                    toastr.success(response.message);
+                                } else {
+                                    toastr.error(response.message || 'Failed to send update.');
+                                }
+                            }, 600);
+                        },
+                        error: function(xhr) {
+                            setTimeout(function() {
+                                toastr.clear();
+                                button.prop('disabled', false).html('<i class="fas fa-envelope mr-1"></i> Send Update');
+                                var errorMsg = 'An error occurred while sending update.';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMsg = xhr.responseJSON.message;
+                                }
+                                toastr.error(errorMsg);
+                            }, 600);
                         }
                     });
                 });

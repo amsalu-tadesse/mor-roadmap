@@ -23,13 +23,9 @@ class ShelfInitiativesDataTable extends DataTable
             ->addColumn('objective_name', fn ($row) => $row->objective->name ?? 'N/A')
             ->addColumn('directorate_name', fn ($row) => $row->directorates->pluck('name')->join(', ') ?: 'N/A')
             ->addColumn('action', function ($row) {
-                return view('components.action-buttons', [
+                return view('admin.shelf-initiatives.action', [
                     'row_id' => $row->id,
-                    'show' => true,
-                    'approve' => true,
-                    'permission_delete' => 'shelf-initiative: delete',
-                    'permission_edit' => 'shelf-initiative: edit',
-                    'permission_view' => 'shelf-initiative: view',
+                    'row' => $row,
                 ]);
             })
             ->rawColumns(['no', 'action']);
@@ -106,7 +102,7 @@ class ShelfInitiativesDataTable extends DataTable
             Column::make('name')->title('Initiative'),
             Column::make('directorate_name')->title('Directorates')->orderable(false),
             Column::make('theme_name')->title('Theme')->orderable(false),
-            Column::make('objective_name')->title('Objective')->orderable(false),
+            Column::make('objective_name')->title('Objective')->orderable(false)->visible(false),
             Column::computed('action')->title('Action')->addClass('text-center action-column')->exportable(false)->printable(false)->orderable(false),
         ];
     }

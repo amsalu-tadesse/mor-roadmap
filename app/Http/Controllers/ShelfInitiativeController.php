@@ -134,4 +134,71 @@ class ShelfInitiativeController extends Controller
 
         return redirect()->route('admin.shelf-initiatives.index')->with('success_update', 'Initiative approved and moved to implementation stage successfully!');
     }
+
+    public function showApproval(Initiative $shelfInitiative)
+    {
+        return response()->json([
+            'success' => 1,
+            'approval_description' => $shelfInitiative->approval_description,
+            'approval_file_url' => $shelfInitiative->approval_file ? \Illuminate\Support\Facades\Storage::url($shelfInitiative->approval_file) : null,
+            'approval_file_name' => $shelfInitiative->approval_file ? basename($shelfInitiative->approval_file) : null,
+            'approval_status' => $shelfInitiative->approval_status,
+        ]);
+    }
+
+    public function proposeApproval(\Illuminate\Http\Request $request, Initiative $shelfInitiative)
+    {
+        $request->validate([
+            'approval_description' => 'nullable|string',
+            'approval_file' => 'nullable|file|mimes:pdf,doc,docx,png,jpg,jpeg,zip|max:10240',
+            'decision' => 'required|in:approve,reject',
+        ]);
+
+        $status = $request->input('decision') === 'approve' ? 'proposed' : 'rejected';
+
+        $data = [
+            'approval_description' => $request->input('approval_description'),
+            'approval_status' => $status,
+        ];
+
+        if ($request->hasFile('approval_file')) {
+            if ($shelfInitiative->approval_file) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($shelfInitiative->approval_file);
+            }
+            $path = $request->file('approval_file')->store('approval_files', 'public');
+            $data['approval_file'] = $path;
+        }
+
+        $shelfInitiative->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => $status === 'proposed' ? 'Initiative approval proposed successfully.' : 'Initiative rejected.',
+        ]);
+    }
+
+    public function acceptApproval(\Illuminate\Http\Request $request, Initiative $shelfInitiative)
+    {
+        $request->validate([
+            'decision' => 'required|in:approve,reject',
+        ]);
+
+        if ($request->input('decision') === 'approve') {
+            $shelfInitiative->update([
+                'approval_status' => 'approved',
+                'implementation_status_id' => Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION,
+            ]);
+            $message = 'Initiative has been officially approved and moved to the implementation stage.';
+        } else {
+            $shelfInitiative->update([
+                'approval_status' => 'rejected',
+            ]);
+            $message = 'Initiative approval request has been rejected.';
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+        ]);
+    }
 }
