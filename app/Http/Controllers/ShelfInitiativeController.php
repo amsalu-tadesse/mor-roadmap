@@ -90,6 +90,8 @@ class ShelfInitiativeController extends Controller
                 'implementationStatusName' => $shelfInitiative->implementationStatus->name ?? 'N/A',
                 'getCreatedBy' => $getCreatedBy,
                 'created_at' => $shelfInitiative->created_at ? $shelfInitiative->created_at->format('Y-m-d H:i:s') : null,
+                'approval_file_url' => $shelfInitiative->approval_file ? \Illuminate\Support\Facades\Storage::url($shelfInitiative->approval_file) : null,
+                'approval_file_name' => $shelfInitiative->approval_file ? basename($shelfInitiative->approval_file) : null,
             ]);
         }
         return view('admin.shelf-initiatives.show', compact('shelfInitiative'));
@@ -181,17 +183,22 @@ class ShelfInitiativeController extends Controller
     {
         $request->validate([
             'decision' => 'required|in:approve,reject',
+            'approval_remarks' => 'required|string',
         ]);
+
+        $remarks = $request->input('approval_remarks');
 
         if ($request->input('decision') === 'approve') {
             $shelfInitiative->update([
                 'approval_status' => 'approved',
+                'approval_remarks' => $remarks,
                 'implementation_status_id' => Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION,
             ]);
             $message = 'Initiative has been officially approved and moved to the implementation stage.';
         } else {
             $shelfInitiative->update([
                 'approval_status' => 'rejected',
+                'approval_remarks' => $remarks,
             ]);
             $message = 'Initiative approval request has been rejected.';
         }

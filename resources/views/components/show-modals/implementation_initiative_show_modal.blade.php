@@ -33,6 +33,22 @@
                             <th>Note</th>
                             <td id="note_show"></td>
                         </tr>
+                        <tr id="approval_status_row">
+                            <th>Approval Status</th>
+                            <td id="approval_status_show"></td>
+                        </tr>
+                        <tr id="approval_desc_row">
+                            <th>Proposal Description</th>
+                            <td id="approval_desc_show"></td>
+                        </tr>
+                        <tr id="approval_file_row">
+                            <th>Attachment</th>
+                            <td id="approval_file_show"></td>
+                        </tr>
+                        <tr id="approval_remarks_row">
+                            <th>Decision Reason</th>
+                            <td id="approval_remarks_show"></td>
+                        </tr>
                     </table>
 
                     <h5 class="text-info border-bottom pb-2 mb-3 mt-4">Activities</h5>

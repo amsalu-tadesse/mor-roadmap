@@ -26,6 +26,10 @@
                                 <a href="#" id="accept_file_link" target="_blank" class="text-info font-weight-bold">Download Attachment</a>
                             </div>
                         </div>
+                        <div class="form-group mt-3">
+                            <label for="accept_remarks">Reason <span class="required-field text-danger">*</span></label>
+                            <textarea name="approval_remarks" class="form-control" id="accept_remarks" rows="3" placeholder="Enter reason for approval or rejection" required></textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

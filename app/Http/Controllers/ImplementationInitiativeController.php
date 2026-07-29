@@ -83,6 +83,8 @@ class ImplementationInitiativeController extends Controller
                 'directorateName' => $implementationInitiative->directorates->pluck('name')->join(', ') ?: 'N/A',
                 'getCreatedBy' => $getCreatedBy,
                 'created_at' => $implementationInitiative->created_at->format('Y-m-d H:i:s'),
+                'approval_file_url' => $implementationInitiative->approval_file ? \Illuminate\Support\Facades\Storage::url($implementationInitiative->approval_file) : null,
+                'approval_file_name' => $implementationInitiative->approval_file ? basename($implementationInitiative->approval_file) : null,
             ]);
         }
         return view('admin.implementation-initiatives.show', compact('implementationInitiative'));

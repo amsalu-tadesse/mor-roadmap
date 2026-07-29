@@ -95,7 +95,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="note">Note</label>
-                                    <textarea name="note" class="form-control" id="note" rows="1"
+                                    <textarea name="note" class="form-control" id="note" rows="3"
                                         placeholder="Enter Note"></textarea>
                                 </div>
                             </div>

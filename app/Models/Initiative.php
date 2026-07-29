@@ -18,6 +18,7 @@ class Initiative extends Model
         'implementation_status_id',
         'note',
         'approval_description',
+        'approval_remarks',
         'approval_file',
         'approval_status',
         'created_by',
