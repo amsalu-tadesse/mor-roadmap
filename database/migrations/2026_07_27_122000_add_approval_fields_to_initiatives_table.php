@@ -11,17 +11,22 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('initiatives', function (Blueprint $table) {
-            $table->text('approval_description')->nullable();
-            $table->string('approval_file')->nullable();
-            $table->string('approval_status')->nullable(); // 'proposed', 'approved', 'rejected'
-        });
+        if (!Schema::hasColumn('initiatives', 'approval_description')) {
+            Schema::table('initiatives', function (Blueprint $table) {
+                $table->text('approval_description')->nullable();
+                $table->string('approval_file')->nullable();
+                $table->string('approval_status')->nullable(); // 'proposed', 'approved', 'rejected'
+            });
+        }
 
         // Register spatie permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $proposePermission = Permission::firstOrCreate(['name' => 'shelf-initiative: approve', 'guard_name' => 'web']);
-        $acceptPermission = Permission::firstOrCreate(['name' => 'shelf-initiative: accept-approve', 'guard_name' => 'web']);
+        // Delete old accept-approve permission if present
+        Permission::where('name', 'shelf-initiative: accept-approve')->delete();
+
+        $proposePermission = Permission::firstOrCreate(['name' => 'shelf-initiative: approval-request', 'guard_name' => 'web']);
+        $acceptPermission = Permission::firstOrCreate(['name' => 'shelf-initiative: approve', 'guard_name' => 'web']);
 
         $superAdmin = Role::where('name', 'Super Admin')->first();
         if ($superAdmin) {
@@ -31,11 +36,13 @@ return new class extends Migration
         $planningDirectorate = Role::where('name', 'Planning Directorate')->first();
         if ($planningDirectorate) {
             $planningDirectorate->givePermissionTo($proposePermission);
+            $planningDirectorate->revokePermissionTo($acceptPermission);
         }
 
         $higherOfficials = Role::where('name', 'Higher level officials')->first();
         if ($higherOfficials) {
             $higherOfficials->givePermissionTo($acceptPermission);
+            $higherOfficials->revokePermissionTo($proposePermission);
         }
     }
 
@@ -45,7 +52,7 @@ return new class extends Migration
             $table->dropColumn(['approval_description', 'approval_file', 'approval_status']);
         });
 
-        Permission::whereIn('name', ['shelf-initiative: approve', 'shelf-initiative: accept-approve'])->delete();
+        Permission::whereIn('name', ['shelf-initiative: approval-request', 'shelf-initiative: approve'])->delete();
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
     }
 };

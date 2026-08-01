@@ -141,6 +141,8 @@ class DatabaseSeeder extends Seeder
 
         //other non CRUD permissions
         $arrayOfPermissionNames[] = 'crime: restore';
+        $arrayOfPermissionNames[] = 'shelf-initiative: approval-request';
+        $arrayOfPermissionNames[] = 'shelf-initiative: approve';
 
         // $arrayOfPermissionNames[] = 'access-domain: zonal';
 
@@ -168,9 +170,11 @@ class DatabaseSeeder extends Seeder
                 'code' => $role
             ]);
 
-            // if ($role == 'Super Admin') {
-            // $myrole->givePermissionTo(Permission::all());
-            // }
+            if ($role === 'Planning Directorate') {
+                $myrole->givePermissionTo(['shelf-initiative: approval-request']);
+            } elseif ($role === 'Higher level officials') {
+                $myrole->givePermissionTo(['shelf-initiative: approve']);
+            }
         }
 
 
