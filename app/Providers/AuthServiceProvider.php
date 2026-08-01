@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Crime;
 use App\Models\User;
 use App\Policies\UserPolicy;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -16,11 +15,9 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use Illuminate\Validation\ValidationException;
-
 // use Illuminate\Support\Facades\Gate;
 
 use App\Models\FAQ;
-use App\Policies\CrimePolicy;
 use App\Policies\FAQPolicy;
 
 class AuthServiceProvider extends ServiceProvider
@@ -32,7 +29,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // FAQ::class => FAQPolicy::class,
-        Crime::class => CrimePolicy::class,
 
     ];
 
