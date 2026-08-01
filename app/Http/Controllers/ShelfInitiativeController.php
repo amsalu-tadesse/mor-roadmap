@@ -6,15 +6,20 @@ use App\Constants\Constants;
 use App\DataTables\InitiativeActivitiesDataTable;
 use App\DataTables\ShelfInitiativesDataTable;
 use App\Http\Requests\StoreShelfInitiativeRequest;
+use App\Http\Requests\UpdateDraftInitiativeRequest;
+use App\Models\Activity;
+use App\Models\ActivityStatus;
 use App\Models\Directorate;
 use App\Models\ImplementationStatus;
 use App\Models\Initiative;
-use App\Models\ActivityStatus;
+use App\Models\InitiativeApprovalHistory;
 use App\Models\Objective;
 use App\Models\Partner;
-use App\Models\Activity;
 use App\Models\Theme;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class ShelfInitiativeController extends Controller
 {
@@ -72,15 +77,28 @@ class ShelfInitiativeController extends Controller
     {
         if (request()->ajax()) {
             $shelfInitiative->load(['objective', 'directorates', 'implementationStatus', 'theme']);
-            $creator = \App\Models\User::find($shelfInitiative->created_by);
+            $creator = User::find($shelfInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
-        // dd([
-        //     'initiative_id' => $shelfInitiative->id,
-        //     'objective_id' => $shelfInitiative->objective_id,
-        //     'objective' => $shelfInitiative->objective,
-        //     'theme' => $shelfInitiative->objective->theme ?? null,
-        //     'theme_name' => $shelfInitiative->objective->theme->name ?? 'N/A',
-        // ]);
+
+            $histories = $shelfInitiative->approvalHistories()->with('user')->get()->map(function ($h) {
+                return [
+                    'id' => $h->id,
+                    'cycle_number' => $h->cycle_number,
+                    'action' => $h->action,
+                    'description' => $h->description,
+                    'file_url' => $h->file ? Storage::url($h->file) : null,
+                    'file_name' => $h->original_file_name ?: ($h->file ? basename($h->file) : null),
+                    'remarks' => $h->remarks,
+                    'user_name' => $h->user ? trim(($h->user->first_name ?? '') . ' ' . ($h->user->last_name ?? '')) : 'User',
+                    'created_at' => $h->created_at ? $h->created_at->format('Y-m-d') : null,
+                ];
+            });
+
+            $latestHistoryWithFile = $shelfInitiative->approvalHistories()->whereNotNull('file')->orderBy('id', 'desc')->first();
+            $approvalFileName = $shelfInitiative->approval_original_file_name
+                ?: ($latestHistoryWithFile ? $latestHistoryWithFile->original_file_name : null)
+                ?: ($shelfInitiative->approval_file ? basename($shelfInitiative->approval_file) : null);
+
             return response()->json([
                 'success' => 1,
                 'initiative' => $shelfInitiative,
@@ -90,8 +108,9 @@ class ShelfInitiativeController extends Controller
                 'implementationStatusName' => $shelfInitiative->implementationStatus->name ?? 'N/A',
                 'getCreatedBy' => $getCreatedBy,
                 'created_at' => $shelfInitiative->created_at ? $shelfInitiative->created_at->format('Y-m-d H:i:s') : null,
-                'approval_file_url' => $shelfInitiative->approval_file ? \Illuminate\Support\Facades\Storage::url($shelfInitiative->approval_file) : null,
-                'approval_file_name' => $shelfInitiative->approval_file ? basename($shelfInitiative->approval_file) : null,
+                'approval_file_url' => $shelfInitiative->approval_file ? Storage::url($shelfInitiative->approval_file) : null,
+                'approval_file_name' => $approvalFileName,
+                'histories' => $histories,
             ]);
         }
         return view('admin.shelf-initiatives.show', compact('shelfInitiative'));
@@ -113,7 +132,7 @@ class ShelfInitiativeController extends Controller
         return view('admin.shelf-initiatives.edit', compact('shelfInitiative', 'objectives', 'directorates', 'implementationStatuses'));
     }
 
-    public function update(\App\Http\Requests\UpdateDraftInitiativeRequest $request, Initiative $shelfInitiative)
+    public function update(UpdateDraftInitiativeRequest $request, Initiative $shelfInitiative)
     {
         $data = $request->validated();
         $shelfInitiative->update(Arr::except($data, ['directorates']));
@@ -139,16 +158,37 @@ class ShelfInitiativeController extends Controller
 
     public function showApproval(Initiative $shelfInitiative)
     {
+        $histories = $shelfInitiative->approvalHistories()->with('user')->get()->map(function ($h) {
+            return [
+                'id' => $h->id,
+                'cycle_number' => $h->cycle_number,
+                'action' => $h->action,
+                'description' => $h->description,
+                'file_url' => $h->file ? Storage::url($h->file) : null,
+                'file_name' => $h->original_file_name ?: ($h->file ? basename($h->file) : null),
+                'remarks' => $h->remarks,
+                'user_name' => $h->user ? trim(($h->user->first_name ?? '') . ' ' . ($h->user->last_name ?? '')) : 'User',
+                'created_at' => $h->created_at ? $h->created_at->format('Y-m-d') : null,
+            ];
+        });
+
+        $latestHistoryWithFile = $shelfInitiative->approvalHistories()->whereNotNull('file')->orderBy('id', 'desc')->first();
+        $approvalFileName = $shelfInitiative->approval_original_file_name
+            ?: ($latestHistoryWithFile ? $latestHistoryWithFile->original_file_name : null)
+            ?: ($shelfInitiative->approval_file ? basename($shelfInitiative->approval_file) : null);
+
         return response()->json([
             'success' => 1,
             'approval_description' => $shelfInitiative->approval_description,
-            'approval_file_url' => $shelfInitiative->approval_file ? \Illuminate\Support\Facades\Storage::url($shelfInitiative->approval_file) : null,
-            'approval_file_name' => $shelfInitiative->approval_file ? basename($shelfInitiative->approval_file) : null,
+            'approval_file_url' => $shelfInitiative->approval_file ? Storage::url($shelfInitiative->approval_file) : null,
+            'approval_file_name' => $approvalFileName,
             'approval_status' => $shelfInitiative->approval_status,
+            'approval_remarks' => $shelfInitiative->approval_remarks,
+            'histories' => $histories,
         ]);
     }
 
-    public function proposeApproval(\Illuminate\Http\Request $request, Initiative $shelfInitiative)
+    public function proposeApproval(Request $request, Initiative $shelfInitiative)
     {
         $request->validate([
             'approval_description' => 'nullable|string',
@@ -156,30 +196,47 @@ class ShelfInitiativeController extends Controller
             'decision' => 'required|in:approve,reject',
         ]);
 
-        $status = $request->input('decision') === 'approve' ? 'proposed' : 'rejected';
+        $status = $request->input('decision') === 'approve' ? 'requested' : 'rejected';
 
         $data = [
             'approval_description' => $request->input('approval_description'),
             'approval_status' => $status,
         ];
 
+        $filePath = null;
+        $originalFileName = null;
         if ($request->hasFile('approval_file')) {
-            if ($shelfInitiative->approval_file) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($shelfInitiative->approval_file);
-            }
-            $path = $request->file('approval_file')->store('approval_files', 'public');
-            $data['approval_file'] = $path;
+            $file = $request->file('approval_file');
+            $originalFileName = $file->getClientOriginalName();
+            $filePath = $file->store('approval_files', 'public');
+            $data['approval_file'] = $filePath;
         }
 
         $shelfInitiative->update($data);
 
+        $latestHistory = InitiativeApprovalHistory::where('initiative_id', $shelfInitiative->id)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $nextCycle = $latestHistory ? ($latestHistory->action === 'rejected' ? $latestHistory->cycle_number + 1 : $latestHistory->cycle_number) : 1;
+
+        InitiativeApprovalHistory::create([
+            'initiative_id' => $shelfInitiative->id,
+            'user_id' => auth()->id(),
+            'cycle_number' => $nextCycle,
+            'action' => 'requested',
+            'description' => $request->input('approval_description'),
+            'file' => $filePath,
+            'original_file_name' => $originalFileName,
+        ]);
+
         return response()->json([
             'success' => true,
-            'message' => $status === 'proposed' ? 'Initiative approval proposed successfully.' : 'Initiative rejected.',
+            'message' => $status === 'requested' ? 'Initiative approval requested successfully.' : 'Initiative rejected.',
         ]);
     }
 
-    public function acceptApproval(\Illuminate\Http\Request $request, Initiative $shelfInitiative)
+    public function acceptApproval(Request $request, Initiative $shelfInitiative)
     {
         $request->validate([
             'decision' => 'required|in:approve,reject',
@@ -201,6 +258,28 @@ class ShelfInitiativeController extends Controller
                 'approval_remarks' => $remarks,
             ]);
             $message = 'Initiative approval request has been rejected.';
+        }
+
+        $latestHistory = InitiativeApprovalHistory::where('initiative_id', $shelfInitiative->id)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $action = $request->input('decision') === 'approve' ? 'approved' : 'rejected';
+
+        if ($latestHistory && $latestHistory->action === 'requested') {
+            $latestHistory->update([
+                'action' => $action,
+                'remarks' => $remarks,
+            ]);
+        } else {
+            $cycleNumber = $latestHistory ? ($latestHistory->cycle_number + 1) : 1;
+            InitiativeApprovalHistory::create([
+                'initiative_id' => $shelfInitiative->id,
+                'user_id' => auth()->id(),
+                'cycle_number' => $cycleNumber,
+                'action' => $action,
+                'remarks' => $remarks,
+            ]);
         }
 
         return response()->json([

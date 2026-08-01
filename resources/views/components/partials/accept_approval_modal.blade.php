@@ -15,19 +15,15 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label>Description</label>
-                            <blockquote class="quote-info" id="accept_description_view" style="margin: 0; padding: 10px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">
-                                No description provided.
-                            </blockquote>
+                            <div id="accept_description_view"></div>
                         </div>
                         <div class="form-group mt-3" id="accept_file_container">
                             <label>File Attachment</label>
-                            <div>
-                                <i class="fas fa-paperclip text-info mr-1"></i>
-                                <a href="#" id="accept_file_link" target="_blank" class="text-info font-weight-bold">Download Attachment</a>
-                            </div>
+                            <div id="accept_file_view"></div>
                         </div>
                         <div class="form-group mt-3">
                             <label for="accept_remarks">Reason <span class="required-field text-danger">*</span></label>
+                            <div id="accept_past_remarks" class="mb-2" style="display: none;"></div>
                             <textarea name="approval_remarks" class="form-control" id="accept_remarks" rows="3" placeholder="Enter reason for approval or rejection" required></textarea>
                         </div>
                     </div>

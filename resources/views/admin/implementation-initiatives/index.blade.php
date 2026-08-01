@@ -348,10 +348,12 @@
 
                                 if (response.initiative.approval_status) {
                                     var statusHtml = response.initiative.approval_status;
-                                    if (statusHtml === 'proposed' || statusHtml === 'approved') {
-                                        statusHtml = '<span class="fa fa-check-circle" style="color:green"> Approved</span>';
+                                    if (statusHtml === 'requested' || statusHtml === 'proposed') {
+                                        statusHtml = '<span class="fa fa-check-circle" style="color:green"> Requested</span>';
                                     } else if (statusHtml === 'rejected') {
                                         statusHtml = '<span class="fa fa-times-circle" style="color:red"> Rejected</span>';
+                                    } else if (statusHtml === 'approved') {
+                                        statusHtml = '<span class="fa fa-check-circle" style="color:green"> Approved</span>';
                                     } else {
                                         statusHtml = statusHtml.charAt(0).toUpperCase() + statusHtml.slice(1);
                                     }
@@ -384,6 +386,64 @@
                                     $('#show_modal #approval_remarks_row').show();
                                 } else {
                                     $('#show_modal #approval_remarks_row').hide();
+                                }
+
+                                if (response.histories && response.histories.length > 0) {
+                                    var tbodyHtml = '';
+                                    var cycleMap = {};
+                                    $.each(response.histories, function(index, h) {
+                                        if (!cycleMap[h.cycle_number]) {
+                                            cycleMap[h.cycle_number] = {
+                                                cycle_number: h.cycle_number,
+                                                action: h.action,
+                                                description: h.description,
+                                                file_url: h.file_url,
+                                                file_name: h.file_name,
+                                                remarks: h.remarks,
+                                                created_at: h.created_at
+                                            };
+                                        } else {
+                                            if (h.action) cycleMap[h.cycle_number].action = h.action;
+                                            if (h.description) cycleMap[h.cycle_number].description = h.description;
+                                            if (h.file_url) {
+                                                cycleMap[h.cycle_number].file_url = h.file_url;
+                                                cycleMap[h.cycle_number].file_name = h.file_name;
+                                            }
+                                            if (h.remarks) cycleMap[h.cycle_number].remarks = h.remarks;
+                                            if (h.created_at) cycleMap[h.cycle_number].created_at = h.created_at;
+                                        }
+                                    });
+
+                                    $.each(cycleMap, function(cycleNum, h) {
+                                        var actionBadge = '';
+                                        if (h.action === 'requested') {
+                                            actionBadge = '<span class="badge badge-warning">Requested</span>';
+                                        } else if (h.action === 'rejected') {
+                                            actionBadge = '<span class="badge badge-danger">Rejected</span>';
+                                        } else if (h.action === 'approved') {
+                                            actionBadge = '<span class="badge badge-success">Approved</span>';
+                                        } else {
+                                            actionBadge = '<span class="badge badge-secondary">' + h.action + '</span>';
+                                        }
+
+                                        var descriptionText = h.description || 'N/A';
+                                        var remarksText = h.remarks || 'N/A';
+                                        var fileLink = h.file_url ? '<a href="' + h.file_url + '" target="_blank" class="text-info font-weight-bold"><i class="fas fa-paperclip mr-1"></i>' + (h.file_name || 'Download') + '</a>' : '-';
+
+                                        tbodyHtml += '<tr>' +
+                                            '<td class="text-center font-weight-bold">Cycle #' + h.cycle_number + '</td>' +
+                                            '<td>' + actionBadge + '</td>' +
+                                            '<td>' + descriptionText + '</td>' +
+                                            '<td>' + fileLink + '</td>' +
+                                            '<td>' + remarksText + '</td>' +
+                                            '<td>' + (h.created_at || '-') + '</td>' +
+                                            '</tr>';
+                                    });
+
+                                    $('#approval_history_tbody').html(tbodyHtml);
+                                    $('#approval_history_section').show();
+                                } else {
+                                    $('#approval_history_section').hide();
                                 }
 
                                 $('#show_initiative_id').val(row_id);

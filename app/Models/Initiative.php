@@ -20,6 +20,7 @@ class Initiative extends Model
         'approval_description',
         'approval_remarks',
         'approval_file',
+        'approval_original_file_name',
         'approval_status',
         'created_by',
         'updated_by',
@@ -48,5 +49,10 @@ class Initiative extends Model
     public function activities()
     {
         return $this->hasMany(Activity::class);
+    }
+
+    public function approvalHistories()
+    {
+        return $this->hasMany(InitiativeApprovalHistory::class)->orderBy('id', 'asc');
     }
 }

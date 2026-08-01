@@ -10,6 +10,7 @@ use App\Models\ImplementationStatus;
 use App\Models\Initiative;
 use App\Models\Objective;
 use App\Models\Theme;
+use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 
@@ -54,7 +55,7 @@ class DraftInitiativeController extends Controller
     {
         if (request()->ajax()) {
             $draftInitiative->load(['objective', 'directorates', 'implementationStatus', 'theme']);
-            $creator = \App\Models\User::find($draftInitiative->created_by);
+            $creator = User::find($draftInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
 
             return response()->json([

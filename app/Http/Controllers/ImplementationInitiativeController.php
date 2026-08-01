@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Constants;
 use App\DataTables\ImplementationInitiativesDataTable;
 use App\DataTables\InitiativeActivitiesDataTable;
 use App\Http\Requests\StoreImplementationInitiativeRequest;
 use App\Http\Requests\UpdateImplementationInitiativeRequest;
+use App\Models\Activity;
+use App\Models\ActivityStatus;
 use App\Models\Directorate;
 use App\Models\ImplementationStatus;
 use App\Models\Initiative;
-use App\Models\ActivityStatus;
 use App\Models\Objective;
 use App\Models\Partner;
-use App\Models\Activity;
 use App\Models\Theme;
+use App\Models\User;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class ImplementationInitiativeController extends Controller
 {
@@ -27,7 +30,7 @@ class ImplementationInitiativeController extends Controller
         $partners = Partner::all();
         $priorities = Activity::PRIORITIES;
         $initiatives = Initiative::whereHas('implementationStatus', function ($q) {
-            $q->where('id', \App\Constants\Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION);
+            $q->where('id', Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION);
         })->get();
         $activityStatuses = ActivityStatus::all();
 
@@ -61,7 +64,7 @@ class ImplementationInitiativeController extends Controller
     {
         $data = $request->validated();
         if (empty($data['implementation_status_id'])) {
-            $data['implementation_status_id'] = \App\Constants\Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION;
+            $data['implementation_status_id'] = Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION;
         }
         $initiative = Initiative::create(Arr::except($data, ['directorates']));
         $initiative->directorates()->sync($data['directorates']);
@@ -72,8 +75,27 @@ class ImplementationInitiativeController extends Controller
     {
         if (request()->ajax()) {
             $implementationInitiative->load(['objective', 'directorates', 'theme']);
-            $creator = \App\Models\User::find($implementationInitiative->created_by);
+            $creator = User::find($implementationInitiative->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
+
+            $histories = $implementationInitiative->approvalHistories()->with('user')->get()->map(function ($h) {
+                return [
+                    'id' => $h->id,
+                    'cycle_number' => $h->cycle_number,
+                    'action' => $h->action,
+                    'description' => $h->description,
+                    'file_url' => $h->file ? Storage::url($h->file) : null,
+                    'file_name' => $h->original_file_name ?: ($h->file ? basename($h->file) : null),
+                    'remarks' => $h->remarks,
+                    'user_name' => $h->user ? trim(($h->user->first_name ?? '') . ' ' . ($h->user->last_name ?? '')) : 'User',
+                    'created_at' => $h->created_at ? $h->created_at->format('Y-m-d') : null,
+                ];
+            });
+
+            $latestHistoryWithFile = $implementationInitiative->approvalHistories()->whereNotNull('file')->orderBy('id', 'desc')->first();
+            $approvalFileName = $implementationInitiative->approval_original_file_name
+                ?: ($latestHistoryWithFile ? $latestHistoryWithFile->original_file_name : null)
+                ?: ($implementationInitiative->approval_file ? basename($implementationInitiative->approval_file) : null);
 
             return response()->json([
                 'success' => 1,
@@ -83,8 +105,9 @@ class ImplementationInitiativeController extends Controller
                 'directorateName' => $implementationInitiative->directorates->pluck('name')->join(', ') ?: 'N/A',
                 'getCreatedBy' => $getCreatedBy,
                 'created_at' => $implementationInitiative->created_at->format('Y-m-d H:i:s'),
-                'approval_file_url' => $implementationInitiative->approval_file ? \Illuminate\Support\Facades\Storage::url($implementationInitiative->approval_file) : null,
-                'approval_file_name' => $implementationInitiative->approval_file ? basename($implementationInitiative->approval_file) : null,
+                'approval_file_url' => $implementationInitiative->approval_file ? Storage::url($implementationInitiative->approval_file) : null,
+                'approval_file_name' => $approvalFileName,
+                'histories' => $histories,
             ]);
         }
         return view('admin.implementation-initiatives.show', compact('implementationInitiative'));

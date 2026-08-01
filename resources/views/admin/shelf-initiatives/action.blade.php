@@ -1,14 +1,18 @@
-@if ($row->approval_status == 'approved' || $row->approval_status == 'proposed')
+@if ($row->approval_status == 'approved')
     <span class="fa fa-check-circle mx-1" style="color:green"> Approved</span>
-    @if ($row->approval_status == 'proposed')
-        @can('shelf-initiative: accept-approve')
-            <a class="btn btn-sm btn-success text-white accept-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button">Approve</a>
-        @endcan
-    @endif
-@elseif ($row->approval_status == 'rejected')
-    <span class="fa fa-times-circle mx-1" style="color:red"> Rejected</span>
+@elseif ($row->approval_status == 'requested')
     @can('shelf-initiative: approve')
-        <a class="btn btn-sm btn-warning text-white propose-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button">Approve</a>
+        <a class="btn btn-sm btn-warning text-white propose-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button" title="{{ $row->approval_remarks ? 'Reason: ' . $row->approval_remarks : 'Requested' }}">Requested</a>
+    @endcan
+    @can('shelf-initiative: accept-approve')
+        <a class="btn btn-sm btn-success text-white accept-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button">Approve</a>
+    @endcan
+@elseif ($row->approval_status == 'rejected')
+    @can('shelf-initiative: approve')
+        <a class="btn btn-sm btn-danger text-white propose-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button" title="{{ $row->approval_remarks ? 'Reason: ' . $row->approval_remarks : 'Rejected' }}">Rejected</a>
+    @endcan
+    @can('shelf-initiative: accept-approve')
+        <a class="btn btn-sm btn-success text-white accept-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button">Approve</a>
     @endcan
 @else
     @can('shelf-initiative: approve')

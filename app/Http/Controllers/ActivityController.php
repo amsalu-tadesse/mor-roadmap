@@ -12,6 +12,8 @@ use App\Models\ActivityStatus;
 use App\Models\Directorate;
 use App\Models\Initiative;
 use App\Models\Partner;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 
 class ActivityController extends Controller
@@ -67,7 +69,7 @@ class ActivityController extends Controller
     {
         if (request()->ajax()) {
             $activity->load(['partner', 'activityStatus', 'interestedPartners', 'directorates']);
-            $creator = \App\Models\User::find($activity->created_by);
+            $creator = User::find($activity->created_by);
             $getCreatedBy = $creator ? ($creator->first_name . ' ' . $creator->middle_name . ' ' . $creator->last_name) : 'Unknown';
             $priorityLabels = Activity::PRIORITIES;
 
@@ -81,8 +83,8 @@ class ActivityController extends Controller
                 'activityStatusName' => $activity->activityStatus->name ?? 'N/A',
                 'interestedPartners' => $activity->interestedPartners,
                 'directorates' => $activity->directorates,
-                'start_date' => $activity->start_date ? \Carbon\Carbon::parse($activity->start_date)->format('Y-m-d') : null,
-                'end_date' => $activity->end_date ? \Carbon\Carbon::parse($activity->end_date)->format('Y-m-d') : null,
+                'start_date' => $activity->start_date ? Carbon::parse($activity->start_date)->format('Y-m-d') : null,
+                'end_date' => $activity->end_date ? Carbon::parse($activity->end_date)->format('Y-m-d') : null,
             ]);
         }
         return view('admin.activities.show', compact('activity'));

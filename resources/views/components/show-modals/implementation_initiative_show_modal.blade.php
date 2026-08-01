@@ -51,6 +51,26 @@
                         </tr>
                     </table>
 
+                    <div id="approval_history_section" class="mt-4" style="display: none;">
+                        <h5 class="font-weight-bold text-secondary mb-2"><i class="fas fa-history mr-1"></i> Approval Cycle History</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th style="width: 8%">Cycle</th>
+                                        <th style="width: 10%">Status</th>
+                                        <th>Proposal Description</th>
+                                        <th style="width: 15%">Attachment</th>
+                                        <th>Decision Remarks</th>
+                                        <th style="width: 15%">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="approval_history_tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <h5 class="text-info border-bottom pb-2 mb-3 mt-4">Activities</h5>
                     <input type="hidden" id="show_initiative_id" value="">
                     <x-partials.initiative_activities_datatable :dataTable="$initiativeActivitiesShowTable" />

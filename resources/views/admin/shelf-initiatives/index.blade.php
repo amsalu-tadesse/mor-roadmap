@@ -314,10 +314,12 @@
 
                             if (response.initiative.approval_status) {
                                 var statusHtml = response.initiative.approval_status;
-                                if (statusHtml === 'proposed' || statusHtml === 'approved') {
-                                    statusHtml = '<span class="fa fa-check-circle" style="color:green"> Approved</span>';
+                                if (statusHtml === 'requested' || statusHtml === 'proposed') {
+                                    statusHtml = '<span class="fa fa-info-circle text-warning"> Requested</span>';
                                 } else if (statusHtml === 'rejected') {
                                     statusHtml = '<span class="fa fa-times-circle" style="color:red"> Rejected</span>';
+                                } else if (statusHtml === 'approved') {
+                                    statusHtml = '<span class="fa fa-check-circle" style="color:green"> Approved</span>';
                                 } else {
                                     statusHtml = statusHtml.charAt(0).toUpperCase() + statusHtml.slice(1);
                                 }
@@ -350,6 +352,64 @@
                                 $('#show_modal #approval_remarks_row').show();
                             } else {
                                 $('#show_modal #approval_remarks_row').hide();
+                            }
+
+                            if (response.histories && response.histories.length > 0) {
+                                var tbodyHtml = '';
+                                var cycleMap = {};
+                                $.each(response.histories, function(index, h) {
+                                    if (!cycleMap[h.cycle_number]) {
+                                        cycleMap[h.cycle_number] = {
+                                            cycle_number: h.cycle_number,
+                                            action: h.action,
+                                            description: h.description,
+                                            file_url: h.file_url,
+                                            file_name: h.file_name,
+                                            remarks: h.remarks,
+                                            created_at: h.created_at
+                                        };
+                                    } else {
+                                        if (h.action) cycleMap[h.cycle_number].action = h.action;
+                                        if (h.description) cycleMap[h.cycle_number].description = h.description;
+                                        if (h.file_url) {
+                                            cycleMap[h.cycle_number].file_url = h.file_url;
+                                            cycleMap[h.cycle_number].file_name = h.file_name;
+                                        }
+                                        if (h.remarks) cycleMap[h.cycle_number].remarks = h.remarks;
+                                        if (h.created_at) cycleMap[h.cycle_number].created_at = h.created_at;
+                                    }
+                                });
+
+                                $.each(cycleMap, function(cycleNum, h) {
+                                    var actionBadge = '';
+                                    if (h.action === 'requested') {
+                                        actionBadge = '<span class="badge badge-warning">Requested</span>';
+                                    } else if (h.action === 'rejected') {
+                                        actionBadge = '<span class="badge badge-danger">Rejected</span>';
+                                    } else if (h.action === 'approved') {
+                                        actionBadge = '<span class="badge badge-success">Approved</span>';
+                                    } else {
+                                        actionBadge = '<span class="badge badge-secondary">' + h.action + '</span>';
+                                    }
+
+                                    var descriptionText = h.description || 'N/A';
+                                    var remarksText = h.remarks || 'N/A';
+                                    var fileLink = h.file_url ? '<a href="' + h.file_url + '" target="_blank" class="text-info font-weight-bold"><i class="fas fa-paperclip mr-1"></i>' + (h.file_name || 'Download') + '</a>' : '-';
+
+                                    tbodyHtml += '<tr>' +
+                                        '<td class="text-center font-weight-bold">Cycle #' + h.cycle_number + '</td>' +
+                                        '<td>' + actionBadge + '</td>' +
+                                        '<td>' + descriptionText + '</td>' +
+                                        '<td>' + fileLink + '</td>' +
+                                        '<td>' + remarksText + '</td>' +
+                                        '<td>' + (h.created_at || '-') + '</td>' +
+                                        '</tr>';
+                                });
+
+                                $('#approval_history_tbody').html(tbodyHtml);
+                                $('#approval_history_section').show();
+                            } else {
+                                $('#approval_history_section').hide();
                             }
 
                             $('#show_initiative_id').val(row_id);
@@ -487,17 +547,62 @@
                 form.find('.custom-file-label').removeClass("selected").html('Choose file');
                 form.data('row_id', row_id);
 
-                // Fetch current details to prepopulate
                 var url = "{{ route('admin.shelf-initiatives.show-approval', ':id') }}";
                 url = url.replace(':id', row_id);
                 $.ajax({
                     url: url, type: 'GET', dataType: 'json',
                     success: function (response) {
                         if (response.success == 1) {
-                            $('#propose_description').val(response.approval_description || '');
-                            if (response.approval_file_name) {
-                                form.find('.custom-file-label').addClass("selected").html(response.approval_file_name);
+                            var descHtml = '';
+                            var fileHtml = '';
+                            var remarksHtml = '';
+                            var seenFiles = {};
+
+                            if (response.histories && response.histories.length > 0) {
+                                $.each(response.histories, function (i, h) {
+                                    if (h.description) {
+                                        descHtml += '<blockquote class="quote-info" style="margin-bottom: 5px; padding: 8px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">' + h.description + '</blockquote>';
+                                    }
+                                    if (h.file_url && !seenFiles[h.file_url]) {
+                                        seenFiles[h.file_url] = true;
+                                        fileHtml += '<div class="mb-1"><i class="fas fa-paperclip text-info mr-1"></i><a href="' + h.file_url + '" target="_blank" class="text-info font-weight-bold">' + (h.file_name || 'Download Attachment') + '</a></div>';
+                                    }
+                                    if (h.remarks) {
+                                        remarksHtml += '<blockquote class="quote-warning" style="margin-bottom: 5px; padding: 8px; background-color: #fff8e6; border-left: 3px solid #ffc107;">' + h.remarks + '</blockquote>';
+                                    }
+                                });
+                            } else {
+                                if (response.approval_description) {
+                                    descHtml = '<blockquote class="quote-info" style="margin-bottom: 5px; padding: 8px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">' + response.approval_description + '</blockquote>';
+                                }
+                                if (response.approval_file_url) {
+                                    fileHtml = '<div class="mb-1"><i class="fas fa-paperclip text-info mr-1"></i><a href="' + response.approval_file_url + '" target="_blank" class="text-info font-weight-bold">' + (response.approval_file_name || 'Download Attachment') + '</a></div>';
+                                }
+                                if (response.approval_remarks) {
+                                    remarksHtml = '<blockquote class="quote-warning" style="margin-bottom: 5px; padding: 8px; background-color: #fff8e6; border-left: 3px solid #ffc107;">' + response.approval_remarks + '</blockquote>';
+                                }
                             }
+
+                            if (descHtml) {
+                                $('#propose_past_descriptions').html(descHtml).show();
+                            } else {
+                                $('#propose_past_descriptions').hide();
+                            }
+
+                            if (fileHtml) {
+                                $('#propose_past_files').html(fileHtml).show();
+                            } else {
+                                $('#propose_past_files').hide();
+                            }
+
+                            if (remarksHtml) {
+                                $('#propose_remarks_view').html(remarksHtml);
+                                $('#propose_remarks_container').show();
+                            } else {
+                                $('#propose_remarks_container').hide();
+                            }
+
+                            $('#propose_description').val('');
                         }
                     }
                 });
@@ -557,13 +662,52 @@
                     url: url, type: 'GET', dataType: 'json',
                     success: function (response) {
                         if (response.success == 1) {
-                            $('#accept_description_view').text(response.approval_description || 'No description provided.');
-                            if (response.approval_file_url) {
-                                $('#accept_file_link').attr('href', response.approval_file_url);
+                            var descHtml = '';
+                            var fileHtml = '';
+                            var remarksHtml = '';
+                            var seenFiles = {};
+
+                            if (response.histories && response.histories.length > 0) {
+                                $.each(response.histories, function (i, h) {
+                                    if (h.description) {
+                                        descHtml += '<blockquote class="quote-info" style="margin-bottom: 5px; padding: 8px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">' + h.description + '</blockquote>';
+                                    }
+                                    if (h.file_url && !seenFiles[h.file_url]) {
+                                        seenFiles[h.file_url] = true;
+                                        fileHtml += '<div class="mb-1"><i class="fas fa-paperclip text-info mr-1"></i><a href="' + h.file_url + '" target="_blank" class="text-info font-weight-bold">' + (h.file_name || 'Download Attachment') + '</a></div>';
+                                    }
+                                    if (h.remarks) {
+                                        remarksHtml += '<blockquote class="quote-warning" style="margin-bottom: 5px; padding: 8px; background-color: #fff8e6; border-left: 3px solid #ffc107;">' + h.remarks + '</blockquote>';
+                                    }
+                                });
+                            } else {
+                                if (response.approval_description) {
+                                    descHtml = '<blockquote class="quote-info" style="margin-bottom: 5px; padding: 8px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">' + response.approval_description + '</blockquote>';
+                                }
+                                if (response.approval_file_url) {
+                                    fileHtml = '<div class="mb-1"><i class="fas fa-paperclip text-info mr-1"></i><a href="' + response.approval_file_url + '" target="_blank" class="text-info font-weight-bold">' + (response.approval_file_name || 'Download Attachment') + '</a></div>';
+                                }
+                                if (response.approval_remarks) {
+                                    remarksHtml = '<blockquote class="quote-warning" style="margin-bottom: 5px; padding: 8px; background-color: #fff8e6; border-left: 3px solid #ffc107;">' + response.approval_remarks + '</blockquote>';
+                                }
+                            }
+
+                            $('#accept_description_view').html(descHtml || '<blockquote class="quote-info" style="margin: 0; padding: 8px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">No description provided.</blockquote>');
+
+                            if (fileHtml) {
+                                $('#accept_file_view').html(fileHtml);
                                 $('#accept_file_container').show();
                             } else {
                                 $('#accept_file_container').hide();
                             }
+
+                            if (remarksHtml) {
+                                $('#accept_past_remarks').html(remarksHtml).show();
+                            } else {
+                                $('#accept_past_remarks').hide();
+                            }
+
+                            $('#accept_remarks').val('');
                             $('#accept_approval_modal').modal('show');
                         }
                     }
