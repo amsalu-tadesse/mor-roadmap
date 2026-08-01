@@ -46,7 +46,7 @@ return [
     'menu_3'                 =>  [
         'name'                 => 'Initiatives',
         'menu_icon'           => 'fa-tasks',
-        'permissions'           => ['draft-initiative: list', 'implementation-initiative: list', 'shelf-initiative: list'],
+        'permissions'           => ['draft-initiative: list', 'implementation-initiative: list', 'shelf-initiative: list', 'activity: list'],
 
         'menu_item'            =>
         [
@@ -79,7 +79,7 @@ return [
     'menu_4'                 =>  [
         'name'                 => 'Initiative setup',
         'menu_icon'           => 'fa-list-alt',
-        'permissions'           => ['directorate: list', 'theme: list', 'objective: list', 'activity-status: list', 'implementation-status: list', 'partner: list', 'activity: list'],
+        'permissions'           => ['directorate: list', 'theme: list', 'objective: list', 'activity-status: list', 'implementation-status: list', 'partner: list'],
 
         'menu_item'            =>
         [
