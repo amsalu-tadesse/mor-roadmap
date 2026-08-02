@@ -57,9 +57,9 @@ class InitiativeActivitiesDataTable extends DataTable
             ->addColumn('activities_description', function ($row) {
                 return '<div>' . e($row->activities) . '</div>';
             })
-            ->addColumn('start_date_formatted', fn($row) => $row->start_date ? $row->start_date->format('Y-m-d') : 'N/A')
-            ->addColumn('end_date_formatted', fn($row) => $row->end_date ? $row->end_date->format('Y-m-d') : 'N/A')
-            ->addColumn('budget_col', fn($row) => $row->budget ?? 'N/A')
+            ->addColumn('start_date_formatted', fn ($row) => $row->start_date ? $row->start_date->format('Y-m-d') : 'N/A')
+            ->addColumn('end_date_formatted', fn ($row) => $row->end_date ? $row->end_date->format('Y-m-d') : 'N/A')
+            ->addColumn('budget_col', fn ($row) => $row->budget ?? 'N/A')
             ->addColumn('completion_col', function ($row) {
                 if ($row->completion === null || $row->completion === '') {
                     return 'N/A';
@@ -67,12 +67,12 @@ class InitiativeActivitiesDataTable extends DataTable
                 $color = Constants::getStatusColor($row->completion);
                 return '<div style="background-color: ' . $color . '; color: #000; font-weight: bold; text-align: center; padding: 10px 4px; margin: -12px -8px;">' . (int)$row->completion . '%</div>';
             })
-            ->addColumn('activity_status_name', fn($row) => $row->activityStatus->name ?? 'N/A')
-            ->addColumn('request_type_col', fn($row) => $row->request_type ?? 'N/A')
+            ->addColumn('activity_status_name', fn ($row) => $row->activityStatus->name ?? 'N/A')
+            ->addColumn('request_type_col', fn ($row) => $row->request_type ?? 'N/A')
             ->addColumn('interested_partners_col', function ($row) {
                 if ($row->interestedPartners->isNotEmpty()) {
                     return $row->interestedPartners
-                        ->map(fn($p) => '<span class="badge badge-info mr-1">' . e($p->name) . '</span>')
+                        ->map(fn ($p) => '<span class="badge badge-info mr-1">' . e($p->name) . '</span>')
                         ->join('');
                 }
                 return 'N/A';
@@ -80,7 +80,7 @@ class InitiativeActivitiesDataTable extends DataTable
             ->addColumn('directorates_col', function ($row) {
                 if ($row->directorates->isNotEmpty()) {
                     return $row->directorates
-                        ->map(fn($d) => '<span class="badge badge-secondary mr-1">' . e($d->name) . '</span>')
+                        ->map(fn ($d) => '<span class="badge badge-secondary mr-1">' . e($d->name) . '</span>')
                         ->join('');
                 }
                 return 'N/A';
@@ -107,12 +107,15 @@ class InitiativeActivitiesDataTable extends DataTable
             ->with(['partner', 'activityStatus', 'interestedPartners', 'directorates']);
 
         $initiativeId = $this->request()->get('initiative_id');
+        // dd($initiativeId);
 
         if ($initiativeId) {
             $query->where('initiative_id', $initiativeId);
         } else {
             $query->whereRaw('1 = 0');
         }
+
+        // dd($query->get());
 
         return $query;
     }

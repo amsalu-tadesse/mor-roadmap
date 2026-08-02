@@ -15,7 +15,6 @@ use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DirectorateController;
 use App\Http\Controllers\AnimalController;
-use App\Http\Controllers\ArchiveCrimeController;
 use App\Http\Controllers\SiteAdminController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SubscriptionController;
@@ -26,9 +25,6 @@ use App\Http\Controllers\CaseStatusController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CountUnitController;
-use App\Http\Controllers\CrimeCategoryController;
-use App\Http\Controllers\CrimeController;
-use App\Http\Controllers\CrimeTypeController;
 use App\Http\Controllers\CrudGeneratorController;
 use App\Http\Controllers\DetectionMethodController;
 use App\Http\Controllers\FloraController;
@@ -46,8 +42,6 @@ use App\Http\Controllers\SpeciesController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\SuspectController;
-use App\Http\Controllers\TrafficingCrimeController;
-use App\Http\Controllers\TrafficingStatusController;
 use App\Http\Controllers\TransportMethodController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\ObjectiveController;
@@ -55,6 +49,7 @@ use App\Http\Controllers\ActivityStatusController;
 use App\Http\Controllers\ImplementationStatusController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\ArchiveInitiativeController;
 use App\Http\Controllers\DraftInitiativeController;
 use App\Http\Controllers\ImplementationInitiativeController;
 use App\Http\Controllers\ShelfInitiativeController;
@@ -62,8 +57,6 @@ use App\Http\Controllers\VerdictTypeController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\SeizedProductController;
-use App\Http\Controllers\TrashedCrimeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,8 +132,8 @@ Route::middleware(['web', 'auth'])->group(function () {
             Route::post('shelf-initiatives/{shelf_initiative}/propose-approval', [ShelfInitiativeController::class, 'proposeApproval'])->name('shelf-initiatives.propose-approval');
             Route::post('shelf-initiatives/{shelf_initiative}/accept-approval', [ShelfInitiativeController::class, 'acceptApproval'])->name('shelf-initiatives.accept-approval');
             Route::resource('shelf-initiatives', ShelfInitiativeController::class);
-            Route::get('completed-initiatives', [\App\Http\Controllers\ArchiveInitiativeController::class, 'completed'])->name('completed-initiatives.index');
-            Route::get('suspended-initiatives', [\App\Http\Controllers\ArchiveInitiativeController::class, 'suspended'])->name('suspended-initiatives.index');
+            Route::get('completed-initiatives', [ArchiveInitiativeController::class, 'completed'])->name('completed-initiatives.index');
+            Route::get('suspended-initiatives', [ArchiveInitiativeController::class, 'suspended'])->name('suspended-initiatives.index');
             Route::resource('contact-us', ContactUsController::class);
             Route::post('contact-message', [ContactUsController::class, 'storeReply'])->name('contact-message.storeReply');
             Route::post('update-address/{id}', [SiteAdminController::class, 'update'])->name('updateaddress');
@@ -159,7 +152,6 @@ Route::middleware(['web', 'auth'])->group(function () {
             // Route::get('/visualize2', [DashboardController::class, 'dashboard'])->name('visualize2');
 
 
-            Route::resource('archive-crimes', ArchiveCrimeController::class);
             Route::get("/notifications", [NotificationController::class,"index"])->name("notifications.index");
             Route::DELETE("/notifications/{id}", [NotificationController::class,"destroy"])->name("notification.destroy");
             Route::post("/notification-update", [NotificationController::class,"update"])->name("update.notification");
