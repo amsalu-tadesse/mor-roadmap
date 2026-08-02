@@ -12,30 +12,30 @@
             <div class="modal-body">
                 <div class="card-body">
                     <h5 class="text-info border-bottom pb-2 mb-3">Base Initiative Details</h5>
-                    <table class="table table-bordered mb-4">
+                    <table class="table table-bordered mb-4" style="table-layout: fixed; width: 100%;">
                         <tr>
                             <th style="width: 30%">Initiative Name</th>
-                            <td id="name_show"></td>
+                            <td id="name_show" style="word-break: break-word;"></td>
                         </tr>
                         <tr>
                             <th>Directorates</th>
-                            <td id="directorate_show"></td>
+                            <td id="directorate_show" style="word-break: break-word;"></td>
                         </tr>
                         <tr>
                             <th>Theme</th>
-                            <td id="theme_show"></td>
+                            <td id="theme_show" style="word-break: break-word;"></td>
                         </tr>
                         <tr>
                             <th>Objective</th>
-                            <td id="objective_show"></td>
+                            <td id="objective_show" style="word-break: break-word;"></td>
                         </tr>
                         <tr>
                             <th>Note</th>
-                            <td id="note_show"></td>
+                            <td id="note_show" style="word-break: break-word; white-space: pre-wrap;"></td>
                         </tr>
                         <tr id="approval_status_row">
                             <th>Approval Status</th>
-                            <td id="approval_status_show"></td>
+                            <td id="approval_status_show" style="word-break: break-word;"></td>
                         </tr>
                     </table>
 

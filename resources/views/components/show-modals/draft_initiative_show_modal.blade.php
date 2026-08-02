@@ -9,38 +9,38 @@
             </div>
             <div class="modal-body">
                 <div class="card-body">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                         <tr>
                             <th style="width: 30%">Initiative Name</th>
-                            <td id="name_show"></td>
+                            <td id="name_show" style="word-break: break-word;"></td>
                         </tr>
                         <tr>
                             <th>Directorates</th>
-                            <td id="directorate_show"></td>
+                            <td id="directorate_show" style="word-break: break-word;"></td>
                         </tr>
                         <tr>
                             <th>Theme</th>
-                            <td id="theme_show"></td>
+                            <td id="theme_show" style="word-break: break-word;"></td>
                         </tr>
                         <tr>
                             <th>Objective</th>
-                            <td id="objective_show"></td>
+                            <td id="objective_show" style="word-break: break-word;"></td>
                         </tr>
                         <tr>
                             <th>Implementation Status</th>
-                            <td id="implementation_status_show"></td>
+                            <td id="implementation_status_show" style="word-break: break-word;"></td>
                         </tr>
                         <tr>
                             <th>Note</th>
-                            <td id="note_show"></td>
+                            <td id="note_show" style="word-break: break-word; white-space: pre-wrap;"></td>
                         </tr>
                         <tr>
                             <th>Created By</th>
-                            <td id="created_by"></td>
+                            <td id="created_by" style="word-break: break-word;"></td>
                         </tr>
                         <tr>
                             <th>Created At</th>
-                            <td id="created_at"></td>
+                            <td id="created_at" style="word-break: break-word;"></td>
                         </tr>
                     </table>
                 </div>
