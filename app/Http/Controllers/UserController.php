@@ -53,63 +53,70 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request, EmailService $emailService)
     {
+        try {
+            $validated_data = $this->getValidatedData($request);
 
-        // dd(request()->all());
-        $validated_data = $this->getValidatedData($request);
-
-
-        if ($request->has('user_roles')) {
-            $user_roles = $validated_data['user_roles'];
-            unset($validated_data['user_roles']);
-        }
-        // dd($validated_data);
-
-        $user = User::create($validated_data);
-        Notification::create([
-            "title" => "Account is created succesfully {$user->first_name} {$user->last_name}",
-            "date" => Carbon::now(),
-            "is_seen" => 0
-        ]);
-        // $password = Str::random(8);
-        $password = "12345678";
-        $user->password = $password;
-        $user->save();
-
-        foreach ($user_roles ?? [] as $role) {
-            $role = Role::findById($role);
-            $user->assignRole($role);
-        }
-
-        //Mailing
-        $messageObj = Email::where('code', 'email:on_user_registration')->first();
-        if ($messageObj?->status == 1) {
-            $body = $messageObj->body;
-            $link = Constants::DOMAIN . '/login';
-            $body = str_ireplace("{user}", $user?->first_name, $body);
-            $body = str_ireplace("{password}", $password, $body);
-            $body = str_ireplace("{link}", $link, $body);
-            $message['title'] = $messageObj->subject;
-            $message['body'] = $body;
-
-            try {
-                //$emailService->sendMail([$request->input('email')], [], $message);
-                dispatch(new \App\Jobs\SendEmailJob([$request->input('email')], [], $message));
-            } catch (Exception $ex) {
-                //continue.
-                dd("not able to send email.", $ex);
+            if ($request->has('user_roles')) {
+                $user_roles = $validated_data['user_roles'];
+                unset($validated_data['user_roles']);
             }
+
+            $user = User::create($validated_data);
+            Notification::create([
+                "title" => "Account is created succesfully {$user->first_name} {$user->last_name}",
+                "date" => Carbon::now(),
+                "is_seen" => 0
+            ]);
+            $password = "12345678";
+            $user->password = $password;
+            $user->save();
+
+            foreach ($user_roles ?? [] as $role) {
+                $role = Role::findById($role);
+                $user->assignRole($role);
+            }
+
+            //Mailing
+            $messageObj = Email::where('code', 'email:on_user_registration')->first();
+            if ($messageObj?->status == 1) {
+                $body = $messageObj->body;
+                $link = Constants::DOMAIN . '/login';
+                $body = str_ireplace("{user}", $user?->first_name, $body);
+                $body = str_ireplace("{password}", $password, $body);
+                $body = str_ireplace("{link}", $link, $body);
+                $message['title'] = $messageObj->subject;
+                $message['body'] = $body;
+
+                try {
+                    dispatch(new \App\Jobs\SendEmailJob([$request->input('email')], [], $message));
+                } catch (Exception $ex) {
+                    // continue
+                }
+            }
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'User created successfully!',
+                    'redirect' => route('admin.users.index')
+                ]);
+            }
+
+            return redirect()->route('admin.users.index')->with('success_create', 'Users added!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
+        } catch (Exception $ex) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $ex->getMessage()], 500);
+            }
+            return redirect()->back()->withInput()->withErrors(['error' => $ex->getMessage()]);
         }
-
-
-
-        return redirect()->route('admin.users.index')->with('success_create', 'Users added!');
     }
 
     public function getValidatedData($request)
     {
         $validated_data = $request->validated();
-
-
+        unset($validated_data['terms']);
 
         $is_superadmin = 0;
         $status = 0;

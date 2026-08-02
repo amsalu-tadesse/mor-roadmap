@@ -73,14 +73,7 @@ class Handler extends ExceptionHandler
             $message = 'You need to login first.';
         }
         if ($exception instanceof \Illuminate\Validation\ValidationException) {
-
-            $message = $exception->getMessage();
-            // Add anywhere in this method the following code
-            // It does what the FormValidator does.
-            // if (request()->ajax())
-                // return response()->json(['errors' => $exception->validator->getMessageBag()], 422);
-
-            // return redirect()->back()->withErrors($exception->validator->getMessageBag()->toArray());
+            return parent::render($request, $exception);
         }
         if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
 

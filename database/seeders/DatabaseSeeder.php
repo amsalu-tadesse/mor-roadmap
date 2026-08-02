@@ -116,6 +116,7 @@ class DatabaseSeeder extends Seeder
             'draft-initiative',
             'implementation-initiative',
             'shelf-initiative',
+            'archived-initiatives',
         ];
         $permission_activities = [
             'list',

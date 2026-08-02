@@ -22,20 +22,34 @@ class StoreUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-
+        $rules = [
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users', 'email')],
-            // 'mobile' => [ Rule::unique('users', 'mobile')],
-            // 'mobile' => [ 'required',new MobileNumber, Rule::unique('users', 'mobile')],
-            'mobile' => [ new MobileNumber, Rule::unique('users', 'mobile')],
-            'user_roles' =>[Rule::exists('roles', 'id')],
-            'is_superadmin' =>'',
+            'mobile' => ['required', new MobileNumber, Rule::unique('users', 'mobile')],
+            'user_roles' => 'nullable|array',
+            'user_roles.*' => 'exists:roles,id',
+            'is_superadmin' => '',
             'organization_id' => 'nullable|exists:organizations,id',
-            'twofa_code' =>'',
+            'twofa_code' => '',
             'status' => '',
+        ];
+
+        if ($this->routeIs('auth.signup')) {
+            $rules['terms'] = 'required';
+        }
+
+        return $rules;
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.unique' => 'This email address is already registered.',
+            'mobile.unique' => 'This mobile number is already registered.',
+            'mobile.required' => 'The mobile number field is required.',
+            'terms.required' => 'You must agree to the terms and conditions.',
         ];
     }
 }

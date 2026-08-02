@@ -349,7 +349,7 @@
                                 if (response.initiative.approval_status) {
                                     var statusHtml = response.initiative.approval_status;
                                     if (statusHtml === 'requested' || statusHtml === 'proposed') {
-                                        statusHtml = '<span class="fa fa-check-circle" style="color:green"> Requested</span>';
+                                        statusHtml = '<span class="fa fa-info-circle text-warning"> Requested</span>';
                                     } else if (statusHtml === 'rejected') {
                                         statusHtml = '<span class="fa fa-times-circle" style="color:red"> Rejected</span>';
                                     } else if (statusHtml === 'approved') {
@@ -361,31 +361,6 @@
                                     $('#show_modal #approval_status_row').show();
                                 } else {
                                     $('#show_modal #approval_status_row').hide();
-                                }
-
-                                if (response.initiative.approval_description) {
-                                    $('#show_modal #approval_desc_show').html(response.initiative.approval_description);
-                                    $('#show_modal #approval_desc_row').show();
-                                } else {
-                                    $('#show_modal #approval_desc_row').hide();
-                                }
-
-                                if (response.approval_file_url) {
-                                    $('#show_modal #approval_file_show').html(
-                                        '<a href="' + response.approval_file_url + '" target="_blank" class="text-info font-weight-bold">' +
-                                        '<i class="fas fa-paperclip text-info mr-1"></i>' + (response.approval_file_name || 'Download Attachment') +
-                                        '</a>'
-                                    );
-                                    $('#show_modal #approval_file_row').show();
-                                } else {
-                                    $('#show_modal #approval_file_row').hide();
-                                }
-
-                                if (response.initiative.approval_remarks) {
-                                    $('#show_modal #approval_remarks_show').html(response.initiative.approval_remarks);
-                                    $('#show_modal #approval_remarks_row').show();
-                                } else {
-                                    $('#show_modal #approval_remarks_row').hide();
                                 }
 
                                 if (response.histories && response.histories.length > 0) {

@@ -26,7 +26,7 @@ class SuspendedInitiativesDataTable extends DataTable
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
                     'show' => true,
-                    'permission_view' => 'implementation-initiative: view',
+                    'permission_view' => 'archived-initiatives: view',
                     'permission_edit' => 'suspended-initiative: edit',
                     'permission_delete' => 'suspended-initiative: delete',
                 ]);
