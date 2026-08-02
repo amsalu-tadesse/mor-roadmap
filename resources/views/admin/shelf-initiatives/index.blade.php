@@ -329,31 +329,6 @@
                                 $('#show_modal #approval_status_row').hide();
                             }
 
-                            if (response.initiative.approval_description) {
-                                $('#show_modal #approval_desc_show').html(response.initiative.approval_description);
-                                $('#show_modal #approval_desc_row').show();
-                            } else {
-                                $('#show_modal #approval_desc_row').hide();
-                            }
-
-                            if (response.approval_file_url) {
-                                $('#show_modal #approval_file_show').html(
-                                    '<a href="' + response.approval_file_url + '" target="_blank" class="text-info font-weight-bold">' +
-                                    '<i class="fas fa-paperclip text-info mr-1"></i>' + (response.approval_file_name || 'Download Attachment') +
-                                    '</a>'
-                                );
-                                $('#show_modal #approval_file_row').show();
-                            } else {
-                                $('#show_modal #approval_file_row').hide();
-                            }
-
-                            if (response.initiative.approval_remarks) {
-                                $('#show_modal #approval_remarks_show').html(response.initiative.approval_remarks);
-                                $('#show_modal #approval_remarks_row').show();
-                            } else {
-                                $('#show_modal #approval_remarks_row').hide();
-                            }
-
                             if (response.histories && response.histories.length > 0) {
                                 var tbodyHtml = '';
                                 var cycleMap = {};
@@ -747,6 +722,43 @@
                     }
                 });
             });
+
+            function delete_row(element, row_id) {
+                var url = "{{ route('admin.shelf-initiatives.destroy', ':id') }}";
+                url = url.replace(':id', row_id);
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: { confirmButton: 'btn btn-success mx-1', cancelButton: 'btn btn-danger' },
+                    buttonsStyling: false
+                });
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: url,
+                            data: {
+                                _token: "{{ csrf_token() }}"
+                            },
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.success) {
+                                    window.LaravelDataTables['shelf-initiatives-table'].ajax.reload();
+                                    swalWithBootstrapButtons.fire('Deleted!', 'Shelf Initiative has been deleted.', 'success');
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         </script>
     @endpush
 </x-layout>

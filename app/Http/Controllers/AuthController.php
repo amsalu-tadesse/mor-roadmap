@@ -172,19 +172,14 @@ class AuthController extends Controller
     }
     public function signup(StoreUserRequest $request, EmailService $emailService)
     {
-
-        $terms = $request->input('terms');
-
-        if ($terms) {
+        try {
             $user = User::create($request->validated());
-            // $password =  Str::password(10);
             $password = Utility::getRandomStringRandomInt(8);
             $user->password = $password;
             $user->save();
 
             //Mailing
             $messageObj = Email::where('code', 'email:on_user_signup')->first();
-            // dd($messageObj->status);
             if ($messageObj?->status == 1) {
                 $body = $messageObj->body;
                 $link = Constants::DOMAIN . '/login';
@@ -194,19 +189,30 @@ class AuthController extends Controller
                 $message['title'] = $messageObj->subject;
                 $message['body'] = $body;
 
-
                 try {
-
-                    //$emailService->sendMail([$request->input('email')], [], $message);
-                     dispatch(new \App\Jobs\SendEmailJob([$request->input('email')], [], $message));
+                    dispatch(new \App\Jobs\SendEmailJob([$request->input('email')], [], $message));
                 } catch (Exception $ex) {
-                    dd($ex);
-                    return redirect()->route('login')->with('message', 'Registration was successfull. Now you can login.');
+                    return redirect()->route('login')->with('message', 'Registration was successful. Now you can login.');
                 }
             }
-        }
 
-        return redirect()->route('login')->with('message', 'Registration was successfull. We have sent you a default password to access the system.');
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Registration was successful. We have sent you a default password to access the system.',
+                    'redirect' => route('login')
+                ]);
+            }
+
+            return redirect()->route('login')->with('message', 'Registration was successful. We have sent you a default password to access the system.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
+        } catch (Exception $ex) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $ex->getMessage()], 500);
+            }
+            return redirect()->back()->withInput()->withErrors(['error' => $ex->getMessage()]);
+        }
     }
 
     public function changePasswordSave(Request $request)

@@ -36,18 +36,6 @@
                             <th>Approval Status</th>
                             <td id="approval_status_show"></td>
                         </tr>
-                        <tr id="approval_desc_row">
-                            <th>Proposal Description</th>
-                            <td id="approval_desc_show"></td>
-                        </tr>
-                        <tr id="approval_file_row">
-                            <th>Attachment</th>
-                            <td id="approval_file_show"></td>
-                        </tr>
-                        <tr id="approval_remarks_row">
-                            <th>Decision Reason</th>
-                            <td id="approval_remarks_show"></td>
-                        </tr>
                     </table>
 
                     <div id="approval_history_section" class="mt-4" style="display: none;">

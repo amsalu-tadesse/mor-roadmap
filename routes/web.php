@@ -104,7 +104,7 @@ Route::post('/delete-all-data', [CustomExceptionController::class, 'deleteAllDat
 
 
 
-Route::middleware(['web', 'auth'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::prefix('admin')->group(function () {
         Route::name('admin.')->group(function () {

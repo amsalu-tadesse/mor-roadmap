@@ -120,18 +120,18 @@ return [
     'menu_5'                 =>  [
         'name'                 => 'Archives',
         'menu_icon'           => 'fa-archive',
-        'permissions'           => ['draft-initiative: list', 'implementation-initiative: list', 'shelf-initiative: list'],
+        'permissions'           => ['archived-initiatives: list', 'archived-initiatives'],
         'menu_item'            =>
         [
             [
                 'title'      =>  'Completed Initiatives',
                 'url'        =>  'admin.completed-initiatives.index',
-                'permission' => 'implementation-initiative: list'
+                'permission' => 'archived-initiatives: list'
             ],
             [
                 'title'      =>  'Suspended Initiatives',
                 'url'        =>  'admin.suspended-initiatives.index',
-                'permission' => 'implementation-initiative: list'
+                'permission' => 'archived-initiatives: list'
             ],
         ]
     ],

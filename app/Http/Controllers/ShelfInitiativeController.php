@@ -287,4 +287,13 @@ class ShelfInitiativeController extends Controller
             'message' => $message,
         ]);
     }
+
+    public function destroy(Initiative $shelfInitiative)
+    {
+        $shelfInitiative->delete();
+        if (request()->ajax()) {
+            return response()->json(['success' => true]);
+        }
+        return redirect()->route('admin.shelf-initiatives.index')->with('success_delete', 'Shelf Initiative deleted successfully!');
+    }
 }

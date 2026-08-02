@@ -26,7 +26,7 @@ class CompletedInitiativesDataTable extends DataTable
                 return view('components.action-buttons', [
                     'row_id' => $row->id,
                     'show' => true,
-                    'permission_view' => 'implementation-initiative: view',
+                    'permission_view' => 'archived-initiatives: view',
                     'permission_edit' => 'completed-initiative: edit',
                     'permission_delete' => 'completed-initiative: delete',
                 ]);
