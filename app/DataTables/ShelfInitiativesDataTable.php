@@ -38,6 +38,16 @@ class ShelfInitiativesDataTable extends DataTable
                 $query->where('id', Constants::IMPLEMENTATION_STATUS_SHELFING);
             });
 
+        // Approvers who cannot submit requests should not see rejected records
+        // (rejected records go back to the requester for resubmission)
+        $user = auth()->user();
+        if ($user && $user->can('shelf-initiative: approve') && !$user->can('shelf-initiative: approval-request')) {
+            $query->where(function ($q) {
+                $q->whereNull('approval_status')
+                  ->orWhere('approval_status', '!=', 'rejected');
+            });
+        }
+
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
             $query->whereHas('directorates', function ($q) {
                 $q->where('directorates.id', $this->request()->get('directorate_id'));

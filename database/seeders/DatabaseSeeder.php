@@ -82,12 +82,14 @@ class DatabaseSeeder extends Seeder
 
 
         foreach ($emails_setting as $code => $subject_body) {
-            \App\Models\Email::factory()->create([
-                'code' => $code,
-                'subject' => $subject_body['subject'],
-                'body' => $subject_body['body'],
-                'status' => $subject_body['status'],
-            ]);
+            \App\Models\Email::updateOrCreate(
+                ['code' => $code],
+                [
+                    'subject' => $subject_body['subject'],
+                    'body'    => $subject_body['body'],
+                    'status'  => $subject_body['status'],
+                ]
+            );
         }
 
 
@@ -150,11 +152,10 @@ class DatabaseSeeder extends Seeder
 
 
 
-        $permissions = collect($arrayOfPermissionNames)->map(function ($permission) {
-            return ['name' => $permission, 'guard_name' => 'web'];
-        });
+        foreach ($arrayOfPermissionNames as $permissionName) {
+            Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'web']);
+        }
 
-        Permission::insert($permissions->toArray());
 
 
         $roles = [
@@ -167,15 +168,15 @@ class DatabaseSeeder extends Seeder
 
 
         foreach ($roles as $role) {
-            $myrole = Role::create([
-                'name' => $role,
-                'code' => $role
-            ]);
-
-            if ($role === 'Planning Directorate') {
-                $myrole->givePermissionTo(['shelf-initiative: approval-request']);
-            } elseif ($role === 'Higher level officials') {
-                $myrole->givePermissionTo(['shelf-initiative: approve']);
+            [$myrole, $created] = [Role::firstOrCreate(['name' => $role], ['code' => $role]), false];
+            if (!$myrole->wasRecentlyCreated) {
+                // Role already exists — skip permission assignment to avoid duplicates
+            } else {
+                if ($role === 'Planning Directorate') {
+                    $myrole->givePermissionTo(['shelf-initiative: approval-request']);
+                } elseif ($role === 'Higher level officials') {
+                    $myrole->givePermissionTo(['shelf-initiative: approve']);
+                }
             }
         }
 
@@ -234,41 +235,29 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($initial_users as $user) {
-            $createdUser = \App\Models\User::factory()->create([
-                'first_name' => $user['first_name'],
-                'middle_name' => $user['middle_name'],
-                'last_name' => $user['last_name'],
-                'mobile' => $user['mobile'],
-                'password' => "12345678",
-                'password_changed' => $user['password_changed'],
-                'status' => $user['status'],
-                'is_superadmin' => $user['is_superadmin'],
-                'created_by' => $user['created_by'],
-                'updated_by' => $user['updated_by'],
-                'email' => $user['email'],
-            ]);
-
-
+            $createdUser = \App\Models\User::firstOrCreate(
+                ['email' => $user['email']],
+                [
+                    'first_name'       => $user['first_name'],
+                    'middle_name'      => $user['middle_name'],
+                    'last_name'        => $user['last_name'],
+                    'mobile'           => $user['mobile'],
+                    'password'         => bcrypt('12345678'),
+                    'password_changed' => $user['password_changed'],
+                    'status'           => $user['status'],
+                    'is_superadmin'    => $user['is_superadmin'],
+                    'created_by'       => $user['created_by'],
+                    'updated_by'       => $user['updated_by'],
+                ]
+            );
 
             if ($user['is_superadmin']) {
                 $role = Role::findByName('Super Admin');
-                $role->givePermissionTo(Permission::all());
-                $createdUser->assignRole($role);
-                // $createdUser->assignRole("Federal Level Data Manager");
-                // } elseif ($user['email'] == 'fdatamanager@gmail.com') {
-                //     $createdUser->assignRole("Federal Level Data Manager");
-                // } elseif ($user['email'] == 'rdatamanager@gmail.com') {
-                //     $createdUser->assignRole("Region Level Data Manager");
-                // } elseif ($user['email'] == 'suppervisor@gmail.com') {
-                /*$role = Role::findByName('Suppervisor');
-                $createdUser->assignRole($role);
-                $createdUser->assignRole("Suppervisor");*/
+                if (!$createdUser->hasRole('Super Admin')) {
+                    $role->givePermissionTo(Permission::all());
+                    $createdUser->assignRole($role);
+                }
             }
-
-
-            /*if ($role) {
-                $createdUser->assignRole($role);
-            }*/
         }
 
 
@@ -351,16 +340,13 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($settings as $setting) {
-
-            \App\Models\Setting::factory()->create(
+            \App\Models\Setting::updateOrCreate(
+                ['code' => $setting['code']],
                 [
-                    'code' => $setting['code'],
-                    'name' => $setting['name'],
+                    'name'   => $setting['name'],
                     'value1' => $setting['value1'],
                     'value2' => $setting['value2'],
-                    'type' => $setting['type'],
-                    // 'created_by' => $setting['created_by'],
-                    // 'updated_by' => $setting['updated_by'],
+                    'type'   => $setting['type'],
                 ]
             );
         }
@@ -583,16 +569,13 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($helps as $help) {
-
-            \App\Models\Help::factory()->create(
+            \App\Models\Help::updateOrCreate(
+                ['route' => $help['route']],
                 [
-                    'title' => $help['title'],
-                    'url' => $help['url'],
-                    'body' => $help['body'],
-                    'route' => $help['route'],
+                    'title'  => $help['title'],
+                    'url'    => $help['url'],
+                    'body'   => $help['body'],
                     'active' => $help['active'],
-                    'created_by' => $help['created_by'],
-                    'updated_by' => $help['updated_by'],
                 ]
             );
         }
@@ -616,20 +599,19 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($siteAdmins as $siteAdmin) {
-
-            \App\Models\SiteAdmin::factory()->create(
+            \App\Models\SiteAdmin::updateOrCreate(
+                ['name' => $siteAdmin['name']],
                 [
-                    'name' => $siteAdmin['name'],
-                    'aboutus' => $siteAdmin['aboutus'],
-                    'location' => $siteAdmin['location'],
-                    'address' => $siteAdmin['address'],
-                    'email' => $siteAdmin['email'],
-                    'telephone' => $siteAdmin['telephone'],
-                    'facebook' => $siteAdmin['facebook'],
-                    'twitter' => $siteAdmin['twitter'],
-                    'youtube' => $siteAdmin['youtube'],
+                    'aboutus'     => $siteAdmin['aboutus'],
+                    'location'    => $siteAdmin['location'],
+                    'address'     => $siteAdmin['address'],
+                    'email'       => $siteAdmin['email'],
+                    'telephone'   => $siteAdmin['telephone'],
+                    'facebook'    => $siteAdmin['facebook'],
+                    'twitter'     => $siteAdmin['twitter'],
+                    'youtube'     => $siteAdmin['youtube'],
                     'intro_video' => $siteAdmin['intro_video'],
-                    'linkedin' => $siteAdmin['linkedin'],
+                    'linkedin'    => $siteAdmin['linkedin'],
                 ]
             );
         }
@@ -728,9 +710,17 @@ class DatabaseSeeder extends Seeder
         }
 
 
-        $statuses = ['Drafting stage', 'Shelfing stage', 'Implementation stage'];
+        $statuses = [
+            ['name' => 'Drafting stage',        'visible' => 1],
+            ['name' => 'Shelfing stage',         'visible' => 1],
+            ['name' => 'Implementation stage',   'visible' => 0],
+        ];
         foreach ($statuses as $status) {
-            \App\Models\ImplementationStatus::firstOrCreate(['name' => $status]);
+            \App\Models\ImplementationStatus::updateOrCreate(
+                ['name' => $status['name']],
+                ['visible' => $status['visible']]
+            );
         }
+
     }
 }

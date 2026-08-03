@@ -37,9 +37,8 @@ class SuspendedInitiativesDataTable extends DataTable
     public function query(Initiative $model): QueryBuilder
     {
         $query = $model->newQuery()->with(['objective.theme', 'directorates'])
-            ->whereHas('activities', function ($query) {
-                $query->where('activity_status_id', 5);
-            });
+            ->where('archival_type', Initiative::ARCHIVAL_PENDING);
+
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
             $query->whereHas('directorates', function ($q) {

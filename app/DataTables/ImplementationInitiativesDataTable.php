@@ -41,7 +41,10 @@ class ImplementationInitiativesDataTable extends DataTable
         $query = $model->newQuery()->with(['objective.theme', 'directorates'])
             ->whereHas('implementationStatus', function ($query) {
                 $query->where('id', Constants::IMPLEMENTATION_STATUS_IMPLEMENTATION);
-            });
+            })
+            // Only show non-archived records; archived ones go to their archive pages
+            ->where('archival_type', Initiative::ARCHIVAL_NOT_ARCHIVED);
+
 
         if ($this->request()->has('directorate_id') && $this->request()->get('directorate_id') != '') {
             $query->whereHas('directorates', function ($q) {

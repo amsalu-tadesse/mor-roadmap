@@ -17,6 +17,8 @@ class UpdateImplementationInitiativeRequest extends FormRequest
             'directorates.*' => 'exists:directorates,id',
             'implementation_status_id' => 'required|exists:implementation_statuses,id',
             'note' => 'nullable|string',
+            'archival_type' => 'nullable|integer|in:0,1,2',
         ];
+
     }
 }

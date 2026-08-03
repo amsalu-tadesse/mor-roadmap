@@ -1,6 +1,7 @@
 @props(['objectives', 'directorates', 'implementationStatuses', 'themes', 'initiativeActivitiesEditTable'])
 
-<div class="modal fade" id="update_modal" data-backdrop="static">
+<div class="modal fade" id="update_modal">
+
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -68,7 +69,30 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Archive Status</label>
+                                    <input type="hidden" name="archival_type" id="archival_type" value="0">
+                                    <div class="d-flex flex-column mt-1" style="gap: 6px;">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input archival-checkbox"
+                                                   id="archival_completed" data-value="1">
+                                            <label class="custom-control-label text-success font-weight-bold" for="archival_completed">
+                                                Archive completed
+                                            </label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input archival-checkbox"
+                                                   id="archival_pending" data-value="2">
+                                            <label class="custom-control-label text-warning font-weight-bold" for="archival_pending">
+                                                Archive pending
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -141,5 +165,19 @@
                 $('#objective_id_modal').append('<option value="">Select Objective</option>');
             }
         });
+
+        // Archival type checkboxes — mutually exclusive
+        $(document).on('change', '.archival-checkbox', function () {
+            var val = parseInt($(this).data('value'));
+            if ($(this).is(':checked')) {
+                // Uncheck the other checkbox
+                $('.archival-checkbox').not(this).prop('checked', false);
+                $('#archival_type').val(val);
+            } else {
+                // Both unchecked → normal (0)
+                $('#archival_type').val(0);
+            }
+        });
     });
 </script>
+

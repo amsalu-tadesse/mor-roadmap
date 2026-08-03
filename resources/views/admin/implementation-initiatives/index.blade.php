@@ -315,6 +315,12 @@
                                 $('#implementation_status_id').val(initiative.implementation_status_id).trigger('change');
                                 $('#note').val(initiative.note);
 
+                                // Set archival type checkboxes
+                                var archivalType = parseInt(initiative.archival_type) || 0;
+                                $('#archival_type').val(archivalType);
+                                $('#archival_completed').prop('checked', archivalType === 1);
+                                $('#archival_pending').prop('checked', archivalType === 2);
+
                                 var themeId = initiative.theme_id || (initiative.objective ? initiative.objective.theme_id : null);
                                 if (themeId) {
                                     $('#theme_id_modal').data('selected-objective', initiative.objective_id);
@@ -331,6 +337,7 @@
                         }
                     });
                 });
+
 
                 $(document).on('click', '#show_row', function() {
                     var row_id = $(this).data('row_id');

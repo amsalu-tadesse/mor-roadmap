@@ -11,6 +11,11 @@ class Initiative extends Model
 {
     use HasFactory, SoftDeletes, CreatedUpdatedBy;
 
+    // Archival type constants
+    const ARCHIVAL_NOT_ARCHIVED = 0;
+    const ARCHIVAL_COMPLETED    = 1;
+    const ARCHIVAL_PENDING      = 2;
+
     protected $fillable = [
         'name',
         'objective_id',
@@ -22,9 +27,11 @@ class Initiative extends Model
         'approval_file',
         'approval_original_file_name',
         'approval_status',
+        'archival_type',
         'created_by',
         'updated_by',
     ];
+
 
     public function theme()
     {

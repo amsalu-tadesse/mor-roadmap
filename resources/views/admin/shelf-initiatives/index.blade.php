@@ -338,20 +338,19 @@
                                             cycle_number: h.cycle_number,
                                             action: h.action,
                                             description: h.description,
-                                            file_url: h.file_url,
-                                            file_name: h.file_name,
+                                            files: [],
                                             remarks: h.remarks,
                                             created_at: h.created_at
                                         };
                                     } else {
                                         if (h.action) cycleMap[h.cycle_number].action = h.action;
                                         if (h.description) cycleMap[h.cycle_number].description = h.description;
-                                        if (h.file_url) {
-                                            cycleMap[h.cycle_number].file_url = h.file_url;
-                                            cycleMap[h.cycle_number].file_name = h.file_name;
-                                        }
                                         if (h.remarks) cycleMap[h.cycle_number].remarks = h.remarks;
                                         if (h.created_at) cycleMap[h.cycle_number].created_at = h.created_at;
+                                    }
+                                    // Accumulate all files for this cycle
+                                    if (h.file_url) {
+                                        cycleMap[h.cycle_number].files.push({ url: h.file_url, name: h.file_name });
                                     }
                                 });
 
@@ -369,13 +368,19 @@
 
                                     var descriptionText = h.description || 'N/A';
                                     var remarksText = h.remarks || 'N/A';
-                                    var fileLink = h.file_url ? '<a href="' + h.file_url + '" target="_blank" class="text-info font-weight-bold"><i class="fas fa-paperclip mr-1"></i>' + (h.file_name || 'Download') + '</a>' : '-';
+                                    var fileLinks = '-';
+                                    if (h.files && h.files.length > 0) {
+                                        fileLinks = '';
+                                        $.each(h.files, function(i, f) {
+                                            fileLinks += '<div><a href="' + f.url + '" target="_blank" class="text-info font-weight-bold"><i class="fas fa-paperclip mr-1"></i>' + (f.name || 'Download') + '</a></div>';
+                                        });
+                                    }
 
                                     tbodyHtml += '<tr>' +
                                         '<td class="text-center font-weight-bold">Cycle #' + h.cycle_number + '</td>' +
                                         '<td>' + actionBadge + '</td>' +
                                         '<td>' + descriptionText + '</td>' +
-                                        '<td>' + fileLink + '</td>' +
+                                        '<td>' + fileLinks + '</td>' +
                                         '<td>' + remarksText + '</td>' +
                                         '<td>' + (h.created_at || '-') + '</td>' +
                                         '</tr>';
@@ -644,7 +649,7 @@
 
                             if (response.histories && response.histories.length > 0) {
                                 $.each(response.histories, function (i, h) {
-                                    if (h.description) {
+                                    if (h.description && h.action === 'requested') {
                                         descHtml += '<blockquote class="quote-info" style="margin-bottom: 5px; padding: 8px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">' + h.description + '</blockquote>';
                                     }
                                     if (h.file_url && !seenFiles[h.file_url]) {
