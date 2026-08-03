@@ -141,7 +141,7 @@ class DatabaseSeeder extends Seeder
 
 
         //other non CRUD permissions
-        $arrayOfPermissionNames[] = 'crime: restore';
+        // $arrayOfPermissionNames[] = 'crime: restore';
         $arrayOfPermissionNames[] = 'shelf-initiative: approval-request';
         $arrayOfPermissionNames[] = 'shelf-initiative: approve';
 
