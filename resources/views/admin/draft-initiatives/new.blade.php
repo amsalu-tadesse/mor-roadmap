@@ -51,6 +51,18 @@
                 </div>
                 <div class="row">
 
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">Initiative Name<span class="required-field">*</span></label>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Enter Initiative Name" value="{{ old('name') }}">
+                            @error('name')
+                                <span class="invalid-feedback d-block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="objective_id">Objective<span class="required-field">*</span></label>
@@ -71,7 +83,7 @@
                     </div>
 
 
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <div class="form-group">
                             <label for="implementation_status_id">Implementation Status</label>
                             <select name="implementation_status_id" class="form-control select2 @error('implementation_status_id') is-invalid @enderror" id="implementation_status_id">
@@ -86,7 +98,7 @@
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
 
 
                 </div>
@@ -95,15 +107,7 @@
 
 
 
-                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="name">Initiative Name<span class="required-field">*</span></label>
-                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="Enter Initiative Name" value="{{ old('name') }}">
-                            @error('name')
-                                <span class="invalid-feedback d-block">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+
 
 
 

@@ -21,7 +21,7 @@ class DraftInitiativeController extends Controller
         $objectives = Objective::all();
         $themes = Theme::all();
         $directorates = Directorate::all();
-        $implementationStatuses = ImplementationStatus::all();
+        $implementationStatuses = ImplementationStatus::where('visible', 1)->get();
         return $dataTable->render('admin.draft-initiatives.index', compact('objectives', 'themes', 'directorates', 'implementationStatuses'));
     }
 
@@ -30,7 +30,7 @@ class DraftInitiativeController extends Controller
         $objectives = Objective::all();
         $themes = Theme::all();
         $directorates = Directorate::all();
-        $implementationStatuses = ImplementationStatus::all();
+        $implementationStatuses = ImplementationStatus::where('visible', 1)->get();
         return view('admin.draft-initiatives.new', compact('objectives', 'themes', 'directorates', 'implementationStatuses'));
     }
 

@@ -2,7 +2,7 @@
     <span class="fa fa-check-circle mx-1" style="color:green"> Approved</span>
 @elseif ($row->approval_status == 'requested')
     @can('shelf-initiative: approval-request')
-        <a class="btn btn-sm btn-warning text-white propose-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button" title="{{ $row->approval_remarks ? 'Reason: ' . $row->approval_remarks : 'Requested' }}">Requested</a>
+        <a class="btn btn-sm btn-warning text-black propose-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button" title="{{ $row->approval_remarks ? 'Reason: ' . $row->approval_remarks : 'Requested' }}">Requested</a>
     @endcan
     @can('shelf-initiative: approve')
         <a class="btn btn-sm btn-success text-white accept-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button">Approve</a>
@@ -13,7 +13,7 @@
     @endcan
 @else
     @can('shelf-initiative: approval-request')
-        <a class="btn btn-sm btn-warning text-white propose-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button">Request</a>
+        <a class="btn btn-sm btn-warning text-black propose-approve-btn mx-1" data-row_id="{{ $row_id }}" role="button">Request</a>
     @endcan
 @endif
 

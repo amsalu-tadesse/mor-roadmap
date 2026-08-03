@@ -36,7 +36,7 @@
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <div>
-                        <button type="button" class="btn btn-warning text-white btn-submit-propose" data-decision="approve">Request</button>
+                        <button type="button" class="btn btn-warning text-black btn-submit-propose" data-decision="approve">Request</button>
                     </div>
                 </div>
             </form>

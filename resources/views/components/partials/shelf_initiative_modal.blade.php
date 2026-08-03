@@ -56,7 +56,7 @@
                             </div>
                         </div>
                         <div class="row">
-                             <div class="col-md-6">
+                             {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="implementation_status_id">Implementation Status</label>
                                     <select name="implementation_status_id" class="form-control select2" id="implementation_status_id">
@@ -66,7 +66,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="note">Note</label>
