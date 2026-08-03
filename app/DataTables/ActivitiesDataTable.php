@@ -71,7 +71,7 @@ class ActivitiesDataTable extends DataTable
                     return 'N/A';
                 }
 
-                $color = $this->percentageCalculator($row->start_date, $row->end_date, $row->completion);
+                $color = percentageCalculator($row->start_date, $row->end_date, $row->completion);
 
                 return '<div style="background-color: ' . $color[0] . '; color: #000; font-weight: bold; text-align: center; padding: 10px 4px; margin: -12px -8px;">' . (int)$row->completion . '%</div>';
             })
@@ -156,36 +156,6 @@ class ActivitiesDataTable extends DataTable
         return 'Activities_' . date('YmdHis');
     }
 
-    public function percentageCalculator($start_date, $end_date, $completion)
-    {
-
-        $start = Carbon::parse($start_date);
-        $end   = Carbon::parse($end_date);
-        $today = Carbon::today();
-
-        $totalDays = max($start->diffInDays($end), 1);
-
-        // Clamp today to the project period
-        if ($today->lt($start)) {
-            $elapsedDays = 0;
-        } elseif ($today->gt($end)) {
-            $elapsedDays = $totalDays;
-        } else {
-            $elapsedDays = $start->diffInDays($today);
-        }
-
-        $timeProgress = ($elapsedDays / $totalDays) * 100;
-
-        $variance = $completion - $timeProgress;
-        if ($completion == 100) {
-            $variance = 101; // special code
-        }
-
-        $colorRange = Constants::getStatusColor($variance);
-        return $colorRange;
-
-
-    }
 
 
 }
