@@ -144,6 +144,7 @@ class DatabaseSeeder extends Seeder
         // $arrayOfPermissionNames[] = 'crime: restore';
         $arrayOfPermissionNames[] = 'shelf-initiative: approval-request';
         $arrayOfPermissionNames[] = 'shelf-initiative: approve';
+        $arrayOfPermissionNames[] = 'initiative: visualization';
 
         // $arrayOfPermissionNames[] = 'access-domain: zonal';
 

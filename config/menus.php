@@ -6,14 +6,14 @@ return [
     'menu_1'                 =>  [
         'name'                 => 'Visualization',
         'menu_icon'           => 'fa-user',
-        'permissions'           => ['role: list', 'user: list'],
+        'permissions'           => ['initiative: visualization'],
 
         'menu_item'            =>
         [
             [
                 'title'        => 'Analytics',
                 'url'          => 'admin.analytics',
-                'permission'   => 'role: list'
+                'permission'   => 'initiative: visualization'
 
             ],
 
