@@ -6,6 +6,9 @@ use App\DataTables\PartnersDataTable;
 use App\Http\Requests\StorePartnerRequest;
 use App\Http\Requests\UpdatePartnerRequest;
 use App\Models\Partner;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PartnerUpdateMail;
 
 class PartnerController extends Controller
 {
@@ -103,12 +106,17 @@ class PartnerController extends Controller
         $activities = $partner->activities()->with('initiative.objective.theme')->get();
 
         // Generate PDF
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.partners.pdf', compact('partner', 'activities'));
+        $pdf = Pdf::loadView('admin.partners.pdf', compact('partner', 'activities'));
         $pdfData = $pdf->output();
 
         // Send Email
-        \Illuminate\Support\Facades\Mail::to($partner->email)
-            ->send(new \App\Mail\PartnerUpdateMail($partner, $pdfData));
+        Mail::to($partner->email)->send(new PartnerUpdateMail($partner, $pdfData));
+
+        //     \Illuminate\Support\Facades\Mail::to($partner->email)
+        // ->queue(new \App\Mail\PartnerUpdateMail($partner, $pdfData));
+
+
+        // dispatch(new \App\Jobs\SendEmailJob([$partner->email], [], $pdfData));
 
         return response()->json([
             'success' => true,

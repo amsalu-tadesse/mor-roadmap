@@ -23,10 +23,9 @@ trait CreatedUpdatedByCopy
                 if ($enable == 1) {
                     try {
                         $message = self::getMessage($model);
-                        if($message != 'Unknown')
-                        {
+                        if ($message != 'Unknown') {
                             // Utility::sendTelegramMsg($message);
-                            dispatch(new \App\Jobs\SendTelegram($message));
+                            //  dispatch(new \App\Jobs\SendTelegram($message));
                         }
 
                     } catch (Exception $ex) {
@@ -73,7 +72,7 @@ trait CreatedUpdatedByCopy
         $modelName = class_basename($model);
 
         $message = match ($modelName) {
-             "Region", "Kpi", "WorkingGroup" => "*** New ".$modelName. " has been created ***\n Name: ".$model->name,
+            "Region", "Kpi", "WorkingGroup" => "*** New ".$modelName. " has been created ***\n Name: ".$model->name,
             "User" => "*** New User has been registered *** \n Name: " . $model->first_name . " " . $model->middle_name . " " . $model->last_name . " \n Email: " . $model->email,
             "Issue" => "*** New Issue has been created *** \n Title: " . $model->title,
             "Email" => $model->subject,

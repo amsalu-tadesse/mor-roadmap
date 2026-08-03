@@ -68,7 +68,7 @@
         .bg-low { background-color: #17a2b8; }
         .bg-medium { background-color: #ffc107; color: #333333; }
         .bg-high { background-color: #dc3545; }
-        
+
         .footer {
             position: fixed;
             bottom: 0;
@@ -139,9 +139,10 @@
                         {{ $activity->start_date ? $activity->start_date->format('Y-m-d') : 'N/A' }}<br>to<br>
                         {{ $activity->end_date ? $activity->end_date->format('Y-m-d') : 'N/A' }}
                     </td>
-                    <td style="text-align: right;">
-                        {{ $activity->budget ? number_format($activity->budget, 2) : '0.00' }}
-                    </td>
+                   <td style="text-align: right;">
+    {{ $activity->budget  }}
+</td>
+
                     <td style="text-align: center;">
                         <strong>{{ $activity->completion ?? 0 }}%</strong>
                         <div style="font-size: 8px; color: #666666; margin-top: 2px;">
