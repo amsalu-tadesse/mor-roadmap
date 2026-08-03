@@ -120,7 +120,7 @@ return [
     'menu_5'                 =>  [
         'name'                 => 'Archives',
         'menu_icon'           => 'fa-archive',
-        'permissions'           => ['archived-initiatives: list', 'archived-initiatives'],
+        'permissions'           => ['archived-initiatives: list'],
         'menu_item'            =>
         [
             [

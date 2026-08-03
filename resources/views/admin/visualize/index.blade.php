@@ -13,7 +13,7 @@
 
     <div class="card">
         <!-- FIXED: Added explicit width and height directly to the container -->
-        <div id="vbar" id="bytheme" style="width: 100%; height: 500px;"></div>
+        <div id="vbar" style="width: 100%; height: 500px;"></div>
     </div>
 
 
@@ -33,7 +33,19 @@
         <!-- FIXED: Added explicit width and height directly to the container -->
         <div id="bytheme" data-chart="theme" style="width: 100%; height: 500px;"></div>
     </div>
+ <hr>
 
+    <div class="card">
+        <!-- FIXED: Added explicit width and height directly to the container -->
+        <div id="bycompletion" data-chart="bycompletion" style="width: 100%; height: 500px;"></div>
+    </div>
+
+ <hr>
+
+    <div class="card">
+        <!-- FIXED: Added explicit width and height directly to the container -->
+        <div id="bypartnerstack" data-chart="bypartnerstack" style="width: 100%; height: 600px;"></div>
+    </div>
 
 
 {{-- <div id="hbar" data-chart="directorate" style="width: 100%; height: 900px;"></div>
@@ -53,6 +65,7 @@
 
 
     <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
 
 
 <!-- One Unified ECharts Intersection & Animation Engine -->
@@ -207,6 +220,10 @@
                     initStatusPieChart(element);
                 } else if (targetId === 'bytheme') {
                     initThemeChart(element);
+                } else if (targetId === 'bycompletion') {
+                    initCompletionChart(element);
+                } else if (targetId === 'bypartnerstack') {
+                    stackByPartner(element);
                 }
 
                 // Stop tracking this chart box container to fix its animation states
@@ -216,13 +233,216 @@
     }, observerOptions);
 
     // Dynamic Discovery: Boot up observer bindings on your HTML targets
-    var chartIds = ['hbar', 'vbar', 'piechart', 'bytheme'];
+    var chartIds = ['hbar', 'vbar', 'piechart', 'bytheme', 'bycompletion', 'bypartnerstack'];
     chartIds.forEach(function(id) {
         var targetDom = document.getElementById(id);
         if (targetDom) {
             lazyChartObserver.observe(targetDom);
         }
     });
+
+
+
+
+
+// Slice 2: Total Registered Activities per Partner (vbar)
+    function initCompletionChart(domElement) {
+        var myChart = echarts.init(domElement, null, { renderer: 'canvas', useDirtyRect: false });
+        var dataValues = {!! json_encode($orderedPercentageCount) !!};
+        var option = {
+            color: generateDynamicColors(dataValues.length, 60, 45, 191),
+            title: { text: 'Activity status by completion percentage', left: 'center', top: '1%' },
+            color: {!! json_encode($orderedColors) !!},
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            grid: { left: '3%', right: '4%', bottom: '8%', containLabel: true },
+            xAxis: [{
+                type: 'category',
+                data: {!! json_encode($orderedPercentageLabels) !!},
+                axisTick: { alignWithLabel: true },
+                axisLabel: { interval: 0, rotate: 30 }
+            }],
+            yAxis: [{ type: 'value', minInterval: 1 }],
+            series: [{
+                name: 'Total Activities',
+                type: 'bar',
+                barWidth: '55%',
+                colorBy: 'data',
+                data: dataValues,
+                label: { show: true, position: 'top', fontWeight: 'bold' }
+            }]
+        };
+
+        myChart.setOption(option);
+        window.addEventListener('resize', myChart.resize);
+    }
+
+
+/*
+
+function stackByPartner(domElement) {
+
+
+//  var dom = document.getElementById('bypartnerstack');
+var myChart = echarts.init(domElement, null, { renderer: 'canvas', useDirtyRect: false });
+//    var dom = document.getElementById('container');
+    // There should not be negative values in rawData
+
+const rawData = {!! json_encode($rawData) !!};
+
+const totalData = [];
+for (let i = 0; i < rawData[0].length; ++i) {
+  let sum = 0;
+  for (let j = 0; j < rawData.length; ++j) {
+    sum += rawData[j][i];
+  }
+  totalData.push(sum);
+}
+
+var orderedPercentageLabels = {!! json_encode($orderedPercentageLabels) !!};
+var partnerStackedLabels = {!! json_encode($partnerStackedLabels) !!};
+
+
+
+
+console.log(partnerStackedLabels);
+const series = orderedPercentageLabels.map((name, sid) => {
+  return {
+    name,
+    type: 'bar',
+    stack: 'total',
+    barWidth: '60%',
+    label: {
+      show: true,
+      formatter: (params) => Math.round(params.value * 1000) / 10 + '%'
+    },
+    data: rawData[sid].map((d, did) =>
+      totalData[did] <= 0 ? 0 : d / totalData[did]
+    )
+  };
+});
+
+ var option = {
+      // 1. Give room at the bottom for rotated text
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '15%',
+        containLabel: true
+      },
+      legend: {
+        selectedMode: false
+      },
+      yAxis: {
+        type: 'value',
+        max: 1 // Since your series maps to percentages (0 to 1), lock the max height
+      },
+      xAxis: {
+        type: 'category',
+        data: {!! json_encode($partnerStackedLabels) !!},
+        // 2. Force all labels to show and tilt them
+        axisLabel: {
+          interval: 0,
+          rotate: 30,
+          hideOverlap: false
+        }
+      },
+      series
+    };
+
+
+
+
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+
+    }
+*/
+
+
+
+function stackByPartner(domElement) {
+    var myChart = echarts.init(domElement, null, { renderer: 'canvas', useDirtyRect: false });
+    const rawData = {!! json_encode($rawData) !!};
+
+    const totalData = [];
+    for (let i = 0; i < rawData[0].length; ++i) {
+        let sum = 0;
+        for (let j = 0; j < rawData.length; ++j) {
+            sum += rawData[j][i];
+        }
+        totalData.push(sum);
+    }
+
+    var orderedPercentageLabels = {!! json_encode($orderedPercentageLabels) !!};
+    var partnerStackedLabels = {!! json_encode($partnerStackedLabels) !!};
+    // 1. Fetch the backend color array
+    var chartColors = {!! json_encode($chartColors) !!};
+
+    const series = orderedPercentageLabels.map((name, sid) => {
+        return {
+            name,
+            type: 'bar',
+            stack: 'total',
+            barWidth: '60%',
+            // 2. Set the color for this specific range row
+            itemStyle: {
+                color: chartColors[sid]
+            },
+            label: {
+                show: true,
+                   formatter: (params) => {
+                    if (params.value === 0) {
+                        return ''; // Hides the text for 0% blocks
+                    }
+                    return Math.round(params.value * 1000) / 10 + '%';
+                }
+                // formatter: (params) => Math.round(params.value * 1000) / 10 + '%'
+            },
+            data: rawData[sid].map((d, did) =>
+                totalData[did] <= 0 ? 0 : d / totalData[did]
+            )
+        };
+    });
+
+    var option = {
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '15%',
+            containLabel: true
+        },
+        legend: {
+            selectedMode: false
+        },
+        yAxis: {
+            type: 'value',
+            max: 1
+        },
+        xAxis: {
+            type: 'category',
+            data: {!! json_encode($partnerStackedLabels) !!},
+            axisLabel: {
+                interval: 0,
+                rotate: 30,
+                hideOverlap: false
+            }
+        },
+        series
+    };
+
+    if (option && typeof option === 'object') {
+        myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+}
+
+
+
 </script>
 
 

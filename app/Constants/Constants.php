@@ -40,30 +40,37 @@ class Constants
         return $allPages;
 
     }
-    public static function getStatusColor($completion)
+    public static function getStatusColor($difference)
     {
+
+
+        if ($difference == 101) { //completed
+            return ["#194da8", "completed"];
+        }
         // Special overrides to match the demo screenshot exactly:
-        if ($completion == 5) {
-            return "#28a745"; // Green
+        if ($difference >= 10) {
+
+            return ["#0bc19a", "above 10%"];
         }
-        if ($completion == 10) {
-            return "#dc3545"; // Red
+        if ($difference >= 0) {
+
+            return ["#3df014", "within 0-10%"];
         }
-        if ($completion == 35) {
-            return "#ffc107"; // Yellow
+        if ($difference >= -5) {
+            return ["#FACC15", "within -5% to 0%"];
         }
 
-        // General fallback logic based on original thresholds:
-        if ($completion >= 60) {
-            return "#28a745"; // Green
+        if ($difference >= -15) {
+            return ["#F97316", "within -15% to -5%"];
         }
-        if ($completion >= 40) {
-            return "#007bff"; // Blue
+        if ($difference >= -30) {
+
+            return ["#ba0707", "within -30% to -15%"];
+
         }
-        if ($completion >= 25) {
-            return "#ffc107"; // Yellow
-        }
-        return "#dc3545"; // Red
+
+
+        return ["#f90707", "below -30%"];
     }
 
 
