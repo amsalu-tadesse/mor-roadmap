@@ -116,13 +116,13 @@
         window.addEventListener('resize', myChart.resize);
     }
 
-    // Slice 2: Total Registered Activities per Partner (vbar)
+    // Slice 2: Activities per Partner (vbar)
     function initPartnerChart(domElement) {
         var myChart = echarts.init(domElement, null, { renderer: 'canvas', useDirtyRect: false });
         var dataValues = {!! json_encode($activityCounts) !!};
         var option = {
             color: generateDynamicColors(dataValues.length, 60, 45, 191),
-            title: { text: 'Total Registered Activities per Partner', left: 'center', top: '1%' },
+            title: { text: 'Activities per Partner', left: 'center', top: '1%' },
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             grid: { left: '3%', right: '4%', bottom: '8%', containLabel: true },
             xAxis: [{
@@ -245,13 +245,14 @@
 
 
 
-// Slice 2: Total Registered Activities per Partner (vbar)
+
+// Slice 2: Activities per Partner (vbar)
     function initCompletionChart(domElement) {
         var myChart = echarts.init(domElement, null, { renderer: 'canvas', useDirtyRect: false });
         var dataValues = {!! json_encode($orderedPercentageCount) !!};
         var option = {
-            color: generateDynamicColors(dataValues.length, 60, 45, 191),
-            title: { text: 'Activity status by completion percentage', left: 'center', top: '1%' },
+            //color: generateDynamicColors(dataValues.length, 60, 45, 191),
+            title: { text: 'Activities status by completion percentage', left: 'center', top: '1%' },
             color: {!! json_encode($orderedColors) !!},
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             grid: { left: '3%', right: '4%', bottom: '8%', containLabel: true },
@@ -277,90 +278,6 @@
     }
 
 
-/*
-
-function stackByPartner(domElement) {
-
-
-//  var dom = document.getElementById('bypartnerstack');
-var myChart = echarts.init(domElement, null, { renderer: 'canvas', useDirtyRect: false });
-//    var dom = document.getElementById('container');
-    // There should not be negative values in rawData
-
-const rawData = {!! json_encode($rawData) !!};
-
-const totalData = [];
-for (let i = 0; i < rawData[0].length; ++i) {
-  let sum = 0;
-  for (let j = 0; j < rawData.length; ++j) {
-    sum += rawData[j][i];
-  }
-  totalData.push(sum);
-}
-
-var orderedPercentageLabels = {!! json_encode($orderedPercentageLabels) !!};
-var partnerStackedLabels = {!! json_encode($partnerStackedLabels) !!};
-
-
-
-
-console.log(partnerStackedLabels);
-const series = orderedPercentageLabels.map((name, sid) => {
-  return {
-    name,
-    type: 'bar',
-    stack: 'total',
-    barWidth: '60%',
-    label: {
-      show: true,
-      formatter: (params) => Math.round(params.value * 1000) / 10 + '%'
-    },
-    data: rawData[sid].map((d, did) =>
-      totalData[did] <= 0 ? 0 : d / totalData[did]
-    )
-  };
-});
-
- var option = {
-      // 1. Give room at the bottom for rotated text
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '15%',
-        containLabel: true
-      },
-      legend: {
-        selectedMode: false
-      },
-      yAxis: {
-        type: 'value',
-        max: 1 // Since your series maps to percentages (0 to 1), lock the max height
-      },
-      xAxis: {
-        type: 'category',
-        data: {!! json_encode($partnerStackedLabels) !!},
-        // 2. Force all labels to show and tilt them
-        axisLabel: {
-          interval: 0,
-          rotate: 30,
-          hideOverlap: false
-        }
-      },
-      series
-    };
-
-
-
-
-
-    if (option && typeof option === 'object') {
-      myChart.setOption(option);
-    }
-
-    window.addEventListener('resize', myChart.resize);
-
-    }
-*/
 
 
 
@@ -398,7 +315,7 @@ function stackByPartner(domElement) {
                     if (params.value === 0) {
                         return ''; // Hides the text for 0% blocks
                     }
-                    return Math.round(params.value * 1000) / 10 + '%';
+                    return Math.round(params.value * 1000 / 10) + '%';
                 }
                 // formatter: (params) => Math.round(params.value * 1000) / 10 + '%'
             },
@@ -418,6 +335,7 @@ function stackByPartner(domElement) {
         legend: {
             selectedMode: false
         },
+         title: { text: 'Activity completion status by partner', left: 'center', top: '4%' },
         yAxis: {
             type: 'value',
             max: 1

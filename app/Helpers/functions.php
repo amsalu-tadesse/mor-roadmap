@@ -3,6 +3,7 @@
 // app/Helpers/functions.php
 
 use App\Constants\Constants;
+use App\Services\StatusService;
 use Carbon\Carbon;
 
 if (!function_exists('percentageCalculator')) {
@@ -35,7 +36,8 @@ if (!function_exists('percentageCalculator')) {
             $variance = 101; // special code
         }
 
-        $colorRange = Constants::getStatusColor($variance);
+
+        $colorRange = StatusService::getStatus($variance);
         return $colorRange;
 
     }

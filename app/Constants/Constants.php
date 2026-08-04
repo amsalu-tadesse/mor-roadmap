@@ -3,7 +3,9 @@
 namespace App\Constants;
 
 use App\Models\Setting;
+use App\Services\StatusService as ServicesStatusService;
 use Illuminate\Support\Facades\Request;
+use App\Services\StatusService;
 
 class Constants
 {
@@ -40,51 +42,6 @@ class Constants
         return $allPages;
 
     }
-    public static function getStatusColor($difference)
-    {
-
-
-        if ($difference == 101) { //completed
-            return ["#194da8", "completed"];
-        }
-        // Special overrides to match the demo screenshot exactly:
-        if ($difference >= 10) {
-
-            return ["#0bc19a", "above 10%"];
-        }
-        if ($difference >= 0) {
-
-            return ["#3df014", "within 0-10%"];
-        }
-        if ($difference >= -5) {
-            return ["#FACC15", "within -5% to 0%"];
-        }
-
-        if ($difference >= -15) {
-            return ["#F97316", "within -15% to -5%"];
-        }
-        if ($difference >= -30) {
-
-            return ["#ba0707", "within -30% to -15%"];
-
-        }
-
-
-        return ["#f90707", "below -30%"];
-    }
-
-
-    /*public static function jobs() {
-        return [
-            "Student",
-            "College Student",
-            "Housewife",
-            "Office Workers",
-            "Self-Employment",
-            "Freelancer",
-            "Other",
-        ];
-    }*/
 
 
 }

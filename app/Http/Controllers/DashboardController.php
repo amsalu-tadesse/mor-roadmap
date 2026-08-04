@@ -8,7 +8,9 @@ use App\Models\Directorate;
 use App\Models\Partner;
 use App\Models\Initiative;
 use App\Models\SiteAdmin;
+use App\Services\StatusService;
 use Carbon\Carbon;
+use Google\Service\IDS\Status;
 
 class DashboardController extends Controller
 {
@@ -97,53 +99,19 @@ class DashboardController extends Controller
         $orderedPercentageCount = [];
         $orderedColors = [];
 
+        $statusRanges = StatusService::getChartRanges();
 
-        $orderedPercentageLabels[] = "completed";
-        $index = array_search("completed", $percentageLabels);
-        $orderedPercentageCount[] = $percentageCount[$index];
-        $orderedColors[] = Constants::getStatusColor(101)[0];
+        foreach ($statusRanges as $label => $value) {
+            $orderedPercentageLabels[] = $label;
+            $index = array_search($label, $percentageLabels);
+            if ($index !== false) {
+                $orderedPercentageCount[] = $percentageCount[$index];
+            } else {
+                //$orderedPercentageCount[] = 0; // If not found, set count to 0
+            }
+            $orderedColors[] = StatusService::getStatus($value)[0];
 
-        $orderedPercentageLabels[] = "above 10%";
-        $index = array_search("above 10%", $percentageLabels);
-        $orderedPercentageCount[] = $percentageCount[$index];
-        $orderedColors[] = Constants::getStatusColor(10)[0];
-
-        $orderedPercentageLabels[] = "within 0-10%";
-        $index = array_search("within 0-10%", $percentageLabels);
-        $orderedPercentageCount[] = $percentageCount[$index];
-        $orderedColors[] = Constants::getStatusColor(0)[0];
-
-        $orderedPercentageLabels[] = "within -5% to 0%";
-        $index = array_search("within -5% to 0%", $percentageLabels);
-        $orderedPercentageCount[] = $percentageCount[$index];
-        $orderedColors[] = Constants::getStatusColor(-5)[0];
-
-        $orderedPercentageLabels[] = "within -15% to -5%";
-        $index = array_search("within -15% to -5%", $percentageLabels);
-        $orderedPercentageCount[] = $percentageCount[$index];
-        $orderedColors[] = Constants::getStatusColor(-15)[0];
-
-        $orderedPercentageLabels[] = "within -30% to -15%";
-        $index = array_search("within -30% to -15%", $percentageLabels);
-        $orderedPercentageCount[] = $percentageCount[$index];
-        $orderedColors[] = Constants::getStatusColor(-30)[0];
-
-        $orderedPercentageLabels[] = "below -30%";
-        $index = array_search("below -30%", $percentageLabels);
-        $orderedPercentageCount[] = $percentageCount[$index];
-        $orderedColors[] = Constants::getStatusColor(-100)[0];
-
-
-        // dd($orderedPercentageCount, $orderedPercentageLabels);
-
-
-
-
-
-
-
-
-        // dd($percentageCount, $percentageLabels, $sortedCounts, $sortedLabels);
+        }
 
 
         $statuses = \DB::table('activity_statuses')
@@ -180,24 +148,6 @@ class DashboardController extends Controller
         $partnerStackedLabels = $partners->pluck('name')->toArray();
 
 
-        /*
-         0 => 14
-         1 => 1
-         2 => 62
-         3 => 14
-         4 => 10
-         5 => 1
-         6 => 72
-        ]
-        array:7 [
-         0 => "completed"
-         1 => "above 10%"
-         2 => "within 0-10%"
-         3 => "within -5% to 0%"
-         4 => "within -15% to -5%"
-         5 => "within -30% to -15%"
-         6 => "below -30%"
-         */
         $partnersLength = count($partnerStackedLabels);
         $completionStatusLength = count($orderedPercentageLabels);
         // dd($partnersLength, $completionStatusLength);
@@ -224,18 +174,7 @@ class DashboardController extends Controller
         }
 
 
-
-        $colorMap = [
-    "below -30%"          => Constants::getStatusColor(-30)[0], // Red
-    "within -30% to -15%" => Constants::getStatusColor(-30)[0],
-    "within -15% to -5%"  => Constants::getStatusColor(-15)[0],
-    "within -5% to 0%"  => Constants::getStatusColor(-5)[0],
-    "within 0-10%"        => Constants::getStatusColor(0)[0],
-    "above 10%"           => Constants::getStatusColor(10)[0],
-    "completed"           => Constants::getStatusColor(101)[0], // Green
-];
-
-        // dd($orderedColors, $orderedPercentageLabels);
+        $colorMap = StatusService::getColorMap();
 
         $chartColors = [];
         foreach ($orderedPercentageLabels as $label) {
@@ -244,7 +183,7 @@ class DashboardController extends Controller
 
 
 
-        // dd($chartColors, $orderedColors);
+        // dd($orderedPercentageLabels, $partnerStackedLabels);
 
         /* $rawData = [
   [100, 302, 301, 334, 390, 330, 320,100, 302, 301, 334, 390, 330, 320 ], #completed
