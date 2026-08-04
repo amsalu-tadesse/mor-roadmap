@@ -119,6 +119,7 @@ class DatabaseSeeder extends Seeder
             'implementation-initiative',
             'shelf-initiative',
             'archived-initiatives',
+            'color-code',
         ];
         $permission_activities = [
             'list',

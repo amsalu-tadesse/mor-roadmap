@@ -5,7 +5,6 @@ namespace App\Traits;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-
 trait ModelAuthorizable
 {
     public function __construct()
@@ -13,6 +12,7 @@ trait ModelAuthorizable
         $className = class_basename($this); // Get the class name without the namespace
         $convertedName = Str::kebab($className);
         $permissionBaseName = str_replace('-controller', '', $convertedName);
+        // dd($permissionBaseName);
 
         $this->middleware(['permission:' . $permissionBaseName . ': list', 'permission:' . $permissionBaseName . ': view']); //these are mandatory to access this class.
         $this->middleware(['permission:' . $permissionBaseName . ': create'], ['only' => ['create', 'store']]); //these rules are required for these methods only.

@@ -50,6 +50,7 @@ use App\Http\Controllers\ImplementationStatusController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ArchiveInitiativeController;
+use App\Http\Controllers\ColorCodeController;
 use App\Http\Controllers\DraftInitiativeController;
 use App\Http\Controllers\ImplementationInitiativeController;
 use App\Http\Controllers\ShelfInitiativeController;
@@ -106,6 +107,7 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('emails', EmailController::class);
             Route::resource('regions', RegionController::class);
             Route::resource('countries', CountryController::class);
+            Route::resource('color-codes', ColorCodeController::class);
 
             Route::resource('zones', ZoneController::class);
             Route::resource('custom-exceptions', CustomExceptionController::class);

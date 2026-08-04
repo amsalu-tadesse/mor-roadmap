@@ -2,12 +2,28 @@
 
 namespace App\Services;
 
+use App\Models\ColorCode;
+
 class StatusService
 {
     public static function getRanges()
     {
+
+        return ColorCode::orderBy('min', 'desc')
+           ->get()
+           ->map(function ($range) {
+               return [
+                   'min' => $range->min,
+                   'max' => $range->max,
+                   'label' => $range->label,
+                   'color' => $range->color,
+               ];
+           })
+           ->toArray();
+
+
         // Later replace this with a DB query.
-        return [
+        /*return [
             [
                 'min' => 101,
                 'max' => 101,
@@ -16,7 +32,7 @@ class StatusService
             ],
             [
                 'min' => 0,
-                'max' => 100,
+                'max' => 10,
                 'label' => 'within 0-10%',
                 'color' => '#0b8c38',
             ],
@@ -38,7 +54,7 @@ class StatusService
                 'label' => 'below -30%',
                 'color' => '#FF0000',
             ],
-        ];
+        ];*/
     }
 
     public static function getStatus($difference)
