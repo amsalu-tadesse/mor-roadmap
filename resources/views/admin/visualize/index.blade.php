@@ -85,6 +85,23 @@
         return colors;
     }
 
+    function downloader(title) {
+        return {
+            show: true,
+            right: 20,
+            feature: {
+                saveAsImage: {
+                    show: true,
+                    title: 'Download',
+                    type: 'png',
+                    name: title,
+                    pixelRatio: 2
+                }
+            }
+        };
+    }
+
+
     // ================================================================
     // 2. MODULAR CHART INITIALIZATION REGISTRY (YOUR SLICES)
     // ================================================================
@@ -98,8 +115,9 @@
             color: generateDynamicColors(dataValues.length, 65, 45, 225),
             title: {
                 text: 'Initiatives Per Dirctorate',
-                subtext: 'Total Count Breakdown per Managed Directorate'
+                subtext: 'Initiatives Managed Directorate'
             },
+            toolbox: downloader('Initiatives Per Dirctorate'),
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
             xAxis: { type: 'value', boundaryGap: [0, 0.01], minInterval: 1 },
@@ -123,6 +141,7 @@
         var option = {
             color: generateDynamicColors(dataValues.length, 60, 45, 191),
             title: { text: 'Activities per Partner', left: 'center', top: '1%' },
+            toolbox: downloader('Activities per Partner'),
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             grid: { left: '3%', right: '4%', bottom: '8%', containLabel: true },
             xAxis: [{
@@ -152,6 +171,7 @@
         var option = {
             color: generateDynamicColors(rawChartData.length, 65, 50, 215),
             title: { text: 'Activities Breakdown by Status', left: 'center', top: '1%' },
+            toolbox: downloader('Activities Breakdown by Status'),
             tooltip: { trigger: 'item', formatter: '{a} <br/>{b} : <strong>{c}</strong> ({d}%)' },
             legend: { bottom: '2%', left: 'center' },
             series: [{
@@ -178,6 +198,7 @@
         var option = {
             color: generateDynamicColors(dataValues.length, 65, 45, 240),
             title: { text: 'Initiatives Distribution per Strategic Theme' },
+            toolbox: downloader('Initiatives Distribution per Strategic Theme'),
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             grid: { left: '3%', right: '5%', bottom: '3%', containLabel: true },
             legend: { show: false },
@@ -254,6 +275,7 @@
             //color: generateDynamicColors(dataValues.length, 60, 45, 191),
             title: { text: 'Activities status by completion percentage', left: 'center', top: '1%' },
             color: {!! json_encode($orderedColors) !!},
+            toolbox: downloader('Activities status by completion percentage'),
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             grid: { left: '3%', right: '4%', bottom: '8%', containLabel: true },
             xAxis: [{
@@ -340,6 +362,7 @@ function stackByPartner(domElement) {
             type: 'value',
             max: 1
         },
+        toolbox: downloader('Activity completion status by partner'),
         xAxis: {
             type: 'category',
             data: {!! json_encode($partnerStackedLabels) !!},
