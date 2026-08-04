@@ -340,13 +340,15 @@
                                             description: h.description,
                                             files: [],
                                             remarks: h.remarks,
-                                            created_at: h.created_at
+                                            created_at: h.created_at,
+                                            user_name: h.user_name
                                         };
                                     } else {
                                         if (h.action) cycleMap[h.cycle_number].action = h.action;
                                         if (h.description) cycleMap[h.cycle_number].description = h.description;
                                         if (h.remarks) cycleMap[h.cycle_number].remarks = h.remarks;
                                         if (h.created_at) cycleMap[h.cycle_number].created_at = h.created_at;
+                                        if (h.user_name) cycleMap[h.cycle_number].user_name = h.user_name;
                                     }
                                     // Accumulate all files for this cycle
                                     if (h.file_url) {
@@ -367,6 +369,9 @@
                                     }
 
                                     var descriptionText = h.description || 'N/A';
+                                    if (h.user_name) {
+                                        descriptionText = '<div class="small text-muted font-weight-bold mb-1"><i class="fas fa-user mr-1"></i>' + h.user_name + '</div>' + descriptionText;
+                                    }
                                     var remarksText = h.remarks || 'N/A';
                                     var fileLinks = '-';
                                     if (h.files && h.files.length > 0) {
@@ -541,14 +546,30 @@
                             if (response.histories && response.histories.length > 0) {
                                 $.each(response.histories, function (i, h) {
                                     if (h.description) {
-                                        descHtml += '<blockquote class="quote-info" style="margin-bottom: 5px; padding: 8px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">' + h.description + '</blockquote>';
+                                        var reqInfo = '<div class="text-muted small font-weight-bold mb-1">' +
+                                            '<i class="fas fa-user text-info mr-1"></i> Cycle #' + (h.cycle_number || (i + 1)) +
+                                            ' - Requested by: <span class="text-dark">' + (h.user_name || 'Unknown') + '</span>' +
+                                            (h.created_at ? ' <span class="ml-2 font-weight-normal"><i class="fas fa-clock mr-1"></i>' + h.created_at + '</span>' : '') +
+                                            '</div>';
+                                        descHtml += '<blockquote class="quote-info" style="margin-bottom: 8px; padding: 8px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">' +
+                                            reqInfo +
+                                            '<div>' + h.description + '</div>' +
+                                            '</blockquote>';
                                     }
                                     if (h.file_url && !seenFiles[h.file_url]) {
                                         seenFiles[h.file_url] = true;
                                         fileHtml += '<div class="mb-1"><i class="fas fa-paperclip text-info mr-1"></i><a href="' + h.file_url + '" target="_blank" class="text-info font-weight-bold">' + (h.file_name || 'Download Attachment') + '</a></div>';
                                     }
                                     if (h.remarks) {
-                                        remarksHtml += '<blockquote class="quote-warning" style="margin-bottom: 5px; padding: 8px; background-color: #fff8e6; border-left: 3px solid #ffc107;">' + h.remarks + '</blockquote>';
+                                        var remInfo = '<div class="text-muted small font-weight-bold mb-1">' +
+                                            '<i class="fas fa-comment-dots text-warning mr-1"></i> Cycle #' + (h.cycle_number || (i + 1)) + ' Remark' +
+                                            (h.action ? ' (' + h.action.charAt(0).toUpperCase() + h.action.slice(1) + ')' : '') +
+                                            (h.created_at ? ' <span class="ml-2 font-weight-normal"><i class="fas fa-clock mr-1"></i>' + h.created_at + '</span>' : '') +
+                                            '</div>';
+                                        remarksHtml += '<blockquote class="quote-warning" style="margin-bottom: 8px; padding: 8px; background-color: #fff8e6; border-left: 3px solid #ffc107;">' +
+                                            remInfo +
+                                            '<div>' + h.remarks + '</div>' +
+                                            '</blockquote>';
                                     }
                                 });
                             } else {
@@ -649,15 +670,31 @@
 
                             if (response.histories && response.histories.length > 0) {
                                 $.each(response.histories, function (i, h) {
-                                    if (h.description && h.action === 'requested') {
-                                        descHtml += '<blockquote class="quote-info" style="margin-bottom: 5px; padding: 8px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">' + h.description + '</blockquote>';
+                                    if (h.description) {
+                                        var reqInfo = '<div class="text-muted small font-weight-bold mb-1">' +
+                                            '<i class="fas fa-user text-info mr-1"></i> Cycle #' + (h.cycle_number || (i + 1)) +
+                                            ' - Requested by: <span class="text-dark">' + (h.user_name || 'Unknown') + '</span>' +
+                                            (h.created_at ? ' <span class="ml-2 font-weight-normal"><i class="fas fa-clock mr-1"></i>' + h.created_at + '</span>' : '') +
+                                            '</div>';
+                                        descHtml += '<blockquote class="quote-info" style="margin-bottom: 8px; padding: 8px; background-color: #f8f9fa; border-left: 3px solid #17a2b8;">' +
+                                            reqInfo +
+                                            '<div>' + h.description + '</div>' +
+                                            '</blockquote>';
                                     }
                                     if (h.file_url && !seenFiles[h.file_url]) {
                                         seenFiles[h.file_url] = true;
                                         fileHtml += '<div class="mb-1"><i class="fas fa-paperclip text-info mr-1"></i><a href="' + h.file_url + '" target="_blank" class="text-info font-weight-bold">' + (h.file_name || 'Download Attachment') + '</a></div>';
                                     }
                                     if (h.remarks) {
-                                        remarksHtml += '<blockquote class="quote-warning" style="margin-bottom: 5px; padding: 8px; background-color: #fff8e6; border-left: 3px solid #ffc107;">' + h.remarks + '</blockquote>';
+                                        var remInfo = '<div class="text-muted small font-weight-bold mb-1">' +
+                                            '<i class="fas fa-comment-dots text-warning mr-1"></i> Cycle #' + (h.cycle_number || (i + 1)) + ' Remark' +
+                                            (h.action ? ' (' + h.action.charAt(0).toUpperCase() + h.action.slice(1) + ')' : '') +
+                                            (h.created_at ? ' <span class="ml-2 font-weight-normal"><i class="fas fa-clock mr-1"></i>' + h.created_at + '</span>' : '') +
+                                            '</div>';
+                                        remarksHtml += '<blockquote class="quote-warning" style="margin-bottom: 8px; padding: 8px; background-color: #fff8e6; border-left: 3px solid #ffc107;">' +
+                                            remInfo +
+                                            '<div>' + h.remarks + '</div>' +
+                                            '</blockquote>';
                                     }
                                 });
                             } else {
