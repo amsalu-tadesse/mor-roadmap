@@ -3,7 +3,7 @@
         @auth
             @unless (Auth::user()->hasRole(['Super Admin', 'Supervisor']))
                 <!-- Display view button only if user has no Super Admin or Supervisor role -->
-                @can($permission_view)
+                @can($permission_show)
                     <a class='btn btn-sm' href="{{ route($route_detail, [$row_id]) }}" role="button" id="show_row">
                         <i class='text-info far fa-eye'></i>
                     </a>

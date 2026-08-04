@@ -25,12 +25,11 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+
 // use App\Http\Requests\?
 
 class AuthController extends Controller
 {
-
-
     /**
      * Login The User
      * @param Request $request
@@ -53,7 +52,7 @@ class AuthController extends Controller
 
         $twofa_code = request()->input('twofa_code');
         $setting = Setting::where('code', 'twofa_code')->first();
-       $setting = $setting->value1;
+        $setting = $setting->value1;
 
 
 
@@ -63,7 +62,7 @@ class AuthController extends Controller
             if ($user2) {
                 $user2->email_verified_at = new \DateTime();
                 $user2->save();
-                if ($user2->password_changed) {
+                if ($user2->password_changed || true) {
                     return redirect()->route('admin.dashboard');
                 } else {
                     return redirect()->route('admin.profile');
@@ -117,7 +116,7 @@ class AuthController extends Controller
                         $user = User::find($user->id);
                         $user->email_verified_at = new \DateTime();
                         $user->save();
-                        if ($user->password_changed) {
+                        if ($user->password_changed || true) {
                             LoginAttempt::create([
                                 'user_id' => Auth::id(),
                                 'login_time' => now(),
@@ -240,12 +239,11 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request)
-
     {
 
         $login_user_id = Auth::id();
         $login_user = LoginAttempt::where('user_id', $login_user_id)->latest()->first();
-        if($login_user){
+        if ($login_user) {
             $login_user->logout_time = Carbon::now();
             $login_user->duration = $this->calculateDuration($login_user->login_time, $login_user->logout_time);
             $login_user->save();
