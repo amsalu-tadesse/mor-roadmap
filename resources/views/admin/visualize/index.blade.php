@@ -9,13 +9,6 @@
     </div>
 
 
-     <hr>
-
-    <div class="card">
-        <!-- FIXED: Added explicit width and height directly to the container -->
-        <div id="vbar" style="width: 100%; height: 500px;"></div>
-    </div>
-
 
 
 
@@ -34,6 +27,16 @@
         <div id="bytheme" data-chart="theme" style="width: 100%; height: 500px;"></div>
     </div>
  <hr>
+
+
+
+
+    <div class="card">
+        <!-- FIXED: Added explicit width and height directly to the container -->
+        <div id="vbar" style="width: 100%; height: 500px;"></div>
+    </div>
+
+<hr>
 
     <div class="card">
         <!-- FIXED: Added explicit width and height directly to the container -->

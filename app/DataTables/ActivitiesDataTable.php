@@ -73,7 +73,7 @@ class ActivitiesDataTable extends DataTable
 
                 $color = percentageCalculator($row->start_date, $row->end_date, $row->completion);
 
-                return '<div style="background-color: ' . $color[0] . '; color: #000; font-weight: bold; text-align: center; padding: 10px 4px; margin: -12px -8px;">' . (int)$row->completion . '%</div>';
+                return '<div style="background-color: ' . $color[0] . '; color: #fff; font-weight: bold; text-align: center; padding: 10px 4px; margin: -12px -8px;">' . (int)$row->completion . '%</div>';
             })
 
             ->addColumn('action', function ($row) {
