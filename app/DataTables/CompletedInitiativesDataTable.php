@@ -27,8 +27,8 @@ class CompletedInitiativesDataTable extends DataTable
                     'row_id' => $row->id,
                     'show' => true,
                     'permission_view' => 'archived-initiatives: view',
-                    'permission_edit' => 'completed-initiative: edit',
-                    'permission_delete' => 'completed-initiative: delete',
+                    'permission_edit' => 'archived-initiatives: edit',
+                    'permission_delete' => 'archived-initiatives: delete',
                 ]);
             })
             ->rawColumns(['no', 'action']);

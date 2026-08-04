@@ -89,7 +89,7 @@ class ShelfInitiativeController extends Controller
                     'file_url' => $h->file ? Storage::url($h->file) : null,
                     'file_name' => $h->original_file_name ?: ($h->file ? basename($h->file) : null),
                     'remarks' => $h->remarks,
-                    'user_name' => $h->user ? trim(($h->user->first_name ?? '') . ' ' . ($h->user->last_name ?? '')) : 'User',
+                    'user_name' => $h->user ? trim(implode(' ', array_filter([$h->user->first_name, $h->user->middle_name, $h->user->last_name]))) : 'User',
                     'created_at' => $h->created_at ? $h->created_at->format('Y-m-d') : null,
                 ];
             });
@@ -167,7 +167,7 @@ class ShelfInitiativeController extends Controller
                 'file_url' => $h->file ? Storage::url($h->file) : null,
                 'file_name' => $h->original_file_name ?: ($h->file ? basename($h->file) : null),
                 'remarks' => $h->remarks,
-                'user_name' => $h->user ? trim(($h->user->first_name ?? '') . ' ' . ($h->user->last_name ?? '')) : 'User',
+                'user_name' => $h->user ? trim(implode(' ', array_filter([$h->user->first_name, $h->user->middle_name, $h->user->last_name]))) : 'User',
                 'created_at' => $h->created_at ? $h->created_at->format('Y-m-d') : null,
             ];
         });
