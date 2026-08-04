@@ -156,6 +156,11 @@ return [
                 'url'        =>  'admin.settings.index',
                 'permission'   => 'setting: list'
             ],
+            [
+                'title'      =>  'Color codes',
+                'url'        =>  'admin.color-codes.index',
+                'permission'   => 'color-code: list'
+            ],
 
             [
                 'title'      =>  'Helps',
